@@ -11,23 +11,35 @@
 
 /** Ausgabegröße des Kartenbildes in Bildpunkten. */
 export const MAP_W = 880;
-export const MAP_H = 550;
+export const MAP_H = 470;
 
 /**
  * Maßstab: Meter je Bildpunkt der Ausgabe.
  *
- * 120 ist so gewählt, dass Pfaffenhofen im Süden mit Rand ins Bild
- * passt und die Orte um Ingolstadt trotzdem weit genug auseinander
- * liegen, um sie einzeln beschriften zu können.
+ * Bindend ist die Nord-Süd-Achse: von Kösching bis Pfaffenhofen sind es
+ * knapp 35 Kilometer, die mit Rand für die Beschriftung ins Bild
+ * passen müssen. 90 ist der engste Wert, bei dem das aufgeht.
  */
-export const M_PER_PX = 120;
+export const M_PER_PX = 90;
 
-/** Zoomstufe der bezogenen Kacheln. */
-export const TILE_ZOOM = 10;
+/**
+ * Zoomstufe der bezogenen Kacheln.
+ *
+ * Eine Stufe feiner als für den Maßstab nötig. Die Kacheln werden
+ * danach verkleinert, dadurch bleibt die Zeichnung auch auf Displays
+ * mit doppelter Pixeldichte scharf.
+ */
+export const TILE_ZOOM = 11;
 export const TILE_SIZE = 256;
 
-/** Ingolstadt, Mittelpunkt der Karte. */
-export const CENTER = { lat: 48.763, lon: 11.425 };
+/**
+ * Bildmitte.
+ *
+ * Nicht Ingolstadt, sondern die Mitte zwischen dem nördlichsten und dem
+ * südlichsten Ort. Auf Ingolstadt zentriert bliebe oben viel leeres
+ * Land stehen, während Pfaffenhofen unten aus dem Bild fiele.
+ */
+export const CENTER = { lat: 48.686, lon: 11.425 };
 
 /** Meter je Bildpunkt einer Kachel dieser Zoomstufe, auf Höhe der Mitte. */
 export function tileMetersPerPx(zoom = TILE_ZOOM) {

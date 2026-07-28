@@ -13,35 +13,53 @@ import { MAP_H, MAP_W, pxPerKm, toMap } from '../data/map-config.mjs';
  * Deshalb braucht die Seite weiterhin kein Einwilligungsfenster.
  * Erzeugt von `scripts/build-map.mjs`.
  *
- * Marken und Ringe liegen als SVG darüber und rechnen mit derselben
- * Projektion wie das Bild, siehe `src/data/map-config.mjs`. Das SVG hat
- * genau das Seitenverhältnis des Bildes, sonst würden die Marken
- * verrutschen.
+ * Marken und Beschriftung liegen als SVG darüber und rechnen mit
+ * derselben Projektion wie das Bild, siehe `src/data/map-config.mjs`.
+ * Das SVG hat genau das Seitenverhältnis des Bildes, sonst würden die
+ * Marken verrutschen.
+ *
+ * Die Ortsnamen der Kacheln sind bei dieser Anzeigegröße zu klein zum
+ * Lesen. Die Namen der angefahrenen Orte stehen deshalb noch einmal
+ * als eigene Beschriftung darüber, deutlich größer und mit dunklem
+ * Rand, damit sie auf jedem Untergrund lesbar bleiben.
  */
 
 const PX_KM = pxPerKm();
-const CX = MAP_W / 2;
-const CY = MAP_H / 2;
+const home = toMap(company.coords.lat, company.coords.lon);
 
-const points = company.places.map((place) => ({
-  name: place.name,
-  ...toMap(place.lat, place.lon),
-}));
+const points = company.places.map((place) => {
+  const p = toMap(place.lat, place.lon);
+  /* Beschriftung nach außen, weg von der Bildmitte. So laufen die
+     Namen nicht ineinander und nicht über den Rand. */
+  const right = p.x > MAP_W / 2;
+  return {
+    label: place.short ?? place.name,
+    x: p.x,
+    y: p.y,
+    textX: right ? p.x + 9 : p.x - 9,
+    textY: p.y + 5,
+    anchor: right ? 'start' : 'end',
+  };
+});
 
 /** Maßstabsbalken unten links. */
-const SCALE_KM = 25;
+const SCALE_KM = 20;
 const SCALE_PX = SCALE_KM * PX_KM;
+
+const alt = `Karte der Region um ${company.city} mit ${company.places
+  .map((p) => p.name)
+  .join(', ')}`;
 ---
 
 <figure class="rounded-card bg-navy-800/70 overflow-hidden border border-white/8">
   <div class="relative" style={`aspect-ratio:${MAP_W}/${MAP_H}`}>
     <Image
       src={mapImage}
-      alt={`Karte der Region um ${company.city} mit den Orten, in denen ich Gutachten erstelle`}
+      alt={alt}
       widths={[440, 660, 880]}
       sizes="(min-width: 1024px) 34vw, 100vw"
       format="webp"
-      quality={66}
+      quality={70}
       loading="lazy"
       decoding="async"
       class="absolute inset-0 h-full w-full object-cover"
@@ -49,7 +67,7 @@ const SCALE_PX = SCALE_KM * PX_KM;
 
     <!-- Randabdunklung, damit die Karte in die Kachel einsinkt -->
     <span
-      class="absolute inset-0 bg-[radial-gradient(115%_95%_at_50%_45%,transparent_38%,rgb(4_7_15/0.62)_100%)]"
+      class="absolute inset-0 bg-[radial-gradient(120%_105%_at_50%_40%,transparent_42%,rgb(4_7_15/0.66)_100%)]"
       aria-hidden="true"></span>
 
     <svg
@@ -60,33 +78,16 @@ const SCALE_PX = SCALE_KM * PX_KM;
     >
       <defs>
         <radialGradient id="cov-reach" cx="50%" cy="50%">
-          <stop offset="0%" stop-color="var(--color-gold-400)" stop-opacity="0.2"></stop>
-          <stop offset="45%" stop-color="var(--color-gold-400)" stop-opacity="0.1"></stop>
+          <stop offset="0%" stop-color="var(--color-gold-400)" stop-opacity="0.22"></stop>
+          <stop offset="55%" stop-color="var(--color-gold-400)" stop-opacity="0.08"></stop>
           <stop offset="100%" stop-color="var(--color-gold-400)" stop-opacity="0"></stop>
         </radialGradient>
       </defs>
 
-      <!-- Reichweite als weicher Verlauf statt harter Kante. Ein Kreis
-           mit klarer Linie wuerde eine Grenze behaupten, die es so
+      <!-- Reichweite als weicher Schein statt harter Kante. Ein Kreis
+           mit klarer Linie würde eine Grenze behaupten, die es so
            nicht gibt. -->
-      <circle cx={CX} cy={CY} r={company.radiusKm * PX_KM} fill="url(#cov-reach)"></circle>
-
-      <!-- Entfernungsringe. Ohne Beschriftung, die Entfernung liest man
-           am Maßstab unten links ab. -->
-      {
-        [10, 25].map((km) => (
-          <circle
-            cx={CX}
-            cy={CY}
-            r={km * PX_KM}
-            fill="none"
-            stroke="var(--color-gold-400)"
-            stroke-opacity="0.3"
-            stroke-width="1.4"
-            stroke-dasharray="5 7"
-          />
-        ))
-      }
+      <circle cx={home.x} cy={home.y} r={26 * PX_KM} fill="url(#cov-reach)"></circle>
 
       <!-- Orte im Einsatzgebiet -->
       {
@@ -95,18 +96,31 @@ const SCALE_PX = SCALE_KM * PX_KM;
             <circle
               cx={point.x}
               cy={point.y}
-              r="9"
+              r="10"
               fill="var(--color-gold-400)"
-              fill-opacity="0.2"
+              fill-opacity="0.18"
             />
             <circle
               cx={point.x}
               cy={point.y}
-              r="4.5"
+              r="5"
               fill="var(--color-gold-400)"
               stroke="var(--color-navy-950)"
-              stroke-width="1.5"
+              stroke-width="1.6"
             />
+            <text
+              x={point.textX}
+              y={point.textY}
+              text-anchor={point.anchor}
+              fill="var(--color-bone-100)"
+              font-size="22"
+              font-weight="600"
+              stroke="rgb(4 7 15 / 0.8)"
+              stroke-width="4"
+              paint-order="stroke"
+            >
+              {point.label}
+            </text>
           </g>
         ))
       }
@@ -114,67 +128,54 @@ const SCALE_PX = SCALE_KM * PX_KM;
       <!-- Standort -->
       <circle
         class="coverage-ping"
-        cx={CX}
-        cy={CY}
-        r="30"
+        cx={home.x}
+        cy={home.y}
+        r="26"
         fill="none"
         stroke="var(--color-gold-400)"
         stroke-width="2"></circle>
       <circle
-        cx={CX}
-        cy={CY}
-        r="11"
+        cx={home.x}
+        cy={home.y}
+        r="10"
         fill="var(--color-gold-500)"
         stroke="var(--color-navy-950)"
         stroke-width="2.5"></circle>
       <text
-        x={CX}
-        y={CY + 34}
+        x={home.x}
+        y={home.y + 32}
         text-anchor="middle"
         fill="var(--color-bone-50)"
-        font-size="21"
+        font-size="25"
         font-weight="700"
         stroke="rgb(4 7 15 / 0.85)"
-        stroke-width="4"
+        stroke-width="4.5"
         paint-order="stroke"
       >
         {company.city}
       </text>
 
       <!-- Maßstab -->
-      <g transform={`translate(28 ${MAP_H - 30})`}>
-        <line
-          x1="0"
-          y1="0"
-          x2={SCALE_PX}
-          y2="0"
-          stroke="var(--color-bone-50)"
-          stroke-opacity="0.72"
-          stroke-width="2"></line>
-        <line
-          x1="0"
-          y1="-5"
-          x2="0"
-          y2="5"
-          stroke="var(--color-bone-50)"
-          stroke-opacity="0.72"
-          stroke-width="2"></line>
-        <line
-          x1={SCALE_PX}
-          y1="-5"
-          x2={SCALE_PX}
-          y2="5"
-          stroke="var(--color-bone-50)"
-          stroke-opacity="0.72"
-          stroke-width="2"></line>
+      <g
+        transform={`translate(26 ${MAP_H - 26})`}
+        stroke="var(--color-bone-50)"
+        stroke-opacity="0.7"
+        stroke-width="2"
+      >
+        <line x1="0" y1="0" x2={SCALE_PX} y2="0"></line>
+        <line x1="0" y1="-5" x2="0" y2="5"></line>
+        <line x1={SCALE_PX} y1="-5" x2={SCALE_PX} y2="5"></line>
         <text
           x={SCALE_PX / 2}
           y="-9"
           text-anchor="middle"
           fill="var(--color-bone-50)"
-          fill-opacity="0.8"
-          font-size="15"
-          font-weight="600">{SCALE_KM} km</text
+          fill-opacity="0.85"
+          font-size="17"
+          font-weight="600"
+          stroke="rgb(4 7 15 / 0.8)"
+          stroke-width="3.5"
+          paint-order="stroke">{SCALE_KM} km</text
         >
       </g>
     </svg>
@@ -192,19 +193,8 @@ const SCALE_PX = SCALE_KM * PX_KM;
     </p>
   </div>
 
-  <figcaption class="border-t border-white/8 px-4 py-4">
-    <p class="text-bone-50 text-[0.92rem] font-semibold">
-      {company.region}, rund {company.radiusKm} km im Umkreis
-    </p>
-    <ul class="mt-2.5 flex flex-wrap gap-1.5">
-      {
-        company.places.map((place) => (
-          <li class="bg-navy-700/60 text-navy-300 rounded-full px-2.5 py-1 text-[0.73rem] font-medium">
-            {place.name}
-          </li>
-        ))
-      }
-    </ul>
+  <figcaption class="text-bone-50 border-t border-white/8 px-4 py-3.5 text-[0.92rem] font-semibold">
+    {company.region}, rund {company.radiusKm} km im Umkreis
   </figcaption>
 </figure>
 
@@ -220,14 +210,14 @@ const SCALE_PX = SCALE_KM * PX_KM;
 
   @keyframes coverage-ping {
     0% {
-      transform: scale(0.35);
+      transform: scale(0.4);
       opacity: 0;
     }
     18% {
       opacity: 0.6;
     }
     100% {
-      transform: scale(2.6);
+      transform: scale(2.8);
       opacity: 0;
     }
   }

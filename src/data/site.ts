@@ -43,6 +43,8 @@ export interface Place {
   readonly name: string;
   readonly lat: number;
   readonly lon: number;
+  /** Kurzform fuer die Karte, wo lange Namen ueber den Rand laufen. */
+  readonly short?: string;
 }
 
 /* ------------------------------------------------------------------
@@ -77,13 +79,15 @@ export const company = {
   city: 'Ingolstadt' as string | null,
   region: 'Ingolstadt und Umgebung' as string | null,
   radiusKm: 50,
+  /** Standort auf der Karte im Abschnitt "Ueber mich". */
+  coords: { lat: 48.763, lon: 11.425 },
   places: [
     { name: 'Gaimersheim', lat: 48.7986, lon: 11.3702 },
     { name: 'Kösching', lat: 48.8423, lon: 11.5188 },
     { name: 'Großmehring', lat: 48.7831, lon: 11.5354 },
     { name: 'Manching', lat: 48.7171, lon: 11.4941 },
-    { name: 'Neuburg a. d. Donau', lat: 48.7456, lon: 11.188 },
-    { name: 'Pfaffenhofen a. d. Ilm', lat: 48.5297, lon: 11.5085 },
+    { name: 'Neuburg a. d. Donau', lat: 48.7456, lon: 11.188, short: 'Neuburg' },
+    { name: 'Pfaffenhofen a. d. Ilm', lat: 48.5297, lon: 11.5085, short: 'Pfaffenhofen' },
   ] as readonly Place[],
 
   /** TODO(Kunde): Ladungsfaehige Anschrift fuer das Impressum. */

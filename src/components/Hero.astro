@@ -20,9 +20,38 @@ const chips = [
 const HERO_ALT =
   'Unfallfahrzeug mit eingedrückter Front am Rand einer Landstraße, davor ein aufgestelltes Warndreieck';
 
+/*
+  Zugeschnitten wird vom rechten Rand her, nicht aus der Mitte. Das
+  Fahrzeug steht im Original rechts; ein mittiger Ausschnitt zeigt auf
+  dem Handy nur dessen Heck, waehrend die eingedrueckte Front und das
+  Warndreieck herausfallen. Genau die machen aber das Bild aus.
+
+  Der Ausschnitt ist etwas breiter angelegt als das Display. Sharp
+  kennt nur die Bildkanten als Bezugspunkt, nicht "60 Prozent von
+  links". Den Rest der Feinjustierung uebernimmt deshalb
+  `object-position` am Bild, siehe unten.
+*/
 const [portraitSmall, portraitLarge] = await Promise.all([
-  getImage({ src: heroImg, width: 520, height: 940, format: 'webp', quality: 72 }),
-  getImage({ src: heroImg, width: 940, height: 1700, format: 'webp', quality: 68 }),
+  getImage({
+    src: heroImg,
+    width: 660,
+    height: 886,
+    position: 'right',
+    format: 'webp',
+    quality: 72,
+  }),
+  getImage({
+    src: heroImg,
+    width: 1000,
+    height: 1343,
+    position: 'right',
+    format: 'webp',
+    /* Niedriger als beim Querformat: der Ausschnitt zeigt viel
+       Blattwerk, das jede Qualitaetsstufe teuer bezahlt. Bei 56 liegt
+       die Datei rund 40 Prozent unter 68, ohne dass am Fahrzeug ein
+       Unterschied zu sehen waere. Sie ist auf dem Handy das LCP-Bild. */
+    quality: 58,
+  }),
 ]);
 
 const [landscapeMedium, landscapeLarge, landscapeXl] = await Promise.all([
@@ -41,7 +70,7 @@ const [landscapeMedium, landscapeLarge, landscapeXl] = await Promise.all([
     <source
       media="(max-width: 767px)"
       type="image/webp"
-      srcset={`${portraitSmall.src} 520w, ${portraitLarge.src} 940w`}
+      srcset={`${portraitSmall.src} 660w, ${portraitLarge.src} 1000w`}
       sizes="100vw"
     />
     <source
@@ -57,7 +86,7 @@ const [landscapeMedium, landscapeLarge, landscapeXl] = await Promise.all([
       loading="eager"
       fetchpriority="high"
       decoding="sync"
-      class="absolute inset-0 -z-20 h-full w-full object-cover object-center"
+      class="absolute inset-0 -z-20 h-full w-full object-cover object-[36%_50%] md:object-center"
     />
   </picture>
 

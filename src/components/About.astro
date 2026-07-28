@@ -10,48 +10,13 @@ import portrait from '../assets/portrait-platzhalter.jpg';
   <div class="container-page">
     <div class="grid gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-16">
       <!--
-        Linke Spalte: oben das Porträt, darunter die Karte.
+        Text.
 
-        Das Porträt bekommt `flex-1` und keine feste Höhe. Damit nimmt
-        es genau den Platz auf, den die Karte neben dem Text übrig
-        lässt, und beide Spalten enden auf derselben Linie. Ein festes
-        Seitenverhältnis hätte je nach Textlänge einen Rest ergeben.
+        Steht bewusst vor der Bildspalte. So stimmt die Reihenfolge
+        im Markup mit der Lesereihenfolge auf dem Handy überein, ohne
+        dass Vorlesewerkzeuge und Tastaturbedienung einer anderen
+        Abfolge folgen als das Auge.
       -->
-      <!-- Ein gemeinsames `data-reveal` fuer beide Kacheln. Getrennt
-           bewegten sie sich waehrend des Einblendens gegeneinander und
-           ueberlappten dabei kurz an der Kante. -->
-      <div class="flex flex-col gap-5" data-reveal>
-        <div class="rounded-card relative min-h-52 flex-1 overflow-hidden lg:min-h-40">
-          <Image
-            src={portrait}
-            alt="Kfz-Sachverständiger in Arbeitskleidung in einer Werkstatt"
-            widths={[420, 640, 900]}
-            sizes="(min-width: 1024px) 34vw, 100vw"
-            format="webp"
-            quality={70}
-            loading="lazy"
-            decoding="async"
-            class="absolute inset-0 h-full w-full object-cover object-[50%_28%]"
-          />
-          <span
-            class="absolute inset-0 bg-[linear-gradient(to_top,rgb(4_7_15/0.9),rgb(6_10_22/0.15)_62%)]"
-            aria-hidden="true"></span>
-
-          <div class="absolute inset-x-0 bottom-0 p-4">
-            <p class="text-gold-400 text-[0.66rem] font-semibold tracking-[0.18em] uppercase">
-              Ihr Ansprechpartner
-            </p>
-            <p class="font-display text-bone-50 mt-1 text-lg font-bold">{company.owner}</p>
-            <p class="text-navy-300 mt-0.5 text-[0.8rem]">DESAG geprüfter Sachverständiger</p>
-          </div>
-        </div>
-
-        <div class="flex-none">
-          <CoverageMap />
-        </div>
-      </div>
-
-      <!-- Text -->
       <div class="flex flex-col justify-start">
         <p class="eyebrow" data-reveal>Über mich</p>
 
@@ -94,6 +59,51 @@ import portrait from '../assets/portrait-platzhalter.jpg';
             ))
           }
         </ul>
+      </div>
+      <!--
+        Bildspalte: oben das Porträt, darunter die Karte.
+
+        Das Porträt bekommt `flex-1` und keine feste Höhe. Damit nimmt
+        es genau den Platz auf, den die Karte neben dem Text übrig
+        lässt, und beide Spalten enden auf derselben Linie. Ein festes
+        Seitenverhältnis hätte je nach Textlänge einen Rest ergeben.
+
+        Im Markup steht sie hinter dem Text, damit auf dem Handy
+        zuerst zu lesen ist, worum es geht. Ab der zweispaltigen
+        Ansicht rückt sie über `lg:order-first` nach links.
+      -->
+      <!-- Ein gemeinsames `data-reveal` fuer beide Kacheln. Getrennt
+           bewegten sie sich waehrend des Einblendens gegeneinander und
+           ueberlappten dabei kurz an der Kante. -->
+      <div class="flex flex-col gap-5 lg:order-first" data-reveal>
+        <div class="rounded-card relative min-h-52 flex-1 overflow-hidden lg:min-h-40">
+          <Image
+            src={portrait}
+            alt="Kfz-Sachverständiger in Arbeitskleidung in einer Werkstatt"
+            widths={[420, 640, 900]}
+            sizes="(min-width: 1024px) 34vw, 100vw"
+            format="webp"
+            quality={70}
+            loading="lazy"
+            decoding="async"
+            class="absolute inset-0 h-full w-full object-cover object-[50%_28%]"
+          />
+          <span
+            class="absolute inset-0 bg-[linear-gradient(to_top,rgb(4_7_15/0.9),rgb(6_10_22/0.15)_62%)]"
+            aria-hidden="true"></span>
+
+          <div class="absolute inset-x-0 bottom-0 p-4">
+            <p class="text-gold-400 text-[0.66rem] font-semibold tracking-[0.18em] uppercase">
+              Ihr Ansprechpartner
+            </p>
+            <p class="font-display text-bone-50 mt-1 text-lg font-bold">{company.owner}</p>
+            <p class="text-navy-300 mt-0.5 text-[0.8rem]">DESAG geprüfter Sachverständiger</p>
+          </div>
+        </div>
+
+        <div class="flex-none">
+          <CoverageMap />
+        </div>
       </div>
     </div>
   </div>
