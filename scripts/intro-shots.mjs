@@ -7,7 +7,7 @@
 import { chromium } from 'playwright';
 import { mkdir } from 'node:fs/promises';
 
-const BASE = process.argv[2] ?? 'http://127.0.0.1:4324';
+const BASE = process.argv[2] ?? 'http://127.0.0.1:4326';
 const OUT = '/tmp/shots/intro';
 await mkdir(OUT, { recursive: true });
 
@@ -15,7 +15,7 @@ const browser = await chromium.launch({
   executablePath: process.env.CHROMIUM_PATH ?? '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
 });
 
-const FRAMES = [500, 1000, 1500, 2000, 2900, 3900, 4200];
+const FRAMES = [800, 1450, 1800, 2600, 3300, 3600, 3850, 4150];
 
 for (const viewport of [
   { name: 'desktop', width: 1440, height: 900 },

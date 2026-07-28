@@ -78,11 +78,16 @@ anonymes Großbüro. Aufnahmehinweise stehen in `docs/image-prompts.md`
 unter Punkt 9. Datei als `src/assets/portrait.jpg` ablegen und in
 `src/components/About.astro` den Import ändern.
 
-### 1.8 Echte Bilder
+### 1.8 Bilder
 
-Alle Bilder sind Platzhalter von Pexels. Fertige Prompts für eigene
-Aufnahmen liegen in `docs/image-prompts.md`. Am wirkungsvollsten sind
-eigene Fotos aus der täglichen Arbeit, weil sie unverwechselbar sind.
+Hero und alle sechs Leistungskacheln sind mit Gemini erzeugt und
+eingebaut, die Prompts dazu stehen in `docs/image-prompts.md`. Nur das
+Bild in der Sektion „Über mich" ist noch ein Stimmungsbild von Pexels,
+dort gehört das Porträt aus Punkt 1.7 hin.
+
+Auf Dauer schlagen eigene Fotos aus der täglichen Arbeit jedes
+generierte Bild, weil sie unverwechselbar sind. Wer Aufnahmen von
+echten Begutachtungen sammelt, sollte sie nach und nach eintauschen.
 
 ---
 

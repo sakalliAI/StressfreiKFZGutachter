@@ -15,7 +15,7 @@
 import sharp from 'sharp';
 
 const LOGO = 'brand/Logo.png';
-const HERO = 'src/assets/hero.jpg';
+const HERO = 'src/assets/hero.jpeg';
 
 const NAVY = '#0a1226';
 const GOLD = '#d9a32b';

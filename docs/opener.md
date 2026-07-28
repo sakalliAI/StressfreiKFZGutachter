@@ -7,17 +7,21 @@ verwenden.
 
 ## Was jetzt drin ist
 
-Eine in SVG und CSS gebaute Sequenz, rund 4,4 Sekunden lang:
+Eine in SVG und CSS gebaute Sequenz, rund 4,2 Sekunden lang.
 
-| Zeit          | Was passiert                                                                                   |
-| ------------- | ---------------------------------------------------------------------------------------------- |
-| 0,00 – 0,30 s | Die Fahrbahnlinie zieht sich auf                                                               |
-| 0,30 – 1,45 s | Zwei Fahrzeuge beschleunigen aus dem Bild heraus aufeinander zu, Scheinwerferkegel wachsen mit |
-| 1,45 s        | Aufprall. Weißer Blitz, zwei Schockwellen, sechzehn Splitter, beide Fahrzeuge federn zurück    |
-| 1,70 s        | Die Fläche teilt sich waagerecht, die Seite wird sichtbar, ein Schleier bleibt darüber         |
-| 1,90 s        | Das Logo tritt an die Stelle der Fahrzeuge, Schriftzug darunter                                |
-| 2,55 – 3,55 s | Die Marke steht still, eine volle Sekunde                                                      |
-| 3,55 – 4,35 s | Schleier verschwindet, das Logo fliegt an seinen Platz im Header und bleibt dort liegen        |
+Auf die Reihenfolge am Ende kommt es an: Die Marke steht auf dunklem
+Grund, nicht im Hero. Die Seite kommt erst zum Vorschein, während das
+Logo nach oben links unterwegs ist.
+
+| Zeit          | Was passiert                                                                                        |
+| ------------- | --------------------------------------------------------------------------------------------------- |
+| 0,00 – 0,30 s | Die Fahrbahnlinie zieht sich auf                                                                    |
+| 0,30 – 1,45 s | Zwei Fahrzeuge beschleunigen aus dem Bild heraus aufeinander zu, Scheinwerferkegel wachsen mit      |
+| 1,45 s        | Aufprall. Weißer Blitz, zwei Schockwellen, sechzehn Splitter, beide Fahrzeuge federn zurück         |
+| 1,70 s        | Das Logo tritt an die Stelle der Fahrzeuge, weiterhin auf dunklem Grund                             |
+| 1,90 s        | Der Schriftzug erscheint darunter                                                                   |
+| 2,35 – 3,35 s | Die Marke steht still, eine volle Sekunde                                                           |
+| 3,35 – 4,20 s | Das Logo fliegt an seinen Platz im Header. Erst dabei teilt sich die Fläche und gibt die Seite frei |
 
 Eigenschaften:
 

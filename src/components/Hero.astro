@@ -1,7 +1,7 @@
 ---
 import { getImage } from 'astro:assets';
 import Icon from './Icon.astro';
-import heroImg from '../assets/hero.jpg';
+import heroImg from '../assets/hero.jpeg';
 import { company } from '../data/site';
 
 const chips = [
@@ -18,7 +18,7 @@ const chips = [
   2560px-Datei laedt.
 */
 const HERO_ALT =
-  'Fahrzeug mit stark eingedrückter Front nach einem Unfall am Rand einer Landstraße';
+  'Unfallfahrzeug mit eingedrückter Front am Rand einer Landstraße, davor ein aufgestelltes Warndreieck';
 
 const [portraitSmall, portraitLarge] = await Promise.all([
   getImage({ src: heroImg, width: 520, height: 940, format: 'webp', quality: 72 }),

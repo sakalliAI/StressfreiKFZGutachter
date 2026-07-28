@@ -90,10 +90,11 @@ ist währenddessen ausgeblendet und erscheint erst, wenn das Overlay
 verschwindet. Feste Pixelwerte müssten für jede Bildschirmbreite neu
 gepflegt werden und wären beim nächsten Umbau der Kopfzeile wieder falsch.
 
-Damit die Messwerte darunter nicht leiden, teilt sich die Fläche schon
-gut anderthalb Sekunden vor dem Ende. Der Inhalt ist also sichtbar,
-während die Marke noch steht und fliegt. Der LCP liegt dadurch bei
-2,4 Sekunden statt bei über vier.
+Die Fläche gibt die Seite bewusst erst mit dem Abflug des Logos frei.
+Stünde die Marke über der bereits sichtbaren Seite, wirkte sie wie ein
+Fremdkörper mitten im Hero statt wie ein eigener Auftritt. Der Preis
+dafür sind rund 0,3 Sekunden beim mobilen LCP, 2,7 statt 2,4. Ab dem
+zweiten Aufruf der Sitzung entfällt der Opener ohnehin.
 
 Umgekehrte Sichtbarkeitslogik: Das Overlay steht mit `hidden` im HTML und
 wird nur von einem Inline-Skript eingeblendet. Fällt JavaScript aus, ist
@@ -244,8 +245,9 @@ Die Seite wiegt roh 187 KB, über die Leitung gehen 28 KB.
 
 ## Bekannte Grenzen
 
-- Die Bilder sind Platzhalter von Pexels. Prompts für eigene Aufnahmen
-  liegen in `docs/image-prompts.md`. Das Logo ist echt.
+- Hero und Leistungskacheln sind mit Gemini erzeugte Bilder, die Prompts
+  liegen in `docs/image-prompts.md`. Logo und Prüfsiegel sind echt.
+  Eigene Fotos aus der Praxis wären auf Dauer stärker.
 - Im Bereich „Über mich" steht ein Stimmungsbild, kein Porträt. Ein
   echtes Foto von Mersum Kumalic ersetzt es ohne Codeänderung.
 - Adresse, Steuernummer, Berufshaftpflicht und Aufsichtsbehörde in den

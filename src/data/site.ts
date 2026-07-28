@@ -150,7 +150,7 @@ export const services: readonly Service[] = [
     id: 'haftpflicht',
     title: 'Haftpflichtschaden',
     claim: 'Unverschuldet erwischt worden. Die Gegenseite zahlt das Gutachten.',
-    alt: 'Stark beschädigter Kotflügel und Scheinwerfer nach einem Unfall',
+    alt: 'Eingedrückter Kotflügel und gebrochener Scheinwerfer nach einer Kollision',
     detail: [
       'Vollständiges Schadengutachten mit Reparaturkosten, Wertminderung, Wiederbeschaffungs- und Restwert.',
       'Ausfallschaden und Nutzungsausfall werden mit erfasst, damit nichts liegen bleibt.',
@@ -162,7 +162,7 @@ export const services: readonly Service[] = [
     id: 'kasko',
     title: 'Kaskoschaden',
     claim: 'Wildunfall, Hagel, Vandalismus oder selbst verursacht.',
-    alt: 'Zersplitterte Scheibe und Glasbruch im Fahrzeuginnenraum',
+    alt: 'Glassplitter einer zerborstenen Scheibe auf der Rückbank',
     detail: [
       'Aufnahme und Bewertung des Schadens für Teil- und Vollkasko.',
       'Abstimmung mit Ihrer eigenen Versicherung, damit die Regulierung nicht hängen bleibt.',
@@ -173,7 +173,7 @@ export const services: readonly Service[] = [
     id: 'kurzgutachten',
     title: 'Kurzgutachten',
     claim: 'Kleiner Schaden unterhalb der Bagatellgrenze.',
-    alt: 'Eingerissener Stoßfänger an einem gelben Fahrzeug aus der Nähe',
+    alt: 'Flache Delle mit Lackkratzer an einer Fahrzeugtür im Streiflicht',
     detail: [
       'Für Schäden unter rund 750 Euro erkennen Versicherungen oft nur einen Kostenvoranschlag an.',
       'Ich schaue mir den Schaden an und sage Ihnen, was in Ihrem Fall sinnvoll ist.',
@@ -184,7 +184,7 @@ export const services: readonly Service[] = [
     id: 'wertgutachten',
     title: 'Wertgutachten',
     claim: 'Für Verkauf, Versicherung oder den Oldtimer in der Garage.',
-    alt: 'Klassischer Oldtimer in einer abgedunkelten Garage',
+    alt: 'Oldtimer in einer Werkstatt, angeleuchtet von einer Arbeitsleuchte',
     detail: [
       'Zeitwert, Marktwert oder Wiederbeschaffungswert, je nachdem wofür Sie den Nachweis brauchen.',
       'Oldtimer- und Youngtimerbewertung inklusive Zustandsnote für die Versicherung.',
@@ -195,7 +195,7 @@ export const services: readonly Service[] = [
     id: 'beweissicherung',
     title: 'Beweissicherung',
     claim: 'Schaden dokumentiert, bevor jemand daran schraubt.',
-    alt: 'Werkzeug an einer Delle in der Fahrzeugtür bei der Schadenaufnahme',
+    alt: 'Schichtdickenmessgerät an einer beschädigten Fahrzeugtür',
     detail: [
       'Lückenlose Fotodokumentation und Vermessung, solange der Zustand noch original ist.',
       'Wichtig bei strittiger Schuldfrage oder wenn ein Rechtsstreit im Raum steht.',
@@ -206,7 +206,7 @@ export const services: readonly Service[] = [
     id: 'leasing',
     title: 'Leasingrückgabe',
     claim: 'Zustand prüfen, bevor der Händler die Rechnung schreibt.',
-    alt: 'Prüfprotokoll wird auf einem Klemmbrett im Fahrzeug ausgefüllt',
+    alt: 'Prüfprotokoll auf einem Klemmbrett, abgelegt auf einer Motorhaube',
     detail: [
       'Neutrale Zustandsaufnahme vor der Rückgabe, mit klarer Trennung von normalem Verschleiß und echtem Schaden.',
       'Damit haben Sie eine Grundlage in der Hand, falls Nachforderungen kommen.',

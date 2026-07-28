@@ -15,7 +15,7 @@ CHROME_PATH=<pfad-zu-chrome> npx lighthouse@12 http://127.0.0.1:4323/ \
 
 | Kategorie      | Desktop | Mobil |
 | -------------- | ------- | ----- |
-| Performance    | 98      | 97    |
+| Performance    | 99      | 96    |
 | Accessibility  | 100     | 100   |
 | Best Practices | 100     | 100   |
 | SEO            | 100     | 100   |
@@ -24,16 +24,18 @@ CHROME_PATH=<pfad-zu-chrome> npx lighthouse@12 http://127.0.0.1:4323/ \
 
 | Messwert | Desktop | Mobil | Zielwert |
 | -------- | ------- | ----- | -------- |
-| LCP      | 0.7 s   | 2.4 s | < 2,5 s  |
+| LCP      | 0.7 s   | 2.7 s | < 2,5 s  |
 | CLS      | 0.001   | 0     | < 0,1    |
-| TBT      | 10 ms   | 0 ms  | < 200 ms |
+| TBT      | 80 ms   | 90 ms | < 200 ms |
 | FCP      | 0.3 s   | 1.4 s |          |
 
 Die Mobilmessung läuft mit der Standarddrosselung von Lighthouse
 (langsames 4G, gedrosselte CPU) und beim ersten Aufruf der Sitzung,
-also inklusive des vollständigen Openers. Der gibt die Seite bewusst
-frei, bevor er zu Ende ist, deshalb bremst er den LCP kaum. Ab dem
-zweiten Aufruf entfällt er ganz.
+also inklusive des vollständigen Openers. Der hält die Seite bis zum
+Logo-Flug verdeckt, was den mobilen LCP knapp über die 2,5-Sekunden-Marke
+schiebt. Das ist der bewusst in Kauf genommene Preis für den Auftritt.
+Ab dem zweiten Aufruf der Sitzung entfällt der Opener und der Wert
+liegt deutlich darunter.
 
 Die vollständigen Berichte liegen als `desktop.html` und `mobil.html`
 daneben.
