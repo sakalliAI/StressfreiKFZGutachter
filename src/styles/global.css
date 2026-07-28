@@ -273,6 +273,13 @@
   }
 }
 
+/* Solange der Opener laeuft, bleibt das Header-Logo verborgen. Sonst
+   staende dasselbe Bildzeichen zweimal auf dem Schirm, sobald sich die
+   Flaeche oeffnet und das Logo noch unterwegs ist. */
+.mk-intro-active [data-header] [data-brand-logo] {
+  visibility: hidden;
+}
+
 /* ------------------------------------------------------------------
    Scroll-Reveal
 

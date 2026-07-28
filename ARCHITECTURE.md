@@ -85,7 +85,15 @@ Gründe:
 
 Der Übergang am Ende ist eine FLIP-Animation: Das Script misst die
 Position des Header-Logos, rechnet Verschiebung und Maßstab aus und
-schiebt das Bildzeichen des Openers genau dorthin. Das echte Header-Logo
+schiebt das Bildzeichen des Openers genau dorthin.
+
+Wichtig dabei: Der Opener steht im Dokument **vor** dem Header, und sein
+Script läuft inline beim Parsen. Beide Elemente dürfen deshalb erst im
+Moment des Abflugs gesucht werden, nicht beim Start. Andernfalls ist das
+Ziel schlicht noch nicht da, die Suche liefert `null` und der Flug fällt
+lautlos aus, während der Rest der Sequenz normal weiterläuft. Aus
+demselben Grund wird das Header-Logo nicht direkt ausgeblendet, sondern
+über eine Klasse am `<html>`. Das echte Header-Logo
 ist währenddessen ausgeblendet und erscheint erst, wenn das Overlay
 verschwindet. Feste Pixelwerte müssten für jede Bildschirmbreite neu
 gepflegt werden und wären beim nächsten Umbau der Kopfzeile wieder falsch.

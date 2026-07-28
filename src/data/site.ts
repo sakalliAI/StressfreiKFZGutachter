@@ -183,7 +183,7 @@ export const services: readonly Service[] = [
     id: 'kurzgutachten',
     title: 'Kurzgutachten',
     claim: 'Kleiner Schaden unterhalb der Bagatellgrenze.',
-    alt: 'Flache Delle mit Lackkratzer an einer Fahrzeugtür im Streiflicht',
+    alt: 'Delle mit aufgerissenem Lack an einer Fahrzeugtür im Gegenlicht',
     detail: [
       'Für Schäden unter rund 750 Euro erkennen Versicherungen oft nur einen Kostenvoranschlag an.',
       'Ich schaue mir den Schaden an und sage Ihnen, was in Ihrem Fall sinnvoll ist.',
