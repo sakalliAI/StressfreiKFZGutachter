@@ -105,7 +105,7 @@ async function verifyTurnstile(token, secret, ip) {
   return result.success === true;
 }
 
-export async function onRequestPost({ request, env }) {
+async function handleContact(request, env) {
   const ip = request.headers.get('CF-Connecting-IP') ?? 'unbekannt';
 
   if (rateLimited(ip)) {
@@ -264,8 +264,23 @@ Gesendet über das Kontaktformular von mk-stressfrei.sakalli.ai
 }
 
 /**
- * Nur POST ist vorgesehen. Pages Functions beantworten alle anderen
- * Methoden von sich aus mit 405, sobald ausschliesslich onRequestPost
- * exportiert wird. Ein zusaetzliches onRequest wuerde diese Zuordnung
- * ueberschreiben und ist deshalb bewusst nicht vorhanden.
+ * Ein einziger Einstiegspunkt, der selbst nach Methode verteilt.
+ *
+ * Waere nur `onRequestPost` exportiert, liefe ein GET auf diesen Pfad
+ * in den statischen Fallback von Pages und bekaeme die Startseite mit
+ * Status 200 zurueck. Das waere eine zweite indexierbare Kopie der
+ * Seite unter /api/contact.
  */
+export async function onRequest({ request, env }) {
+  if (request.method === 'POST') return handleContact(request, env);
+
+  return new Response(JSON.stringify({ ok: false, message: 'Nur POST erlaubt.' }), {
+    status: 405,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      Allow: 'POST',
+      'Cache-Control': 'no-store',
+      'X-Robots-Tag': 'noindex, nofollow',
+    },
+  });
+}

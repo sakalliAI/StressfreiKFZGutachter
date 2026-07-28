@@ -17,8 +17,12 @@ const VIEWPORTS = [
   { name: 'mobile', width: 390, height: 844, isMobile: true, hasTouch: true },
 ];
 
+// Gegen eine Live-URL muss Chromium denselben Proxy nutzen wie curl,
+// sonst kommt er nicht ins Netz.
+const proxy = process.env.HTTPS_PROXY ?? process.env.https_proxy;
 const browser = await chromium.launch({
   executablePath: process.env.CHROMIUM_PATH ?? '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
+  ...(proxy && !BASE.startsWith('http://127.0.0.1') ? { proxy: { server: proxy } } : {}),
 });
 let failures = 0;
 
