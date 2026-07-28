@@ -108,7 +108,13 @@
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+  }
+
+  /* `clip` statt `hidden`: `overflow-x: hidden` macht das Element zum
+     Scroll-Container und setzt damit `position: sticky` bei allen
+     Nachfahren ausser Kraft. Genau das braucht die Ablauf-Sektion. */
+  html {
+    overflow-x: clip;
   }
 
   h1,

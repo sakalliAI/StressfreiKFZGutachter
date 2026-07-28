@@ -15,19 +15,19 @@ CHROME_PATH=<pfad-zu-chrome> npx lighthouse@12 http://127.0.0.1:4323/ \
 
 | Kategorie      | Desktop | Mobil |
 | -------------- | ------- | ----- |
-| Performance    | 100     | 96    |
+| Performance    | 100     | 95    |
 | Accessibility  | 100     | 100   |
 | Best Practices | 100     | 100   |
 | SEO            | 100     | 100   |
 
 ## Core Web Vitals
 
-| Messwert | Desktop | Mobil | Zielwert |
-| -------- | ------- | ----- | -------- |
-| LCP      | 0.7 s   | 2.7 s | < 2,5 s  |
-| CLS      | 0       | 0.001 | < 0,1    |
-| TBT      | 0 ms    | 30 ms | < 200 ms |
-| FCP      | 0.3 s   | 1.4 s |          |
+| Messwert | Desktop | Mobil  | Zielwert |
+| -------- | ------- | ------ | -------- |
+| LCP      | 0.7 s   | 2.7 s  | < 2,5 s  |
+| CLS      | 0       | 0.001  | < 0,1    |
+| TBT      | 0 ms    | 140 ms | < 200 ms |
+| FCP      | 0.3 s   | 1.4 s  |          |
 
 Die Mobilmessung läuft mit der Standarddrosselung von Lighthouse
 (langsames 4G, gedrosselte CPU) und beim ersten Aufruf der Sitzung,

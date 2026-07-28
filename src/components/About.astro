@@ -1,52 +1,54 @@
 ---
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
+import CoverageMap from './CoverageMap.astro';
 import { company, trustPoints } from '../data/site';
 import portrait from '../assets/portrait-platzhalter.jpg';
-
-/* Ortsangaben nur ausgeben, wenn sie gepflegt sind. Sonst rendert die
-   Seite eine neutrale Formulierung statt eines Platzhalters. */
-const areaLine = company.region
-  ? `Einsatzgebiet: ${company.region}, rund ${company.radiusKm} km im Umkreis.`
-  : 'Einsatzgebiet auf Anfrage. Sagen Sie mir, wo das Fahrzeug steht.';
-
-const placesLine =
-  company.places.length > 0 ? `Zum Beispiel ${company.places.join(', ')}.` : '';
 ---
 
 <section id="person" class="section-pad bg-navy-900">
   <div class="container-page">
-    <div class="grid items-stretch gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
-      <!-- Visual -->
-      <div class="rounded-card relative min-h-[20rem] overflow-hidden lg:min-h-full" data-reveal>
-        <Image
-          src={portrait}
-          alt="Kfz-Sachverständiger in Arbeitskleidung in einer Werkstatt"
-          widths={[420, 640, 900]}
-          sizes="(min-width: 1024px) 34vw, 100vw"
-          format="webp"
-          quality={70}
-          loading="lazy"
-          decoding="async"
-          class="absolute inset-0 h-full w-full object-cover"
-        />
-        <span
-          class="absolute inset-0 bg-[linear-gradient(to_top,rgb(4_7_15/0.92),rgb(6_10_22/0.25))]"
-          aria-hidden="true"></span>
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-16">
+      <!--
+        Linke Spalte: oben das Porträt, darunter die Karte. Ein einzelnes
+        durchlaufendes Hochformat wirkte neben dem Text wie ein Streifen
+        ohne Aussage.
+      -->
+      <div class="flex flex-col gap-5">
+        <div class="rounded-card relative aspect-4/5 overflow-hidden" data-reveal>
+          <Image
+            src={portrait}
+            alt="Kfz-Sachverständiger in Arbeitskleidung in einer Werkstatt"
+            widths={[420, 640, 900]}
+            sizes="(min-width: 1024px) 34vw, 100vw"
+            format="webp"
+            quality={70}
+            loading="lazy"
+            decoding="async"
+            class="absolute inset-0 h-full w-full object-cover"
+          />
+          <span
+            class="absolute inset-0 bg-[linear-gradient(to_top,rgb(4_7_15/0.92),rgb(6_10_22/0.2)_55%)]"
+            aria-hidden="true"></span>
 
-        <div
-          class="bg-navy-950/80 absolute inset-x-4 bottom-4 rounded-xl border border-white/12 p-4 backdrop-blur-sm"
-        >
-          <p class="text-gold-400 text-[0.68rem] font-semibold tracking-[0.18em] uppercase">
-            Ihr Ansprechpartner
-          </p>
-          <p class="font-display text-bone-50 mt-1.5 text-lg font-bold">{company.owner}</p>
-          <p class="text-navy-300 mt-0.5 text-[0.82rem]">DESAG geprüfter Sachverständiger</p>
+          <div
+            class="bg-navy-950/80 absolute inset-x-4 bottom-4 rounded-xl border border-white/12 p-4 backdrop-blur-sm"
+          >
+            <p class="text-gold-400 text-[0.68rem] font-semibold tracking-[0.18em] uppercase">
+              Ihr Ansprechpartner
+            </p>
+            <p class="font-display text-bone-50 mt-1.5 text-lg font-bold">{company.owner}</p>
+            <p class="text-navy-300 mt-0.5 text-[0.82rem]">DESAG geprüfter Sachverständiger</p>
+          </div>
+        </div>
+
+        <div data-reveal>
+          <CoverageMap />
         </div>
       </div>
 
       <!-- Text -->
-      <div class="flex flex-col justify-center">
+      <div class="flex flex-col justify-start">
         <p class="eyebrow" data-reveal>Über mich</p>
 
         <h2
@@ -88,14 +90,6 @@ const placesLine =
             ))
           }
         </ul>
-
-        <div class="mt-8 flex gap-2.5" data-reveal>
-          <Icon name="map-pin" size={16} class="text-gold-400 mt-1 flex-none" />
-          <p class="text-navy-400 text-[0.86rem] leading-relaxed">
-            {areaLine}
-            {placesLine && <span class="text-navy-400"> {placesLine}</span>}
-          </p>
-        </div>
       </div>
     </div>
   </div>

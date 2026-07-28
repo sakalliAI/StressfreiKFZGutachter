@@ -32,6 +32,15 @@ export interface Faq {
   readonly a: string;
 }
 
+/** Ort im Einsatzgebiet, verortet ueber Entfernung und Peilung. */
+export interface Place {
+  readonly name: string;
+  readonly km: number;
+  readonly bearing: number;
+  /** Kurzform fuer die Karte, wo lange Namen ueber den Rand laufen. */
+  readonly short?: string;
+}
+
 /* ------------------------------------------------------------------
    Stammdaten
    ------------------------------------------------------------------ */
@@ -64,14 +73,17 @@ export const company = {
   city: 'Ingolstadt' as string | null,
   region: 'Ingolstadt und Umgebung' as string | null,
   radiusKm: 50,
+  /* Entfernung in Kilometern und Peilung in Grad ab Ingolstadt, damit
+     die Einsatzgebiet-Karte die Orte an ihrer ungefaehr richtigen
+     Stelle zeigt statt willkuerlich verteilt. */
   places: [
-    'Manching',
-    'Gaimersheim',
-    'Kösching',
-    'Großmehring',
-    'Neuburg an der Donau',
-    'Pfaffenhofen',
-  ] as readonly string[],
+    { name: 'Gaimersheim', km: 6, bearing: 315 },
+    { name: 'Kösching', km: 10, bearing: 40 },
+    { name: 'Großmehring', km: 9, bearing: 95 },
+    { name: 'Manching', km: 10, bearing: 185 },
+    { name: 'Neuburg a. d. Donau', km: 22, bearing: 275, short: 'Neuburg' },
+    { name: 'Pfaffenhofen', km: 30, bearing: 150 },
+  ] as readonly Place[],
 
   /** TODO(Kunde): Ladungsfaehige Anschrift fuer das Impressum. */
   street: null as string | null,

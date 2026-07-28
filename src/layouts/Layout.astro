@@ -48,7 +48,7 @@ if (company.city) {
 
   businessSchema['areaServed'] = [
     { '@type': 'City', name: company.city },
-    ...company.places.map((place) => ({ '@type': 'City', name: place })),
+    ...company.places.map((place) => ({ '@type': 'City', name: place.name })),
   ];
 }
 

@@ -115,27 +115,51 @@ Alternativen mit Veo 3 oder fertigen 3D-Modellen: siehe `docs/opener.md`.
 
 ## Die Fahrt in der Ablauf-Sektion
 
-Ein Fahrzeug fährt die vier Schritte ab, die Strecke färbt sich hinter
-ihm gold und jeder Punkt leuchtet in dem Moment auf, in dem das
-Fahrzeug ihn passiert. Ausgelöst wird das einmal, sobald die Sektion im
-Blick ist.
+Der Block bleibt beim Scrollen stehen, während das Fahrzeug die vier
+Schritte abfährt. Runterscrollen schiebt es vorwärts, Hochscrollen
+zurück. Sobald es beim vierten Punkt steht, gibt die Sektion frei und
+die Seite läuft normal weiter.
 
-Zwei Entscheidungen stecken darin:
+Umgesetzt über `position: sticky` plus eine zusätzliche Scrollstrecke,
+**nicht** über abgefangene Scroll-Ereignisse. Der Unterschied ist
+wesentlich: Wer Scrollen abfängt, zerschießt Trackpad-Trägheit,
+Tastaturbedienung, die Scrollleiste und das Verhalten auf Touch. Hier
+bleibt alles nativ, aus der Position der Strecke wird lediglich ein
+Fortschritt zwischen 0 und 1 abgeleitet.
 
-- **Gleichbleibendes Tempo (`linear`).** Punkt i liegt bei i/4 der
-  Strecke und leuchtet deshalb bei i/4 der Dauer auf. Mit einer
-  beschleunigten Kurve müsste man diese Verzögerungen zurückrechnen.
+Details, die daran hängen:
+
+- **Die Fahrbahn endet in der Mitte des vierten Punktes**, nicht am
+  Rand. Bei vier gleichen Spalten liegt diese Mitte 25 % vom rechten
+  Rand entfernt, abzüglich dreier Viertel der Spaltenlücke und des
+  halben Punktdurchmessers. So kommt das Fahrzeug genau dort zum Stehen.
 - **Bewegt wird ein Läufer, nicht das Fahrzeug.** Der Läufer ist so
-  breit wie die Strecke, `translateX(100%)` entspricht also genau ihrer
-  Länge. Der Umweg ist nötig, weil eine Animation von `left` den
-  Browser in jedem Bild neu umbrechen lässt: In der Messung kamen so
-  über zwei Sekunden Layoutarbeit und 640 ms Blockierzeit zusammen, mit
-  `transform` sind es 30 ms.
+  breit wie die Fahrbahn, `translateX(100%)` entspricht also genau ihrer
+  Länge. Der Umweg ist nötig, weil eine Animation von `left` den Browser
+  in jedem Bild neu umbrechen lässt: In der Messung kamen so über zwei
+  Sekunden Layoutarbeit und 640 ms Blockierzeit zusammen, mit
+  `transform` sind es unter 150 ms.
+- **`html { overflow-x: clip }` statt `overflow-x: hidden` am Body.**
+  `hidden` macht das Element zum Scroll-Container und setzt damit
+  `position: sticky` bei allen Nachfahren außer Kraft. `clip` schneidet
+  ebenfalls ab, ohne einen Scroll-Container zu erzeugen.
+- Auf schmalen Displays ist das Ganze abgeschaltet. Dort stehen die
+  Schritte untereinander, eine waagerechte Fahrt ergäbe keinen Sinn.
 
 Wie beim Opener stellt auch hier erst das Script den leeren
 Startzustand her. Ohne JavaScript steht die Grafik fertig da statt leer.
-Ein Zeitfenster als Sicherheitsnetz wäre falsch gewesen, weil ein
-Besucher beliebig lange braucht, bis er unten ankommt.
+
+## Einsatzgebiet-Karte
+
+Selbst gezeichnetes SVG statt einer eingebetteten Karte. Jeder
+Kartendienst lädt beim Aufruf Daten von einem Dritten und wäre damit
+einwilligungspflichtig, die Seite käme also nicht mehr ohne
+Cookie-Banner aus. Dazu kommen null zusätzliche Anfragen.
+
+Die Orte stehen an ihrer ungefähr richtigen Stelle: Entfernung in
+Kilometern und Peilung in Grad ab Ingolstadt liegen in `site.ts`, die
+Karte rechnet daraus die Position. Der äußere Ring entspricht dem
+gepflegten Einsatzradius, ändert sich `radiusKm`, zieht die Grafik mit.
 
 ## Zweistufiger Header
 

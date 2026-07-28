@@ -1,117 +1,145 @@
 ---
 import SectionHead from './SectionHead.astro';
 import { processSteps } from '../data/site';
-
-/*
-  Die Strecke wird mit gleichbleibendem Tempo abgefahren, deshalb
-  `linear`. Nur so trifft das Fahrzeug jeden Punkt genau dann, wenn
-  dieser aufleuchtet: Punkt i liegt bei i/4 der Strecke, also auch bei
-  i/4 der Dauer. Mit einer beschleunigten Kurve müsste man die
-  Verzögerungen umständlich zurückrechnen.
-*/
-const DRIVE_MS = 3000;
 ---
 
-<section id="ablauf" class="section-pad relative overflow-hidden bg-navy-850">
-  <div class="container-page">
-    <SectionHead
-      eyebrow="Ablauf"
-      title="Von Ihrer Nachricht bis zum fertigen Gutachten"
-      lead="Vier Schritte. Um alles dazwischen kümmere ich mich."
-    />
+<section id="ablauf" class="bg-navy-850 relative">
+  <!--
+    Scroll-Strecke. Der innere Block bleibt stehen, während die Seite
+    daran vorbeiläuft. Das Fahrzeug folgt dabei der Scrollposition, also
+    vorwärts beim Runterscrollen und zurück beim Hochscrollen.
 
-    <div class="relative mt-14 md:mt-20" data-process>
-      <!--
-        Fahrstrecke. Nur ab mittleren Breiten, darunter stehen die
-        Schritte untereinander und eine waagerechte Fahrt ergäbe keinen
-        Sinn.
-      -->
-      <div class="pointer-events-none absolute inset-x-0 top-6 hidden h-px md:block" aria-hidden="true">
-        <span class="absolute inset-0 bg-navy-700"></span>
-        <span class="process-fill absolute inset-y-0 left-0 w-full origin-left bg-[linear-gradient(90deg,var(--color-gold-600),var(--color-gold-400))]"></span>
+    Bewusst über `position: sticky` gelöst und nicht über abgefangene
+    Scroll-Ereignisse. Nur so bleiben Trackpad, Tastatur, Touch und die
+    Scrollleiste unverändert bedienbar.
+  -->
+  <div data-process-pin>
+    <div class="section-pad" data-process-sticky>
+      <div class="container-page">
+        <SectionHead
+          eyebrow="Ablauf"
+          title="Von Ihrer Nachricht bis zum fertigen Gutachten"
+          lead="Vier Schritte. Um alles dazwischen kümmere ich mich."
+        />
 
-        <span class="process-runner absolute inset-y-0 left-0 block w-full">
-          <span class="process-car absolute top-1/2 left-0 block -translate-y-1/2">
-            <svg viewBox="0 0 200 92" width="52" height="24" aria-hidden="true">
-            <ellipse cx="100" cy="84" rx="86" ry="7" fill="#d9a32b" opacity="0.22"></ellipse>
-            <path
-              d="M8 62V46q0-6 6-8l30-8 22-16q4-4 12-4h44q8 0 12 4l22 16 30 8q6 2 6 8v16z"
-              fill="#e8ecf7"></path>
-            <path d="M74 30 90 18h30l16 12z" fill="#1e2f52"></path>
-            <rect x="186" y="40" width="8" height="7" rx="3" fill="#f4d68f"></rect>
-            <circle cx="52" cy="62" r="13" fill="#04070f"></circle>
-            <circle cx="52" cy="62" r="5" fill="#4f66a0"></circle>
-              <circle cx="150" cy="62" r="13" fill="#04070f"></circle>
-              <circle cx="150" cy="62" r="5" fill="#4f66a0"></circle>
-            </svg>
-          </span>
-        </span>
-      </div>
+        <div class="process mt-14 md:mt-20">
+          <!-- Fahrbahn von Punkt 01 bis Punkt 04, nur ab mittlerer Breite -->
+          <div class="process-track" aria-hidden="true">
+            <span class="bg-navy-700 absolute inset-0"></span>
+            <span
+              class="process-fill absolute inset-y-0 left-0 w-full origin-left bg-[linear-gradient(90deg,var(--color-gold-600),var(--color-gold-400))]"
+            ></span>
 
-      <ol class="grid gap-9 md:grid-cols-4 md:gap-6">
-        {
-          processSteps.map((step, i) => (
-            <li class="process-step relative flex gap-5 md:flex-col md:gap-0" style={`--i:${i}`}>
-              {/* Senkrechte Verbindung, nur auf schmalen Viewports */}
-              {i < processSteps.length - 1 && (
-                <span
-                  class="bg-navy-700 absolute top-14 -bottom-9 left-6 w-px md:hidden"
-                  aria-hidden="true"
-                />
-              )}
-
-              <span
-                class="process-dot bg-navy-850 font-display text-navy-400 relative z-1 grid h-12 w-12 flex-none place-items-center rounded-full border text-[0.85rem] font-bold"
-                aria-hidden="true"
-              >
-                {step.n}
+            <span class="process-runner absolute inset-y-0 left-0 block w-full">
+              <span class="process-car absolute top-1/2 left-0 block -translate-y-1/2">
+                <svg viewBox="0 0 200 92" width="54" height="25">
+                  <ellipse cx="100" cy="84" rx="86" ry="7" fill="#d9a32b" opacity="0.22"></ellipse>
+                  <path
+                    d="M8 62V46q0-6 6-8l30-8 22-16q4-4 12-4h44q8 0 12 4l22 16 30 8q6 2 6 8v16z"
+                    fill="#e8ecf7"></path>
+                  <path d="M74 30 90 18h30l16 12z" fill="#1e2f52"></path>
+                  <rect x="186" y="40" width="8" height="7" rx="3" fill="#f4d68f"></rect>
+                  <circle cx="52" cy="62" r="13" fill="#04070f"></circle>
+                  <circle cx="52" cy="62" r="5" fill="#4f66a0"></circle>
+                  <circle cx="150" cy="62" r="13" fill="#04070f"></circle>
+                  <circle cx="150" cy="62" r="5" fill="#4f66a0"></circle>
+                </svg>
               </span>
+            </span>
+          </div>
 
-              <div class="md:mt-6">
-                <h3 class="text-bone-50 text-[1.08rem] font-bold">{step.title}</h3>
-                <p class="text-navy-300 mt-2 max-w-xs text-[0.92rem] leading-relaxed">
-                  {step.text}
-                </p>
-              </div>
-            </li>
-          ))
-        }
-      </ol>
+          <ol class="process-steps">
+            {
+              processSteps.map((step, i) => (
+                <li class="relative flex gap-5 md:flex-col md:gap-0">
+                  {i < processSteps.length - 1 && (
+                    <span
+                      class="bg-navy-700 absolute top-14 -bottom-9 left-6 w-px md:hidden"
+                      aria-hidden="true"
+                    />
+                  )}
+
+                  <span
+                    class="process-dot bg-navy-850 font-display relative z-1 grid h-12 w-12 flex-none place-items-center rounded-full border text-[0.85rem] font-bold"
+                    aria-hidden="true"
+                  >
+                    {step.n}
+                  </span>
+
+                  <div class="md:mt-6">
+                    <h3 class="text-bone-50 text-[1.08rem] font-bold">{step.title}</h3>
+                    <p class="text-navy-300 mt-2 max-w-xs text-[0.92rem] leading-relaxed">
+                      {step.text}
+                    </p>
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<style define:vars={{ driveMs: `${DRIVE_MS}ms` }}>
-  /*
-    Der Endzustand ist der Standard: Strecke gefüllt, Punkte hell, kein
-    Fahrzeug. Ohne JavaScript oder bei reduzierter Bewegung sieht man
-    also eine fertige, sinnvolle Grafik statt einer leeren Linie.
+<style>
+  .process {
+    --process-gap: 1.5rem;
+    position: relative;
+  }
 
-    Den leeren Startzustand stellt erst das Script her (`is-armed`).
-    Diese Umkehr ist wichtig: Ein Zeitfenster als Sicherheitsnetz wäre
-    falsch, weil der Besucher beliebig lange braucht, bis er hier unten
-    ankommt.
+  .process-steps {
+    display: grid;
+    gap: 2.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .process-steps {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--process-gap);
+    }
+  }
+
+  /*
+    Die Fahrbahn endet exakt in der Mitte des vierten Punktes, damit das
+    Fahrzeug dort stehen bleibt und nicht ins Leere weiterfährt.
+
+    Bei vier gleichen Spalten liegt diese Mitte 25 % vom rechten Rand
+    entfernt, abzüglich dreier Viertel der Spaltenlücke und des halben
+    Punktdurchmessers.
+  */
+  .process-track {
+    display: none;
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    right: calc(25% - var(--process-gap) * 0.75 - 1.5rem);
+    height: 1px;
+    pointer-events: none;
+  }
+
+  @media (min-width: 768px) {
+    .process-track {
+      display: block;
+    }
+  }
+
+  /*
+    Endzustand ist der Standard: Strecke gefüllt, alle Punkte hell, kein
+    Fahrzeug. Ohne JavaScript, auf schmalen Displays und bei reduzierter
+    Bewegung steht so eine fertige Grafik da statt einer leeren Linie.
   */
   .process-fill {
     transform: scaleX(1);
   }
 
-  /*
-    Bewegt wird der Läufer, nicht das Fahrzeug. Er ist so breit wie die
-    Strecke, `translateX(100%)` entspricht also genau ihrer Länge.
-
-    Das ist der Grund für diesen Umweg: Eine Animation von `left` lässt
-    den Browser in jedem Bild neu umbrechen. Auf gedrosselter CPU kamen
-    dabei über zwei Sekunden Layoutarbeit zusammen. `transform` läuft
-    dagegen im Compositor, ohne Layout.
-  */
   .process-runner {
     display: none;
     will-change: transform;
   }
 
   .process-car {
-    margin-left: -26px;
+    margin-left: -27px;
   }
 
   .process-dot {
@@ -119,118 +147,119 @@ const DRIVE_MS = 3000;
     background-color: color-mix(in srgb, var(--color-gold-500) 14%, transparent);
     color: var(--color-gold-300);
     transition:
-      border-color 320ms var(--ease-out-soft),
-      background-color 320ms var(--ease-out-soft),
-      color 320ms var(--ease-out-soft);
+      border-color 260ms var(--ease-out-soft),
+      background-color 260ms var(--ease-out-soft),
+      color 260ms var(--ease-out-soft);
   }
 
-  /* Script ist da: auf Anfang stellen */
-  [data-process].is-armed .process-fill {
+  /* Erst wenn das Script übernimmt, wird auf Anfang gestellt. */
+  [data-process-pin].is-armed .process-fill {
     transform: scaleX(0);
   }
 
-  [data-process].is-armed .process-dot {
+  [data-process-pin].is-armed .process-runner {
+    display: block;
+  }
+
+  [data-process-pin].is-armed .process-dot {
     border-color: var(--color-navy-700);
     background-color: transparent;
     color: var(--color-navy-400);
   }
 
-  [data-process].is-armed .process-runner {
-    display: block;
-    opacity: 0;
+  [data-process-pin].is-armed .process-dot.is-lit {
+    border-color: var(--color-gold-500);
+    background-color: color-mix(in srgb, var(--color-gold-500) 14%, transparent);
+    color: var(--color-gold-300);
   }
 
-  /* Losfahren, sobald die Sektion im Blick ist */
-  [data-process].is-driving .process-fill {
-    animation: process-fill var(--driveMs) linear forwards;
-  }
-
-  [data-process].is-driving .process-runner {
-    animation: process-drive var(--driveMs) linear forwards;
-  }
-
-  /*
-    Punkt i liegt bei i/4 der Strecke und leuchtet deshalb bei i/4 der
-    Dauer auf. Genau in dem Moment fährt das Fahrzeug daran vorbei.
-  */
-  [data-process].is-driving .process-dot {
-    animation: process-light 420ms var(--ease-out-soft) forwards;
-    animation-delay: calc(var(--i) * var(--driveMs) / 4);
-  }
-
-  @keyframes process-fill {
-    from {
-      transform: scaleX(0);
-    }
-    to {
-      transform: scaleX(1);
-    }
-  }
-
-  @keyframes process-drive {
-    0% {
-      transform: translateX(0);
-      opacity: 0;
-    }
-    4% {
-      opacity: 1;
-    }
-    92% {
-      opacity: 1;
-    }
-    100% {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-  }
-
-  @keyframes process-light {
-    to {
-      border-color: var(--color-gold-500);
-      background-color: color-mix(in srgb, var(--color-gold-500) 14%, transparent);
-      color: var(--color-gold-300);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .process-runner {
-      display: none !important;
-    }
-
-    [data-process].is-driving .process-fill,
-    [data-process].is-driving .process-dot {
-      animation: none;
-    }
+  [data-process-pin].is-armed [data-process-sticky] {
+    position: sticky;
+    top: 0;
   }
 </style>
 
 <script>
   /**
-   * Die Fahrt startet einmal, sobald die Sektion im Blick ist, und
-   * bleibt danach im Endzustand stehen. Ein Dauerlauf würde beim Lesen
-   * der vier Schritte nur stören.
+   * Scrollgesteuerte Fahrt.
    *
-   * Erst hier wird der leere Startzustand gesetzt. Ohne Script oder
-   * ohne IntersectionObserver bleibt die Grafik im Endzustand, es kann
-   * also nie eine halbfertige Strecke stehen bleiben.
+   * Der Block wird über `position: sticky` festgehalten, während eine
+   * zusätzliche Strecke unter ihm durchläuft. Aus deren Position ergibt
+   * sich ein Fortschritt zwischen 0 und 1, den Fahrzeug, Fahrbahn und
+   * Punkte übernehmen. Dadurch fährt das Auto beim Runterscrollen vor
+   * und beim Hochscrollen zurück, ohne dass am Scrollverhalten selbst
+   * etwas verändert wird.
+   *
+   * Aktiv nur ab mittlerer Breite: auf dem Handy stehen die Schritte
+   * untereinander, eine waagerechte Fahrt ergäbe dort keinen Sinn.
    */
-  const section = document.querySelector<HTMLElement>('[data-process]');
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pin = document.querySelector<HTMLElement>('[data-process-pin]');
+  const sticky = pin?.querySelector<HTMLElement>('[data-process-sticky]') ?? null;
+  const fill = pin?.querySelector<HTMLElement>('.process-fill') ?? null;
+  const runner = pin?.querySelector<HTMLElement>('.process-runner') ?? null;
+  const dots = Array.from(pin?.querySelectorAll<HTMLElement>('.process-dot') ?? []);
 
-  if (section && !reduce && 'IntersectionObserver' in window) {
-    section.classList.add('is-armed');
+  if (pin && sticky && fill && runner && dots.length > 1) {
+    const wide = window.matchMedia('(min-width: 768px)');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const lastDot = dots.length - 1;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          section.classList.add('is-driving');
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.35 },
-    );
+    let runway = 0;
+    let ticking = false;
 
-    observer.observe(section);
+    const enabled = () => wide.matches && !reduce.matches;
+
+    /** Zusätzliche Scrollstrecke, über die das Auto fährt. */
+    const runwayFor = () => Math.round(Math.min(window.innerHeight * 0.85, 720));
+
+    function apply(progress: number): void {
+      runner!.style.transform = `translateX(${progress * 100}%)`;
+      fill!.style.transform = `scaleX(${progress})`;
+
+      dots.forEach((dot, i) => {
+        // Punkt i sitzt bei i/3 der Fahrbahn. Die kleine Toleranz sorgt
+        // dafür, dass der letzte Punkt am Ende sicher aufleuchtet.
+        dot.classList.toggle('is-lit', progress >= i / lastDot - 0.005);
+      });
+    }
+
+    function update(): void {
+      ticking = false;
+      if (!enabled() || runway <= 0) return;
+
+      const offset = Number.parseFloat(getComputedStyle(sticky!).top) || 0;
+      const raw = (offset - pin!.getBoundingClientRect().top) / runway;
+      apply(Math.min(1, Math.max(0, raw)));
+    }
+
+    function layout(): void {
+      if (!enabled()) {
+        pin!.classList.remove('is-armed');
+        pin!.style.height = '';
+        runner!.style.transform = '';
+        fill!.style.transform = '';
+        for (const dot of dots) dot.classList.remove('is-lit');
+        return;
+      }
+
+      pin!.classList.add('is-armed');
+      runway = runwayFor();
+      // Zusatzhöhe: genau so viel, wie das Auto zum Fahren braucht.
+      pin!.style.height = `${sticky!.offsetHeight + runway}px`;
+      update();
+    }
+
+    function onScroll(): void {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', layout, { passive: true });
+    wide.addEventListener('change', layout);
+    reduce.addEventListener('change', layout);
+
+    layout();
   }
 </script>
