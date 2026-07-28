@@ -9,7 +9,9 @@ import { nav, company } from '../data/site';
   class="fixed inset-x-0 top-0 z-100 border-b border-transparent transition-[background-color,border-color,backdrop-filter] duration-300"
   data-header
 >
-  <div class="container-page flex h-[var(--header-h)] items-center justify-between gap-4">
+  <div
+    class="container-page flex h-[var(--header-h)] items-center justify-between gap-4 transition-[height] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]"
+  >
     <a href="#top" class="flex items-center rounded-md py-1">
       <Wordmark />
     </a>
@@ -22,7 +24,7 @@ import { nav, company } from '../data/site';
               <a
                 href={`#${item.id}`}
                 data-spy-link={item.id}
-                class="text-navy-300 hover:text-bone-50 aria-[current=true]:text-bone-50 relative block rounded-md px-3 py-2 text-[0.86rem] font-medium transition-colors duration-200"
+                class="text-bone-200 hover:text-bone-50 aria-[current=true]:text-bone-50 relative block rounded-md px-2.5 py-2 text-[0.86rem] font-medium whitespace-nowrap transition-colors duration-200"
               >
                 {item.label}
                 <span
@@ -120,10 +122,29 @@ import { nav, company } from '../data/site';
     transform: scaleX(1);
   }
 
-  [data-header][data-scrolled='true'] {
-    background-color: rgb(6 10 22 / 0.9);
+  /* Ganz oben ist der Header durchsichtig. Ueber dem hellen Hero
+     braeuchten Logo und Navigation dort sonst Glueck, um lesbar zu
+     bleiben, deshalb ein weicher Verlauf darunter. */
+  [data-header]::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgb(4 7 15 / 0.62), rgb(4 7 15 / 0));
+    pointer-events: none;
+    transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  :global(html[data-scrolled='true']) [data-header]::before {
+    opacity: 0;
+  }
+
+  /* Erst beim Scrollen bekommt der Header einen eigenen Hintergrund.
+     Ganz oben liegt er unsichtbar ueber dem Hero. */
+  :global(html[data-scrolled='true']) [data-header] {
+    background-color: rgb(6 10 22 / 0.92);
     backdrop-filter: blur(14px) saturate(140%);
     border-bottom-color: rgb(255 255 255 / 0.08);
+    box-shadow: 0 10px 30px -22px rgb(0 0 0 / 0.9);
   }
 </style>
 
@@ -162,9 +183,8 @@ import { nav, company } from '../data/site';
   function update(): void {
     ticking = false;
 
-    if (header) {
-      header.dataset.scrolled = window.scrollY > 12 ? 'true' : 'false';
-    }
+    // Am <html>, damit --header-h und --logo-h ueberall greifen.
+    document.documentElement.dataset.scrolled = window.scrollY > 12 ? 'true' : 'false';
 
     if (sections.length === 0) return;
 

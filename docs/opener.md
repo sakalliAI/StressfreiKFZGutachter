@@ -7,19 +7,24 @@ verwenden.
 
 ## Was jetzt drin ist
 
-Eine in SVG und CSS gebaute Sequenz, rund 2,7 Sekunden lang:
+Eine in SVG und CSS gebaute Sequenz, rund 4,4 Sekunden lang:
 
-| Zeit        | Was passiert                                                                                   |
-| ----------- | ---------------------------------------------------------------------------------------------- |
-| 0,0 – 0,2 s | Die Fahrbahnlinie zieht sich auf                                                               |
-| 0,2 – 1,1 s | Zwei Fahrzeuge beschleunigen aus dem Bild heraus aufeinander zu, Scheinwerferkegel wachsen mit |
-| 1,1 s       | Aufprall. Weißer Blitz, zwei Schockwellen, sechzehn Splitter, beide Fahrzeuge federn zurück    |
-| 1,3 – 2,0 s | Fahrzeuge lösen sich auf, die Marke tritt an ihre Stelle                                       |
-| 2,0 – 2,7 s | Die Fläche teilt sich waagerecht und gibt die Seite frei                                       |
+| Zeit          | Was passiert                                                                                   |
+| ------------- | ---------------------------------------------------------------------------------------------- |
+| 0,00 – 0,30 s | Die Fahrbahnlinie zieht sich auf                                                               |
+| 0,30 – 1,45 s | Zwei Fahrzeuge beschleunigen aus dem Bild heraus aufeinander zu, Scheinwerferkegel wachsen mit |
+| 1,45 s        | Aufprall. Weißer Blitz, zwei Schockwellen, sechzehn Splitter, beide Fahrzeuge federn zurück    |
+| 1,70 s        | Die Fläche teilt sich waagerecht, die Seite wird sichtbar, ein Schleier bleibt darüber         |
+| 1,90 s        | Das Logo tritt an die Stelle der Fahrzeuge, Schriftzug darunter                                |
+| 2,55 – 3,55 s | Die Marke steht still, eine volle Sekunde                                                      |
+| 3,55 – 4,35 s | Schleier verschwindet, das Logo fliegt an seinen Platz im Header und bleibt dort liegen        |
 
 Eigenschaften:
 
-- Rund 6 KB. Ein vergleichbares Video liegt bei 2 bis 8 MB.
+- Wenige Kilobyte. Ein vergleichbares Video liegt bei 2 bis 8 MB.
+- Der Flug am Ende ist gemessen, nicht fest verdrahtet: Das Script
+  ermittelt zur Laufzeit, wo das Header-Logo sitzt, und schiebt das
+  Bildzeichen genau dorthin. Passt damit auf jeder Bildschirmbreite.
 - Vektorbasiert, also auf jedem Display gestochen scharf.
 - Läuft **einmal pro Browsersitzung**. Beim Neuladen bleibt er weg, weil
   er bis zum Ende den Inhalt verdeckt und sonst jedes Mal den ersten

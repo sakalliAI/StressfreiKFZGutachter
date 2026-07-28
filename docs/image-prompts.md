@@ -22,10 +22,10 @@ verbessern den fotorealistischen Eindruck spürbar.
 ## Einheitliche Bildsprache
 
 Damit Hero und Kacheln zusammenwirken, gilt für alle Motive dieselbe
-Anmutung: kühler, leicht ins Blaue gezogener Asphaltgrund, ein warmer
-Goldakzent aus einer Lichtquelle im Bild, gedämpfte Sättigung, kein
-greller Kontrast. Der Goldton entspricht der Akzentfarbe der Website
-(`#d9a32b`), die aus dem Logo stammt.
+Anmutung: helles, weiches Tageslicht statt harter Sonne, kühler und
+leicht ins Blaue gezogener Asphaltgrund, ein warmer Goldakzent in den
+Lichtern, gedämpfte Sättigung. Der Goldton entspricht der Akzentfarbe
+der Website (`#d9a32b`), die aus dem Logo stammt.
 
 ---
 
@@ -33,30 +33,38 @@ greller Kontrast. Der Goldton entspricht der Akzentfarbe der Website
 
 **Datei:** `src/assets/hero.jpg` · **Format:** 16:9
 
-> A cinematic wide photograph of a single sedan on a rain-soaked asphalt
-> road at night, water spraying from the wheels in a long motion blur.
-> Wet reflections of amber street lighting stretch across the tarmac, the
-> background falls away into deep unlit darkness. Cold blue-grey asphalt
-> against a warm amber glow from the headlights. Shot on a 70mm lens at
-> f/2.8 with a slow shutter for horizontal motion blur, shallow depth of
-> field, the left third of the frame kept dark and empty for text
-> overlay. Moody, restrained, editorial automotive photography, muted
-> saturation. No faces, no identifiable people, no text, no logos, no
-> readable license plates. Aspect ratio 16:9.
+Die Szene, die auf der Seite steht: Fahrzeug nach einem Unfall am Rand
+einer Landstraße, rechts im Bild, davor ein Warndreieck als Absicherung.
+Die linke Bildhälfte bleibt ruhig, dort liegt die Headline.
+
+> A wide documentary photograph of a dark grey estate car with a heavily
+> crumpled front end and a buckled bonnet, standing on the right-hand
+> verge of a narrow country road. In the left foreground a red reflective
+> warning triangle stands on the tarmac, angled towards the camera and
+> sharply in focus. Hedgerow and green grass line the road, the lane
+> curves away into soft distance. Bright overcast daylight, no harsh
+> shadows, a faint golden warmth in the highlights. Shot on a 35mm lens
+> at f/5.6 from a low standing height, the car occupying the right two
+> thirds, the left third kept calm and uncluttered for a text overlay.
+> Calm, factual, editorial reportage, muted natural saturation. No faces,
+> no identifiable people, no text, no logos, no readable license plates.
+> Aspect ratio 16:9.
 
 ## 2. Hero, Hochformat fürs Handy
 
 **Datei:** `src/assets/hero-portrait.jpg` · **Format:** 9:16
 
-> A cinematic vertical photograph of a car approaching on a rain-soaked
-> asphalt road at night, seen slightly from the front, water spray
-> catching the light. Amber street lighting reflects in the wet tarmac,
-> the upper half of the frame stays dark and empty. Cold blue-grey
-> asphalt with a warm amber highlight from the headlights. Shot on a 50mm
-> lens at f/2.0, shallow depth of field, subject positioned in the lower
-> two thirds. Moody, restrained, editorial automotive photography, muted
-> saturation. No faces, no identifiable people, no text, no logos, no
-> readable license plates. Aspect ratio 9:16.
+> A vertical documentary photograph of a dark grey car with a heavily
+> crumpled front end standing on the verge of a narrow country road, seen
+> at a slight angle from the front. A red reflective warning triangle
+> stands on the tarmac in the lower foreground, sharply in focus.
+> Hedgerow and green grass behind, the upper third of the frame kept open
+> and calm for a text overlay. Bright overcast daylight, soft shadows, a
+> faint golden warmth in the highlights. Shot on a 40mm lens at f/4, the
+> damage clearly readable in the middle of the frame. Calm, factual,
+> editorial reportage, muted natural saturation. No faces, no
+> identifiable people, no text, no logos, no readable license plates.
+> Aspect ratio 9:16.
 
 Wird dieses Bild geliefert, in `src/components/Hero.astro` importieren
 und statt des Zuschnitts aus dem Querformat in die `<source

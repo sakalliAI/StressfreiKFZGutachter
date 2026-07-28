@@ -83,6 +83,18 @@ Gründe:
 - Der LCP der Seite bleibt das Hero-Bild. Der Opener liegt darüber und
   hält den Messwert nicht auf.
 
+Der Übergang am Ende ist eine FLIP-Animation: Das Script misst die
+Position des Header-Logos, rechnet Verschiebung und Maßstab aus und
+schiebt das Bildzeichen des Openers genau dorthin. Das echte Header-Logo
+ist währenddessen ausgeblendet und erscheint erst, wenn das Overlay
+verschwindet. Feste Pixelwerte müssten für jede Bildschirmbreite neu
+gepflegt werden und wären beim nächsten Umbau der Kopfzeile wieder falsch.
+
+Damit die Messwerte darunter nicht leiden, teilt sich die Fläche schon
+gut anderthalb Sekunden vor dem Ende. Der Inhalt ist also sichtbar,
+während die Marke noch steht und fliegt. Der LCP liegt dadurch bei
+2,4 Sekunden statt bei über vier.
+
 Umgekehrte Sichtbarkeitslogik: Das Overlay steht mit `hidden` im HTML und
 wird nur von einem Inline-Skript eingeblendet. Fällt JavaScript aus, ist
 sofort die Seite zu sehen. Andersherum könnte ein Skriptfehler die
@@ -91,6 +103,18 @@ einmal pro Browsersitzung, ist jederzeit überspringbar und entfällt bei
 `prefers-reduced-motion` vollständig.
 
 Alternativen mit Veo 3 oder fertigen 3D-Modellen: siehe `docs/opener.md`.
+
+## Zweistufiger Header
+
+Am Seitenanfang ist der Header groß und ohne eigenen Hintergrund, er
+liegt nur über dem Hero, abgesichert durch einen weichen Verlauf. Sobald
+gescrollt wird, schrumpft er auf etwa zwei Drittel und legt sich
+hinterlegt über den Inhalt.
+
+Höhe und Logogröße hängen an denselben zwei Variablen (`--header-h`,
+`--logo-h`), umgeschaltet über `data-scrolled` am `<html>`. Dadurch
+ziehen Kopfhöhe, Logo, `scroll-padding-top` und der obere Abstand des
+Heros gemeinsam nach, ohne dass irgendwo eine Zahl doppelt gepflegt wird.
 
 ## Warum ein Onepager
 

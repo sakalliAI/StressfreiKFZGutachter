@@ -18,11 +18,11 @@ const chips = [
   2560px-Datei laedt.
 */
 const HERO_ALT =
-  'Fahrzeug bei Nacht auf regennasser Fahrbahn, Scheinwerferlicht spiegelt sich im Wasser';
+  'Fahrzeug mit stark eingedrückter Front nach einem Unfall am Rand einer Landstraße';
 
 const [portraitSmall, portraitLarge] = await Promise.all([
-  getImage({ src: heroImg, width: 480, height: 900, format: 'webp', quality: 70 }),
-  getImage({ src: heroImg, width: 900, height: 1690, format: 'webp', quality: 66 }),
+  getImage({ src: heroImg, width: 520, height: 940, format: 'webp', quality: 72 }),
+  getImage({ src: heroImg, width: 940, height: 1700, format: 'webp', quality: 68 }),
 ]);
 
 const [landscapeMedium, landscapeLarge, landscapeXl] = await Promise.all([
@@ -38,7 +38,7 @@ const [landscapeMedium, landscapeLarge, landscapeXl] = await Promise.all([
     <source
       media="(max-width: 767px)"
       type="image/webp"
-      srcset={`${portraitSmall.src} 480w, ${portraitLarge.src} 900w`}
+      srcset={`${portraitSmall.src} 520w, ${portraitLarge.src} 940w`}
       sizes="100vw"
     />
     <source
@@ -49,8 +49,8 @@ const [landscapeMedium, landscapeLarge, landscapeXl] = await Promise.all([
     <img
       src={landscapeLarge.src}
       alt={HERO_ALT}
-      width={1920}
-      height={1280}
+      width={2560}
+      height={1707}
       loading="eager"
       fetchpriority="high"
       decoding="sync"
@@ -61,12 +61,12 @@ const [landscapeMedium, landscapeLarge, landscapeXl] = await Promise.all([
   <!-- Abdunklung für Textkontrast. Links kräftiger, damit die Headline
        auch auf hellen Bildstellen sicher über 4.5:1 liegt. -->
   <div
-    class="absolute inset-0 -z-10 bg-[linear-gradient(100deg,rgb(4_7_15/0.94)_0%,rgb(6_10_22/0.82)_38%,rgb(6_10_22/0.48)_68%,rgb(4_7_15/0.62)_100%)]"
+    class="absolute inset-0 -z-10 bg-[linear-gradient(100deg,rgb(4_7_15/0.9)_0%,rgb(6_10_22/0.72)_34%,rgb(6_10_22/0.3)_62%,rgb(6_10_22/0.18)_100%)]"
     aria-hidden="true"
   >
   </div>
   <div
-    class="absolute inset-x-0 bottom-0 -z-10 h-56 bg-[linear-gradient(to_top,var(--color-navy-900),transparent)]"
+    class="absolute inset-x-0 bottom-0 -z-10 h-64 bg-[linear-gradient(to_top,var(--color-navy-900)_10%,transparent)]"
     aria-hidden="true"
   >
   </div>

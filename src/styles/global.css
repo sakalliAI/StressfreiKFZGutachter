@@ -66,19 +66,35 @@
    Basis
    ------------------------------------------------------------------ */
 @layer base {
+  /* Der Header startet gross und ohne eigenen Grund. Sobald gescrollt
+     wird, schrumpft er und legt sich hinterlegt ueber den Inhalt.
+     `data-scrolled` sitzt am <html>, damit die Hoehe ueberall
+     verfuegbar ist, auch fuer scroll-padding und den Hero-Abstand. */
   :root {
-    --header-h: 4.25rem;
+    --header-h: 5.25rem;
+    --header-h-compact: 4rem;
+    --logo-h: 2.5rem;
+    --logo-h-compact: 2rem;
+
     scroll-behavior: smooth;
-    /* Sticky-Header darf die Sektions-Ueberschrift beim Ankersprung
-       nicht verdecken. */
-    scroll-padding-top: calc(var(--header-h) + 1.25rem);
+    /* Beim Ankersprung ist immer der kompakte Header aktiv, also mit
+       dessen Hoehe rechnen. */
+    scroll-padding-top: calc(var(--header-h-compact) + 1.25rem);
     -webkit-tap-highlight-color: transparent;
   }
 
   @media (min-width: 1024px) {
     :root {
-      --header-h: 4.75rem;
+      --header-h: 6.25rem;
+      --header-h-compact: 4.75rem;
+      --logo-h: 2.9rem;
+      --logo-h-compact: 2.35rem;
     }
+  }
+
+  html[data-scrolled='true'] {
+    --header-h: var(--header-h-compact);
+    --logo-h: var(--logo-h-compact);
   }
 
   html {

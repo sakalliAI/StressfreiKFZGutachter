@@ -14,18 +14,21 @@
 interface Props {
   class?: string;
   compact?: boolean;
+  /** Erlaubt es, --logo-h lokal zu überschreiben, etwa im Footer. */
+  style?: string;
 }
 
-const { class: className = '', compact = false } = Astro.props;
+const { class: className = '', compact = false, style } = Astro.props;
 ---
 
-<span class={`inline-flex items-center gap-2.5 sm:gap-3 ${className}`}>
+<span class={`inline-flex items-center gap-2.5 sm:gap-3 ${className}`} style={style}>
   <img
     src="/logo.webp"
     alt=""
+    data-brand-logo
     width="640"
     height="211"
-    class="h-8 w-auto flex-none sm:h-10 lg:h-11"
+    class="h-[var(--logo-h)] w-auto flex-none transition-[height] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]"
     loading="eager"
     decoding="sync"
   />

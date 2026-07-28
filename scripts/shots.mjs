@@ -47,8 +47,9 @@ for (const viewport of VIEWPORTS) {
 
   await page.goto(BASE, { waitUntil: 'networkidle' });
 
-  // Opener abwarten und wegklicken, damit die Seite sichtbar wird.
-  await page.waitForTimeout(3200);
+  // Opener komplett abwarten. Er laeuft rund 4,4 Sekunden inklusive
+  // Logo-Flug in den Header.
+  await page.waitForTimeout(5200);
 
   await page.screenshot({ path: `${OUT}/${viewport.name}-hero.png` });
 
