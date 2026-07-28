@@ -73,8 +73,8 @@
   :root {
     --header-h: 5.25rem;
     --header-h-compact: 4rem;
-    --logo-h: 2.5rem;
-    --logo-h-compact: 2rem;
+    --logo-h: 2.75rem;
+    --logo-h-compact: 2.1rem;
 
     scroll-behavior: smooth;
     /* Beim Ankersprung ist immer der kompakte Header aktiv, also mit
@@ -87,8 +87,8 @@
     :root {
       --header-h: 6.25rem;
       --header-h-compact: 4.75rem;
-      --logo-h: 2.9rem;
-      --logo-h-compact: 2.35rem;
+      --logo-h: 3.4rem;
+      --logo-h-compact: 2.5rem;
     }
   }
 

@@ -28,17 +28,17 @@ const { class: className = '', compact = false, style } = Astro.props;
     data-brand-logo
     width="640"
     height="211"
-    class="h-[var(--logo-h)] w-auto flex-none transition-[height] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]"
+    class="h-[var(--logo-h)] w-auto flex-none drop-shadow-[0_2px_8px_rgb(0_0_0/0.6)] transition-[height] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]"
     loading="eager"
     decoding="sync"
   />
   {
     !compact && (
-      <span class="sr-only flex-col leading-none sm:not-sr-only sm:flex">
-        <span class="font-display text-bone-50 text-[0.95rem] font-bold tracking-[0.02em]">
+      <span class="sr-only flex-none flex-col leading-none sm:not-sr-only sm:flex">
+        <span class="font-display text-bone-50 text-[1rem] font-bold tracking-[0.02em] drop-shadow-[0_1px_4px_rgb(0_0_0/0.55)]">
           Stressfrei
         </span>
-        <span class="text-navy-400 mt-1 text-[0.62rem] font-semibold tracking-[0.2em] uppercase">
+        <span class="text-bone-200/80 mt-1 text-[0.63rem] font-semibold tracking-[0.2em] whitespace-nowrap uppercase drop-shadow-[0_1px_4px_rgb(0_0_0/0.55)]">
           KFZ-Gutachter
         </span>
       </span>

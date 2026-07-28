@@ -116,9 +116,17 @@ Alternativen mit Veo 3 oder fertigen 3D-Modellen: siehe `docs/opener.md`.
 ## Zweistufiger Header
 
 Am Seitenanfang ist der Header groß und ohne eigenen Hintergrund, er
-liegt nur über dem Hero, abgesichert durch einen weichen Verlauf. Sobald
-gescrollt wird, schrumpft er auf etwa zwei Drittel und legt sich
-hinterlegt über den Inhalt.
+liegt nur über dem Hero. Sobald gescrollt wird, schrumpft er auf etwa
+zwei Drittel und legt sich hinterlegt über den Inhalt.
+
+Der Hero zeigt oben hellen Himmel. Ohne Abdunklung stünden Logo und
+Navigation dort ohne jeden Halt, deshalb liegt hinter dem Header ein
+Verlauf, der über die Kopfhöhe hinaus ausklingt statt an der Unterkante
+abzureißen. Dieser Verlauf braucht zwingend `z-index: -1`: Absolut
+positionierte Pseudo-Elemente werden nach dem nicht positionierten
+Inhalt des Elternelements gezeichnet, lägen also darüber und würden
+Navigation und Schaltflächen mit abdunkeln. Am deutlichsten fällt das
+am WhatsApp-Grün auf, das dann matt statt leuchtend wirkt.
 
 Höhe und Logogröße hängen an denselben zwei Variablen (`--header-h`,
 `--logo-h`), umgeschaltet über `data-scrolled` am `<html>`. Dadurch
