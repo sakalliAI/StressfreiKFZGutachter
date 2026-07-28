@@ -1,8 +1,11 @@
 @import 'tailwindcss';
 
-/* Selbst gehostete Schriften (DSGVO: keine Anfrage an Google Fonts) */
-@import '@fontsource-variable/archivo/index.css';
-@import '@fontsource-variable/inter/index.css';
+/* Selbst gehostete Schriften (DSGVO: keine Anfrage an Google Fonts).
+   `wght.css` statt `index.css`: nur die aufrechte Gewichtsachse. Die
+   Kursiv-Schnitte und bei Archivo die Breitenachse werden nirgends
+   verwendet und wuerden nur das Stylesheet aufblaehen. */
+@import '@fontsource-variable/archivo/wght.css';
+@import '@fontsource-variable/inter/wght.css';
 
 /* ------------------------------------------------------------------
    Design-Tokens
@@ -45,7 +48,7 @@
   --color-gold-400: #e9bc5a;
   --color-gold-500: #d9a32b;
   --color-gold-600: #b8871c;
-  --color-gold-700: #8f6712;
+  --color-gold-700: #7a5810;
 
   --color-wa-500: #25d366;
   --color-wa-600: #1da851;
@@ -261,18 +264,20 @@
    Startwerte erst von JS gesetzt werden (Klasse .js-reveal-ready am
    <html>). Dadurch kann kein leerer Bereich entstehen, falls ein
    Script blockiert wird.
+
+   Bewusst nur eine Bewegung, keine Deckkraft. Waehrend einer
+   Opacity-Blende mischt der Browser Text- und Hintergrundfarbe, wodurch
+   der Kontrast kurzzeitig unter 4.5:1 faellt. Pruefwerkzeuge messen
+   genau diesen Zwischenstand. Mit reiner Verschiebung gilt immer der
+   Ruhewert.
    ------------------------------------------------------------------ */
 .js-reveal-ready [data-reveal] {
-  opacity: 0;
-  transform: translateY(18px);
-  transition:
-    opacity 700ms var(--ease-out-soft),
-    transform 700ms var(--ease-out-soft);
+  transform: translateY(22px);
+  transition: transform 620ms var(--ease-out-soft);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
 .js-reveal-ready [data-reveal].is-in {
-  opacity: 1;
   transform: none;
 }
 
@@ -282,7 +287,6 @@
   }
 
   .js-reveal-ready [data-reveal] {
-    opacity: 1 !important;
     transform: none !important;
     transition: none !important;
   }

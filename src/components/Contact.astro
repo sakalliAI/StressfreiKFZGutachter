@@ -50,24 +50,32 @@ const label = 'block text-[0.82rem] font-semibold text-navy-300';
           </a>
         </div>
 
-        <dl class="mt-10 grid gap-5 border-t border-white/8 pt-8 text-[0.9rem]" data-reveal>
-          <div class="flex gap-3">
+        {
+          /*
+          Bewusst eine Liste statt <dl>. Ein <dl> erlaubt zwischen sich
+          und den <dt>/<dd> hoechstens eine <div>-Ebene. Das Icon
+          daneben braucht aber eine eigene Ebene, wodurch die Struktur
+          ungueltig wuerde.
+        */
+        }
+        <ul class="mt-10 grid gap-5 border-t border-white/8 pt-8 text-[0.9rem]" data-reveal>
+          <li class="flex gap-3">
             <Icon name="clock" size={17} class="text-gold-400 mt-0.5 flex-none" />
             <div>
-              <dt class="text-bone-50 font-semibold">Erreichbarkeit</dt>
-              <dd class="text-navy-400 mt-1 leading-relaxed">{company.hours}</dd>
+              <p class="text-bone-50 font-semibold">Erreichbarkeit</p>
+              <p class="text-navy-400 mt-1 leading-relaxed">{company.hours}</p>
             </div>
-          </div>
-          <div class="flex gap-3">
+          </li>
+          <li class="flex gap-3">
             <Icon name="map-pin" size={17} class="text-gold-400 mt-0.5 flex-none" />
             <div>
-              <dt class="text-bone-50 font-semibold">Besichtigung</dt>
-              <dd class="text-navy-400 mt-1 leading-relaxed">
+              <p class="text-bone-50 font-semibold">Besichtigung</p>
+              <p class="text-navy-400 mt-1 leading-relaxed">
                 Vor Ort bei Ihnen. Werkstatt, Zuhause, Abstellplatz oder Unfallstelle.
-              </dd>
+              </p>
             </div>
-          </div>
-        </dl>
+          </li>
+        </ul>
       </div>
 
       <!-- Formular -->

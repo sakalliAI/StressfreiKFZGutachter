@@ -122,6 +122,11 @@ dem Deploy unterhalb des Heros leer bleiben. Deshalb:
   Skript ist alles sichtbar.
 - Zusätzlich blendet ein Timeout nach 2,5 Sekunden alles hart ein, falls
   der IntersectionObserver aus irgendeinem Grund nicht auslöst.
+- Der Reveal bewegt die Elemente nur, er blendet sie nicht ein. Während
+  einer Deckkraft-Blende mischt der Browser Text- und Hintergrundfarbe,
+  der Kontrast fällt kurzzeitig unter 4,5:1 und Prüfwerkzeuge messen
+  genau diesen Zwischenstand. Mit reiner Verschiebung gilt immer der
+  Ruhewert.
 - Die CSP in `public/_headers` erlaubt `'unsafe-inline'` für Skripte und
   Styles. Ohne diese Freigabe blockiert der Browser genau die Skripte,
   die Sektionen sichtbar machen.
@@ -188,6 +193,14 @@ Platzhaltertext wäre schlechter als keins.
 
 ## Performance
 
+Gemessen mit Lighthouse gegen das gebaute `dist/`, ausgeliefert mit den
+Headern aus `public/_headers` und mit Brotli, also unter denselben
+Bedingungen wie bei Cloudflare. Ergebnis: Desktop 99/100/100/100, Mobil
+98/100/100/100. Zahlen und Berichte in `docs/lighthouse/`.
+
+Ein Testserver ohne Kompression misst hier deutlich zu pessimistisch:
+Die Seite wiegt roh 187 KB, über die Leitung gehen 28 KB.
+
 - CSS wird vollständig inline ausgeliefert (`inlineStylesheets: 'always'`).
   Bei einem Onepager spart das einen render-blockierenden Request.
 - Das Hero-Bild lädt mit `fetchpriority="high"`, alle übrigen Bilder mit
@@ -197,6 +210,11 @@ Platzhaltertext wäre schlechter als keins.
   laden, von der es den größten Teil wegschneidet.
 - Icons sind Inline-SVG aus einem einheitlichen Set, keine Icon-Font,
   keine externe Bibliothek.
+- Das Logo liegt als WebP mit Alphakanal vor, nicht als PNG. Es ist auf
+  schmalen Displays das größte sichtbare Element und bestimmt damit den
+  LCP. Als PNG waren es 60 KB, als WebP ein Bruchteil davon.
+- Von den Schriften wird nur die aufrechte Gewichtsachse eingebunden
+  (`wght.css`), nicht das komplette Paket mit Kursiven.
 - Gesamtes clientseitiges JavaScript: rund 4 KB, aufgeteilt auf
   Scrollspy, Dialoge, Reveal, Sticky-CTA und Formular.
 

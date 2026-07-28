@@ -6,7 +6,7 @@
  * Nötig, wenn Logo oder Hero-Bild getauscht werden.
  *
  * Ergebnis:
- *   public/logo.png             Wortmarke freigestellt, für Header und Footer
+ *   public/logo.webp            Wortmarke freigestellt, für Header, Footer, Opener
  *   public/favicon-32.png       Monogramm, kleines Favicon
  *   public/apple-touch-icon.png Monogramm, 180 px
  *   public/icon-512.png         Monogramm, 512 px für das Web-Manifest
@@ -32,7 +32,10 @@ const BONE = '#f7f8fc';
  * einen Kanal nahe null haben.
  */
 async function knockOutWhite(file) {
-  const { data, info } = await sharp(file).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const { data, info } = await sharp(file)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
   const out = Buffer.alloc(data.length);
 
   for (let i = 0; i < data.length; i += 4) {
@@ -64,8 +67,18 @@ const logo = await knockOutWhite(LOGO);
 const logoMeta = await sharp(logo).metadata();
 console.log(`Logo freigestellt: ${logoMeta.width}x${logoMeta.height}`);
 
-// Header-Logo. Breite großzügig für Displays mit hoher Pixeldichte.
-await sharp(logo).resize({ width: 480 }).png({ compressionLevel: 9 }).toFile('public/logo.png');
+/*
+  Header-Logo als WebP. Es ist auf schmalen Displays das größte
+  sichtbare Element und bestimmt damit den LCP. Als PNG waren es rund
+  60 KB, verlustbehaftetes WebP mit Alphakanal liegt bei einem Bruchteil
+  davon, ohne dass man am Rand einen Unterschied sieht.
+  640 px deckt auch die größte Darstellung im Opener auf einem Display
+  mit doppelter Pixeldichte ab.
+*/
+await sharp(logo)
+  .resize({ width: 640 })
+  .webp({ quality: 82, alphaQuality: 90 })
+  .toFile('public/logo.webp');
 
 /*
   Favicon aus dem Monogramm. Die volle Wortmarke ist mit rund 3:1 zu
@@ -155,4 +168,6 @@ await sharp(base)
   .jpeg({ quality: 82, mozjpeg: true })
   .toFile('public/og.jpg');
 
-console.log('Assets erzeugt: logo.png, favicon-32.png, apple-touch-icon.png, icon-512.png, og.jpg');
+console.log(
+  'Assets erzeugt: logo.webp, favicon-32.png, apple-touch-icon.png, icon-512.png, og.jpg',
+);

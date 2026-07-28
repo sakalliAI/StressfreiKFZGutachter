@@ -73,7 +73,10 @@ for (const viewport of VIEWPORTS) {
 
   // Scrollspy am Seitenende: die letzte Sektion muss aktiv sein.
   const activeAtBottom = await page.evaluate(
-    () => document.querySelector('[data-spy-link][aria-current="true"]')?.getAttribute('data-spy-link') ?? null,
+    () =>
+      document
+        .querySelector('[data-spy-link][aria-current="true"]')
+        ?.getAttribute('data-spy-link') ?? null,
   );
   if (activeAtBottom !== 'kontakt') {
     problems.push(`Scrollspy am Seitenende: "${activeAtBottom}" statt "kontakt"`);
@@ -86,7 +89,10 @@ for (const viewport of VIEWPORTS) {
   await page.evaluate(() => window.scrollBy(0, 120));
   await page.waitForTimeout(400);
   const activeUpward = await page.evaluate(
-    () => document.querySelector('[data-spy-link][aria-current="true"]')?.getAttribute('data-spy-link') ?? null,
+    () =>
+      document
+        .querySelector('[data-spy-link][aria-current="true"]')
+        ?.getAttribute('data-spy-link') ?? null,
   );
   if (activeUpward !== 'kosten') {
     problems.push(`Scrollspy beim Hochscrollen: "${activeUpward}" statt "kosten"`);

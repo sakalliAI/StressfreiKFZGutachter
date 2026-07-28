@@ -28,7 +28,8 @@ Zusätzlich:
 
 ```bash
 node scripts/build-assets.mjs   # Logo freistellen, Icons und OG-Bild erzeugen
-node scripts/shots.mjs          # Sichtprüfung Desktop und Mobil (braucht laufenden Preview)
+node scripts/shots.mjs          # Sichtprüfung Desktop und Mobil, prüft auch den Scrollspy
+node scripts/serve-prod.mjs     # dist/ mit echten Headern und Brotli ausliefern (Port 4322)
 ```
 
 ## Projektstruktur
@@ -82,6 +83,23 @@ npx wrangler pages deploy dist --project-name mk-stressfrei --branch main
 `_headers` und `_redirects` liegen in `public/` und landen automatisch
 in `dist/`. Die Pages Functions unter `functions/` werden von Wrangler
 mit hochgeladen.
+
+## Qualitätssicherung
+
+```bash
+npm run build
+node scripts/serve-prod.mjs 4323          # produktionsnah, mit _headers und Brotli
+node scripts/shots.mjs http://127.0.0.1:4323   # Rendering, Konsole, Scrollspy, Überlauf
+```
+
+`serve-prod.mjs` liefert `dist/` mit exakt den Headern aus
+`public/_headers` aus. Damit lässt sich prüfen, ob die
+Content-Security-Policy die eigenen Inline-Scripts blockiert. Genau das
+ist der häufigste Grund für Seiten, die nach dem Deploy nur den Hero
+zeigen, und ein Abruf per curl deckt es nicht auf.
+
+Aktuelle Lighthouse-Werte und die vollständigen Berichte:
+`docs/lighthouse/`.
 
 ## Sicherheit und Datenschutz
 

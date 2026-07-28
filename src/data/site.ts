@@ -76,17 +76,16 @@ export const company = {
 /**
  * Vertrauensmerkmale.
  *
- * Die DESAG-Pruefung ist durch die Visitenkarte des Kunden belegt
- * (brand/VK.png). Alles Weitere bleibt draussen, bis es nachgewiesen
- * ist: eine behauptete oeffentliche Bestellung, TUEV-Zertifizierung
- * oder BVSK-Mitgliedschaft waere nach § 5 UWG irrefuehrend.
+ * Die DESAG-Pruefung steht bewusst nicht hier, sondern im Hero-Chip
+ * und in der Sektion "Ueber mich". Sonst stuende sie dreimal
+ * untereinander auf demselben Bildschirm.
+ *
+ * Alles Weitere bleibt draussen, bis es nachgewiesen ist: eine
+ * behauptete oeffentliche Bestellung, TUEV-Zertifizierung oder
+ * BVSK-Mitgliedschaft waere nach § 5 UWG irrefuehrend.
  * Vorlagen dafuer: docs/handover.md.
  */
 export const trustPoints = [
-  {
-    title: 'DESAG geprüft',
-    text: 'Geprüfter Sachverständiger der Deutschen Sachverständigen Gesellschaft.',
-  },
   {
     title: 'Unabhängig',
     text: 'Keine Provision von Werkstatt oder Versicherung. Ich arbeite für Sie, nicht für die Gegenseite.',

@@ -21,17 +21,17 @@ const { class: className = '', compact = false } = Astro.props;
 
 <span class={`inline-flex items-center gap-2.5 sm:gap-3 ${className}`}>
   <img
-    src="/logo.png"
+    src="/logo.webp"
     alt=""
-    width="480"
-    height="158"
+    width="640"
+    height="211"
     class="h-8 w-auto flex-none sm:h-10 lg:h-11"
     loading="eager"
     decoding="sync"
   />
   {
     !compact && (
-      <span class="hidden flex-col leading-none sm:flex">
+      <span class="sr-only flex-col leading-none sm:not-sr-only sm:flex">
         <span class="font-display text-bone-50 text-[0.95rem] font-bold tracking-[0.02em]">
           Stressfrei
         </span>

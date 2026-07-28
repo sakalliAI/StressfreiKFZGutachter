@@ -86,7 +86,7 @@ const SHARDS = Array.from({ length: 16 }, (_, i) => {
 
     <!-- Markenauftritt nach dem Aufprall -->
     <div class="intro__brand">
-      <img class="intro__logo" src="/logo.png" alt="" width="480" height="158" />
+      <img class="intro__logo" src="/logo.webp" alt="" width="640" height="211" />
       <span class="intro__name">Stressfrei</span>
       <span class="intro__sub">KFZ-Gutachter</span>
     </div>
@@ -115,7 +115,7 @@ const SHARDS = Array.from({ length: 16 }, (_, i) => {
     width: 100%;
     height: 50.4%;
     background: radial-gradient(120% 140% at 50% 50%, #0e1930 0%, #04070f 78%);
-    animation: intro-panel-top 620ms cubic-bezier(0.76, 0, 0.24, 1) 2020ms both;
+    animation: intro-panel-top 500ms cubic-bezier(0.76, 0, 0.24, 1) 1700ms both;
   }
 
   .intro__panel--top {
@@ -144,7 +144,7 @@ const SHARDS = Array.from({ length: 16 }, (_, i) => {
     inset: 0;
     display: grid;
     place-items: center;
-    animation: intro-stage-out 260ms ease-in 1960ms both;
+    animation: intro-stage-out 240ms ease-in 1640ms both;
   }
 
   @keyframes intro-stage-out {
@@ -528,7 +528,7 @@ const SHARDS = Array.from({ length: 16 }, (_, i) => {
       return;
     }
 
-    const DURATION = 2680;
+    const DURATION = 2240;
     let done = false;
     let timer = 0;
 
