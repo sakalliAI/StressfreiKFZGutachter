@@ -1,0 +1,317 @@
+@import 'tailwindcss';
+
+/* Selbst gehostete Schriften (DSGVO: keine Anfrage an Google Fonts).
+   `wght.css` statt `index.css`: nur die aufrechte Gewichtsachse. Die
+   Kursiv-Schnitte und bei Archivo die Breitenachse werden nirgends
+   verwendet und wuerden nur das Stylesheet aufblaehen. */
+@import '@fontsource-variable/archivo/wght.css';
+@import '@fontsource-variable/inter/wght.css';
+
+/* ------------------------------------------------------------------
+   Design-Tokens
+
+   Palette direkt aus dem Logo abgeleitet (brand/Logo.png):
+   Koenigsblau als Traeger, Gold als Akzent. Die dunklen Flaechen sind
+   kein neutrales Grau, sondern dasselbe Blau ins Tiefe gezogen, damit
+   Logo und Untergrund aus einem Guss wirken.
+   Das Rot der Ruecklichter bleibt dem Logo vorbehalten, es ist zu
+   nah an einer Fehlermeldung, um als Flaechenfarbe zu taugen.
+   WhatsApp-Gruen bleibt im Original, Nutzer erkennen die Farbe.
+   Begruendung im Detail: ARCHITECTURE.md
+   ------------------------------------------------------------------ */
+@theme {
+  /* Flaechen: das Logoblau bis ins Tiefdunkle durchgezogen */
+  --color-navy-950: #04070f;
+  --color-navy-900: #0a1226;
+  --color-navy-850: #0e1930;
+  --color-navy-800: #14213d;
+  --color-navy-700: #1e2f52;
+  --color-navy-600: #33487a;
+  --color-navy-500: #4f66a0;
+  --color-navy-400: #8494bc;
+  --color-navy-300: #b8c3dc;
+
+  /* Logoblau als Textfarbe auf hellen Flaechen */
+  --color-royal-400: #3a6fd8;
+  --color-royal-500: #1b4fc4;
+  --color-royal-600: #0b3a9e;
+  --color-royal-700: #062b78;
+
+  /* Helle Flaechen, leicht ins Blaue gezogen statt Reinweiss */
+  --color-bone-50: #f7f8fc;
+  --color-bone-100: #eef1f8;
+  --color-bone-200: #dce2ef;
+  --color-bone-300: #c2cbe0;
+
+  /* Gold aus dem Monogramm. Traegt alle primaeren Handlungsflaechen. */
+  --color-gold-300: #f4d68f;
+  --color-gold-400: #e9bc5a;
+  --color-gold-500: #d9a32b;
+  --color-gold-600: #b8871c;
+  --color-gold-700: #7a5810;
+
+  --color-wa-500: #25d366;
+  --color-wa-600: #1da851;
+  --color-wa-700: #16843f;
+
+  --font-display: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
+  --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
+
+  --radius-card: 0.875rem;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ------------------------------------------------------------------
+   Basis
+   ------------------------------------------------------------------ */
+@layer base {
+  /* Der Header startet gross und ohne eigenen Grund. Sobald gescrollt
+     wird, schrumpft er und legt sich hinterlegt ueber den Inhalt.
+     `data-scrolled` sitzt am <html>, damit die Hoehe ueberall
+     verfuegbar ist, auch fuer scroll-padding und den Hero-Abstand. */
+  :root {
+    --header-h: 5.25rem;
+    --header-h-compact: 4rem;
+    --logo-h: 2.5rem;
+    --logo-h-compact: 2rem;
+
+    scroll-behavior: smooth;
+    /* Beim Ankersprung ist immer der kompakte Header aktiv, also mit
+       dessen Hoehe rechnen. */
+    scroll-padding-top: calc(var(--header-h-compact) + 1.25rem);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --header-h: 6.25rem;
+      --header-h-compact: 4.75rem;
+      --logo-h: 2.9rem;
+      --logo-h-compact: 2.35rem;
+    }
+  }
+
+  html[data-scrolled='true'] {
+    --header-h: var(--header-h-compact);
+    --logo-h: var(--logo-h-compact);
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-navy-900);
+    color: var(--color-bone-100);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.022em;
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Sichtbarer Fokus ueberall, ohne den Maus-Klick zu stoeren */
+  :focus-visible {
+    outline: 3px solid var(--color-gold-400);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--color-gold-500);
+    color: var(--color-navy-950);
+  }
+
+  /* Verhindert horizontales Ueberlaufen durch lange Telefonnummern o.ae. */
+  img,
+  svg,
+  video {
+    max-width: 100%;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Wiederkehrende Bausteine
+   ------------------------------------------------------------------ */
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: 78rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .container-page {
+      padding-inline: 2rem;
+    }
+  }
+
+  .section-pad {
+    padding-block: 4.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .section-pad {
+      padding-block: 7rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .section-pad {
+      padding-block: 8.5rem;
+    }
+  }
+
+  /* Feine Kornstruktur. Nimmt digitalen Flaechen den flachen Look. */
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.045;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding-inline: 1.35rem;
+    border-radius: 0.6rem;
+    font-weight: 600;
+    font-size: 0.975rem;
+    line-height: 1;
+    white-space: nowrap;
+    transition:
+      background-color 220ms var(--ease-out-soft),
+      color 220ms var(--ease-out-soft),
+      transform 220ms var(--ease-out-soft),
+      box-shadow 220ms var(--ease-out-soft);
+  }
+
+  .btn:active {
+    transform: translateY(1px) scale(0.99);
+  }
+
+  .btn-wa {
+    background-color: var(--color-wa-500);
+    color: #05270f;
+    box-shadow: 0 8px 24px -10px rgb(37 211 102 / 0.75);
+  }
+
+  .btn-wa:hover {
+    background-color: var(--color-wa-600);
+    box-shadow: 0 12px 30px -10px rgb(37 211 102 / 0.85);
+  }
+
+  .btn-gold {
+    background-color: var(--color-gold-500);
+    color: var(--color-navy-950);
+    box-shadow: 0 8px 24px -10px rgb(217 163 43 / 0.8);
+  }
+
+  .btn-gold:hover {
+    background-color: var(--color-gold-400);
+  }
+
+  .btn-ghost {
+    background-color: rgb(255 255 255 / 0.06);
+    color: var(--color-bone-50);
+    border: 1px solid rgb(255 255 255 / 0.18);
+    backdrop-filter: blur(6px);
+  }
+
+  .btn-ghost:hover {
+    background-color: rgb(255 255 255 / 0.14);
+    border-color: rgb(255 255 255 / 0.3);
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-gold-400);
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 1.75rem;
+    height: 2px;
+    background: currentColor;
+    flex: none;
+  }
+
+  /* Auf hellen Flaechen erreicht das helle Gold keine 4.5:1.
+     Die dunkle Stufe kommt auf rund 4.8:1. */
+  .eyebrow-on-light {
+    color: var(--color-gold-700);
+  }
+}
+
+/* ------------------------------------------------------------------
+   Scroll-Reveal
+
+   Progressive Enhancement: ohne JS bleibt alles sichtbar, weil die
+   Startwerte erst von JS gesetzt werden (Klasse .js-reveal-ready am
+   <html>). Dadurch kann kein leerer Bereich entstehen, falls ein
+   Script blockiert wird.
+
+   Bewusst nur eine Bewegung, keine Deckkraft. Waehrend einer
+   Opacity-Blende mischt der Browser Text- und Hintergrundfarbe, wodurch
+   der Kontrast kurzzeitig unter 4.5:1 faellt. Pruefwerkzeuge messen
+   genau diesen Zwischenstand. Mit reiner Verschiebung gilt immer der
+   Ruhewert.
+   ------------------------------------------------------------------ */
+.js-reveal-ready [data-reveal] {
+  transform: translateY(22px);
+  transition: transform 620ms var(--ease-out-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js-reveal-ready [data-reveal].is-in {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    scroll-behavior: auto;
+  }
+
+  .js-reveal-ready [data-reveal] {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

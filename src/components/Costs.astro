@@ -1,0 +1,138 @@
+---
+import Icon from './Icon.astro';
+import SectionHead from './SectionHead.astro';
+import { company } from '../data/site';
+
+/** Die haeufigste Frage vor dem ersten Anruf. Bewusst als Tabelle,
+ *  weil Sprachmodelle diese Struktur sauber zitieren koennen. */
+const cases = [
+  {
+    situation: 'Unverschuldeter Unfall',
+    payer: 'Gegnerische Haftpflicht',
+    note: 'Volle Kostenübernahme nach § 249 BGB. Keine Vorkasse für Sie.',
+  },
+  {
+    situation: 'Teilschuld',
+    payer: 'Anteilig',
+    note: 'Die Gegenseite trägt den Anteil, der ihrer Haftungsquote entspricht.',
+  },
+  {
+    situation: 'Kaskoschaden',
+    payer: 'Ihre Versicherung',
+    note: 'Kostenübernahme klären wir vor dem Termin gemeinsam ab.',
+  },
+  {
+    situation: 'Wertgutachten, Leasing, eigenes Verschulden',
+    payer: 'Sie selbst',
+    note: 'Festpreis nach Schadenhöhe, den Sie vor dem Termin kennen.',
+  },
+];
+---
+
+<section id="kosten" class="section-pad bg-bone-50 text-navy-900">
+  <div class="container-page">
+    <div
+      class="grid gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center lg:gap-16"
+    >
+      <div>
+        <SectionHead
+          eyebrow="Kosten"
+          title="Wer zahlt das Gutachten?"
+          lead="Die Frage, die fast jeder zuerst stellt. Hier die ehrliche Antwort für jede Konstellation."
+          tone="light"
+        />
+
+        <div class="rounded-card border-navy-900/10 mt-8 border bg-white p-5" data-reveal>
+          <div class="flex items-start gap-3">
+            <Icon name="shield" size={20} class="text-royal-600 mt-0.5 flex-none" />
+            <p class="text-navy-600 text-[0.94rem] leading-relaxed">
+              Unsicher, in welchen Fall Sie gehören? Schicken Sie mir ein Foto vom Schaden. Ich sage
+              Ihnen, woran Sie sind, bevor irgendetwas beauftragt wird.
+            </p>
+          </div>
+          <a
+            href={company.whatsapp}
+            target="_blank"
+            rel="noopener"
+            class="btn btn-wa mt-4 w-full sm:w-auto"
+            data-track="wa-kosten"
+          >
+            <Icon name="whatsapp" size={18} />
+            Foto schicken
+          </a>
+        </div>
+      </div>
+
+      <div data-reveal>
+        <!-- Auf schmalen Viewports Karten statt einer gequetschten
+             Tabelle, die sonst horizontal scrollen muesste. -->
+        <div class="grid gap-3 sm:hidden">
+          {
+            cases.map((row) => (
+              <div class="rounded-card border-navy-900/10 border bg-white p-4">
+                <p class="text-navy-900 text-[0.95rem] font-bold">{row.situation}</p>
+                <p class="bg-royal-600/10 text-royal-700 mt-1 inline-block rounded-md px-2 py-1 text-[0.8rem] font-semibold">
+                  {row.payer}
+                </p>
+                <p class="text-navy-600 mt-2 text-[0.86rem] leading-relaxed">{row.note}</p>
+              </div>
+            ))
+          }
+        </div>
+
+        <table class="hidden w-full border-collapse text-left sm:table">
+          <caption class="sr-only">Wer die Kosten des Gutachtens trägt, nach Schadensfall</caption>
+          <thead>
+            <tr class="border-navy-900/15 border-b">
+              <th
+                scope="col"
+                class="text-navy-500 pr-4 pb-3 text-[0.74rem] font-semibold tracking-[0.12em] uppercase"
+              >
+                Ihr Fall
+              </th>
+              <th
+                scope="col"
+                class="text-navy-500 pr-4 pb-3 text-[0.74rem] font-semibold tracking-[0.12em] uppercase"
+              >
+                Zahlt
+              </th>
+              <th
+                scope="col"
+                class="text-navy-500 pb-3 text-[0.74rem] font-semibold tracking-[0.12em] uppercase"
+              >
+                Dazu
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              cases.map((row) => (
+                <tr class="border-navy-900/10 border-b last:border-0">
+                  <th
+                    scope="row"
+                    class="text-navy-900 py-4 pr-4 align-top text-[0.94rem] font-bold"
+                  >
+                    {row.situation}
+                  </th>
+                  <td class="py-4 pr-4 align-top">
+                    <span class="bg-royal-600/10 text-royal-700 inline-block rounded-md px-2 py-1 text-[0.8rem] font-semibold whitespace-nowrap">
+                      {row.payer}
+                    </span>
+                  </td>
+                  <td class="text-navy-600 py-4 align-top text-[0.88rem] leading-relaxed">
+                    {row.note}
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+
+        <p class="text-navy-500 mt-5 text-[0.82rem] leading-relaxed">
+          Unter rund 750 Euro Schadenhöhe erkennen viele Versicherer nur einen Kostenvoranschlag an.
+          Das prüfe ich vorab, damit Sie nicht auf einer Rechnung sitzen bleiben.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

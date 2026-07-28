@@ -1,0 +1,68 @@
+---
+import Icon from './Icon.astro';
+import { company } from '../data/site';
+---
+
+<!--
+  Schwebender WhatsApp-Button, nur mobil.
+
+  Bewusst ein einzelner Button statt einer Balkenleiste: Telefon und
+  Formular sind über Header und Kontaktbereich ohnehin erreichbar, und
+  der Kunde nennt WhatsApp als seinen Hauptkanal. Sichtbar ist er nur in
+  der Seitenmitte, also weder im Hero noch im Kontaktbereich oder Footer,
+  wo bereits ein direkter Handlungsweg auf dem Schirm ist.
+-->
+<a
+  id="sticky-cta"
+  href={company.whatsapp}
+  target="_blank"
+  rel="noopener"
+  data-track="wa-sticky"
+  class="bg-wa-500 fixed right-4 bottom-5 z-90 inline-flex min-h-13 items-center gap-2.5 rounded-full pr-5 pl-4 text-[0.9rem] font-semibold text-[#05270f] shadow-[0_10px_30px_-8px_rgb(37_211_102/0.7)] transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden"
+  data-visible="false"
+>
+  <Icon name="whatsapp" size={21} />
+  Schreiben
+</a>
+
+<style>
+  #sticky-cta[data-visible='false'] {
+    opacity: 0;
+    transform: translateY(90px) scale(0.94);
+    pointer-events: none;
+  }
+
+  #sticky-cta[data-visible='true'] {
+    opacity: 1;
+    transform: none;
+  }
+</style>
+
+<script>
+  /**
+   * Einblenden nur, wenn weder Hero noch Kontakt noch Footer im
+   * Viewport sind. In allen dreien steht bereits ein CTA, der Button
+   * waere dort nur im Weg.
+   */
+  const cta = document.getElementById('sticky-cta');
+  const watched = ['top', 'kontakt', 'footer']
+    .map((id) => document.getElementById(id))
+    .filter((el): el is HTMLElement => el !== null);
+
+  if (cta && watched.length > 0) {
+    const visible = new Set<Element>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) visible.add(entry.target);
+          else visible.delete(entry.target);
+        }
+        cta.dataset.visible = visible.size === 0 ? 'true' : 'false';
+      },
+      { threshold: 0 },
+    );
+
+    for (const section of watched) observer.observe(section);
+  }
+</script>

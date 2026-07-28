@@ -1,0 +1,245 @@
+---
+import Icon from './Icon.astro';
+import Wordmark from './Wordmark.astro';
+import { nav, company } from '../data/site';
+---
+
+<header
+  id="site-header"
+  class="fixed inset-x-0 top-0 z-100 border-b border-transparent transition-[background-color,border-color,backdrop-filter] duration-300"
+  data-header
+>
+  <div
+    class="container-page flex h-[var(--header-h)] items-center justify-between gap-4 transition-[height] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]"
+  >
+    <a href="#top" class="flex items-center rounded-md py-1">
+      <Wordmark />
+    </a>
+
+    <nav aria-label="Hauptnavigation" class="hidden lg:block">
+      <ul class="flex items-center gap-1">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={`#${item.id}`}
+                data-spy-link={item.id}
+                class="text-bone-200 hover:text-bone-50 aria-[current=true]:text-bone-50 relative block rounded-md px-2.5 py-2 text-[0.86rem] font-medium whitespace-nowrap transition-colors duration-200"
+              >
+                {item.label}
+                <span
+                  class="bg-gold-500 absolute inset-x-3 -bottom-0.5 h-0.5 origin-left scale-x-0 rounded-full transition-transform duration-300"
+                  data-spy-bar
+                  aria-hidden="true"
+                />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a
+        href={company.phoneHref}
+        class="btn btn-ghost hidden !min-h-11 !px-4 !text-[0.85rem] md:inline-flex"
+        data-track="call-header"
+      >
+        <Icon name="phone" size={16} />
+        {company.phoneDisplay}
+      </a>
+      <a
+        href={company.whatsapp}
+        target="_blank"
+        rel="noopener"
+        class="btn btn-wa !min-h-11 !px-4 !text-[0.85rem]"
+        data-track="wa-header"
+      >
+        <Icon name="whatsapp" size={17} />
+        <span class="hidden sm:inline">WhatsApp</span>
+        <span class="sm:hidden">Schreiben</span>
+      </a>
+
+      <button
+        type="button"
+        id="nav-toggle"
+        class="text-bone-100 grid h-11 w-11 place-items-center rounded-lg border border-white/15 bg-white/5 transition-colors hover:bg-white/12 lg:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        aria-label="Menü öffnen"
+      >
+        <Icon name="menu" size={20} class="[[aria-expanded=true]_&]:hidden" />
+        <Icon name="x" size={20} class="hidden [[aria-expanded=true]_&]:block" />
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobiles Menü -->
+  <div
+    id="mobile-nav"
+    class="bg-navy-950/97 grid grid-rows-[0fr] overflow-hidden border-t border-white/8 backdrop-blur-lg transition-[grid-template-rows] duration-350 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden"
+    data-open="false"
+  >
+    <div class="min-h-0">
+      <nav aria-label="Navigation mobil" class="container-page py-3">
+        <ul class="grid gap-0.5">
+          {
+            nav.map((item) => (
+              <li>
+                <a
+                  href={`#${item.id}`}
+                  data-spy-link={item.id}
+                  data-nav-close
+                  class="text-navy-300 hover:text-bone-50 aria-[current=true]:text-gold-400 flex min-h-12 items-center justify-between rounded-lg px-3 text-[0.95rem] font-medium transition-colors hover:bg-white/5 aria-[current=true]:bg-white/6"
+                >
+                  {item.label}
+                  <Icon name="arrow-right" size={16} class="opacity-40" />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <a
+          href={company.phoneHref}
+          class="btn btn-ghost mt-3 w-full"
+          data-nav-close
+          data-track="call-mobilenav"
+        >
+          <Icon name="phone" size={17} />
+          {company.phoneDisplay}
+        </a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<style>
+  #mobile-nav[data-open='true'] {
+    grid-template-rows: 1fr;
+  }
+
+  [data-spy-link][aria-current='true'] [data-spy-bar] {
+    transform: scaleX(1);
+  }
+
+  /* Ganz oben ist der Header durchsichtig. Ueber dem hellen Hero
+     braeuchten Logo und Navigation dort sonst Glueck, um lesbar zu
+     bleiben, deshalb ein weicher Verlauf darunter. */
+  [data-header]::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgb(4 7 15 / 0.62), rgb(4 7 15 / 0));
+    pointer-events: none;
+    transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  :global(html[data-scrolled='true']) [data-header]::before {
+    opacity: 0;
+  }
+
+  /* Erst beim Scrollen bekommt der Header einen eigenen Hintergrund.
+     Ganz oben liegt er unsichtbar ueber dem Hero. */
+  :global(html[data-scrolled='true']) [data-header] {
+    background-color: rgb(6 10 22 / 0.92);
+    backdrop-filter: blur(14px) saturate(140%);
+    border-bottom-color: rgb(255 255 255 / 0.08);
+    box-shadow: 0 10px 30px -22px rgb(0 0 0 / 0.9);
+  }
+</style>
+
+<script>
+  /**
+   * Scrollspy.
+   *
+   * Bewusst positionsbasiert statt IntersectionObserver: aktiv ist die
+   * letzte Sektion, deren Oberkante noch oberhalb der Header-Unterkante
+   * liegt. Damit stimmt die Markierung auch beim Hochscrollen, wo eine
+   * reine Sichtbarkeitspruefung faelschlich die erste Sektion waehlt.
+   */
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-spy-link]'));
+
+  const ids = Array.from(new Set(links.map((l) => l.dataset.spyLink ?? '')));
+  const sections = ids
+    .map((id) => document.getElementById(id))
+    .filter((el): el is HTMLElement => el !== null);
+
+  let current = '';
+  let ticking = false;
+
+  function headerHeight(): number {
+    return header?.offsetHeight ?? 68;
+  }
+
+  function setActive(id: string): void {
+    if (id === current) return;
+    current = id;
+    for (const link of links) {
+      link.setAttribute('aria-current', link.dataset.spyLink === id ? 'true' : 'false');
+    }
+  }
+
+  function update(): void {
+    ticking = false;
+
+    // Am <html>, damit --header-h und --logo-h ueberall greifen.
+    document.documentElement.dataset.scrolled = window.scrollY > 12 ? 'true' : 'false';
+
+    if (sections.length === 0) return;
+
+    // Am Seitenende immer die letzte Sektion markieren. Kurze
+    // Abschnitte wie der Kontaktblock werden sonst nie aktiv.
+    const atBottom =
+      window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+    if (atBottom) {
+      const last = sections[sections.length - 1];
+      if (last) setActive(last.id);
+      return;
+    }
+
+    const line = headerHeight() + 24;
+    let active = '';
+    for (const section of sections) {
+      if (section.getBoundingClientRect().top <= line) active = section.id;
+    }
+    setActive(active);
+  }
+
+  function onScroll(): void {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  update();
+
+  /* Mobiles Menü */
+  const toggle = document.getElementById('nav-toggle');
+  const panel = document.getElementById('mobile-nav');
+
+  function closeNav(): void {
+    if (!toggle || !panel) return;
+    panel.dataset.open = 'false';
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Menü öffnen');
+  }
+
+  toggle?.addEventListener('click', () => {
+    if (!panel || !toggle) return;
+    const open = panel.dataset.open === 'true';
+    panel.dataset.open = open ? 'false' : 'true';
+    toggle.setAttribute('aria-expanded', open ? 'false' : 'true');
+    toggle.setAttribute('aria-label', open ? 'Menü öffnen' : 'Menü schließen');
+  });
+
+  for (const el of document.querySelectorAll('[data-nav-close]')) {
+    el.addEventListener('click', closeNav);
+  }
+
+  document.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Escape') closeNav();
+  });
+</script>

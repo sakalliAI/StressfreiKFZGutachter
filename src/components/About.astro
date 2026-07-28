@@ -1,0 +1,93 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { company, trustPoints } from '../data/site';
+import portrait from '../assets/portrait-platzhalter.jpg';
+
+const areaLine = company.city
+  ? `Einsatzgebiet: ${company.city} und rund ${company.radiusKm} km Umkreis.`
+  : 'Einsatzgebiet auf Anfrage. Sagen Sie mir, wo das Fahrzeug steht.';
+---
+
+<section id="person" class="section-pad bg-navy-900">
+  <div class="container-page">
+    <div class="grid items-stretch gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
+      <!-- Visual -->
+      <div class="rounded-card relative min-h-[20rem] overflow-hidden lg:min-h-full" data-reveal>
+        <Image
+          src={portrait}
+          alt="Fahrzeugfront bei Nacht im Regen"
+          widths={[420, 640, 900]}
+          sizes="(min-width: 1024px) 34vw, 100vw"
+          format="webp"
+          quality={70}
+          loading="lazy"
+          decoding="async"
+          class="absolute inset-0 h-full w-full object-cover"
+        />
+        <span
+          class="absolute inset-0 bg-[linear-gradient(to_top,rgb(4_7_15/0.92),rgb(6_10_22/0.25))]"
+          aria-hidden="true"></span>
+
+        <div
+          class="bg-navy-950/80 absolute inset-x-4 bottom-4 rounded-xl border border-white/12 p-4 backdrop-blur-sm"
+        >
+          <p class="text-gold-400 text-[0.68rem] font-semibold tracking-[0.18em] uppercase">
+            Ihr Ansprechpartner
+          </p>
+          <p class="font-display text-bone-50 mt-1.5 text-lg font-bold">{company.owner}</p>
+          <p class="text-navy-300 mt-0.5 text-[0.82rem]">DESAG geprüfter Sachverständiger</p>
+        </div>
+      </div>
+
+      <!-- Text -->
+      <div class="flex flex-col justify-center">
+        <p class="eyebrow" data-reveal>Über mich</p>
+
+        <h2
+          class="text-bone-50 mt-4 text-[clamp(1.75rem,3.4vw+0.6rem,2.6rem)] font-bold"
+          data-reveal
+        >
+          Sie bekommen keinen Sachbearbeiter. Sie bekommen mich.
+        </h2>
+
+        <div class="text-navy-300 mt-6 grid gap-4 text-[1rem] leading-relaxed" data-reveal>
+          <p>
+            Ich bin {company.owner}, DESAG geprüfter Kfz-Sachverständiger, und arbeite allein. Kein
+            Großbüro, keine Ticketnummer, keine Warteschleife. Wer bei mir anruft, hat mich am
+            Telefon.
+          </p>
+          <p>
+            Ein Unfall ist Ärger genug. Dazu kommen Fristen, Rückfragen der Versicherung und
+            Papiere, die niemand versteht. Genau das nehme ich Ihnen ab. Daher der Name.
+          </p>
+          <p class="border-gold-500 text-bone-100 border-l-2 pl-5">
+            Bezahlt werde ich für ein sauberes Gutachten, nicht für ein bestimmtes Ergebnis. Von
+            Werkstätten und Versicherungen nehme ich keine Provision an.
+          </p>
+        </div>
+
+        <ul class="mt-8 grid gap-x-6 gap-y-4 sm:grid-cols-2" data-reveal>
+          {
+            trustPoints.map((point) => (
+              <li class="flex gap-3">
+                <Icon name="check" size={17} class="text-gold-400 mt-0.5 flex-none" />
+                <span>
+                  <span class="text-bone-50 block text-[0.92rem] font-semibold">{point.title}</span>
+                  <span class="text-navy-400 mt-1 block text-[0.86rem] leading-relaxed">
+                    {point.text}
+                  </span>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+
+        <p class="text-navy-400 mt-8 inline-flex items-center gap-2 text-[0.86rem]" data-reveal>
+          <Icon name="map-pin" size={16} class="text-gold-400 flex-none" />
+          {areaLine}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

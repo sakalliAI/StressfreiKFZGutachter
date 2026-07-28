@@ -1,0 +1,47 @@
+---
+/**
+ * Wortmarke aus dem Original-Logo des Kunden.
+ *
+ * `public/logo.png` entsteht aus `brand/Logo.png`, siehe
+ * `scripts/build-assets.mjs`. Der weiße Hintergrund ist dort bereits
+ * ausgeschlüsselt, das Logo liegt also transparent vor und sitzt ohne
+ * hellen Rand auf dunklem Grund.
+ *
+ * Das Bildzeichen ist rund 3:1 breit. Auf Header-Höhe skaliert wären
+ * Schriftzüge im Logo unleserlich, deshalb steht der Name daneben als
+ * echter Text. Das ist zugleich besser für Suchmaschinen.
+ */
+interface Props {
+  class?: string;
+  compact?: boolean;
+  /** Erlaubt es, --logo-h lokal zu überschreiben, etwa im Footer. */
+  style?: string;
+}
+
+const { class: className = '', compact = false, style } = Astro.props;
+---
+
+<span class={`inline-flex items-center gap-2.5 sm:gap-3 ${className}`} style={style}>
+  <img
+    src="/logo.webp"
+    alt=""
+    data-brand-logo
+    width="640"
+    height="211"
+    class="h-[var(--logo-h)] w-auto flex-none transition-[height] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]"
+    loading="eager"
+    decoding="sync"
+  />
+  {
+    !compact && (
+      <span class="sr-only flex-col leading-none sm:not-sr-only sm:flex">
+        <span class="font-display text-bone-50 text-[0.95rem] font-bold tracking-[0.02em]">
+          Stressfrei
+        </span>
+        <span class="text-navy-400 mt-1 text-[0.62rem] font-semibold tracking-[0.2em] uppercase">
+          KFZ-Gutachter
+        </span>
+      </span>
+    )
+  }
+</span>

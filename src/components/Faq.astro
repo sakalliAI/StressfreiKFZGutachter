@@ -1,0 +1,123 @@
+---
+import Icon from './Icon.astro';
+import SectionHead from './SectionHead.astro';
+import { faqs, company } from '../data/site';
+---
+
+<section id="faq" class="section-pad bg-navy-850">
+  <div class="container-page">
+    <div
+      class="grid gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.65fr)] lg:items-start lg:gap-14"
+    >
+      <div>
+        <SectionHead eyebrow="Häufige Fragen" title="Was Mandanten vorher wissen wollen" />
+
+        <!-- <details> statt eigenem Akkordeon: funktioniert ohne
+             JavaScript, ist tastaturbedienbar und der Text steht im
+             Markup, also auch fuer Crawler lesbar. -->
+        <div class="mt-9 divide-y divide-white/8 border-y border-white/8">
+          {
+            faqs.map((faq) => (
+              <details class="faq group">
+                <summary class="text-bone-50 hover:text-gold-400 flex cursor-pointer list-none items-start justify-between gap-5 py-5 text-[1rem] font-semibold transition-colors">
+                  {faq.q}
+                  <span
+                    class="text-navy-300 group-open:border-gold-500 group-open:text-gold-400 mt-0.5 grid h-7 w-7 flex-none place-items-center rounded-full border border-white/15 transition-transform duration-300 group-open:rotate-45"
+                    aria-hidden="true"
+                  >
+                    <Icon name="plus" size={15} />
+                  </span>
+                </summary>
+                <div class="faq__body">
+                  <p class="text-navy-300 pr-10 pb-5 text-[0.94rem] leading-relaxed">{faq.a}</p>
+                </div>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Bleibt beim Scrollen stehen, damit die Spalte nicht
+           halbleer wirkt. -->
+      <aside class="lg:sticky lg:top-[calc(var(--header-h)+2.5rem)]" data-reveal>
+        <div class="rounded-card bg-navy-800 border border-white/10 p-6">
+          <span class="bg-gold-500/14 text-gold-400 grid h-11 w-11 place-items-center rounded-xl">
+            <Icon name="file-text" size={20} />
+          </span>
+          <h3 class="text-bone-50 mt-5 text-lg font-bold">Ihre Frage steht nicht dabei?</h3>
+          <p class="text-navy-300 mt-2.5 text-[0.92rem] leading-relaxed">
+            Kurze Nachricht genügt. Ich antworte meistens innerhalb einer Stunde, auch am
+            Wochenende.
+          </p>
+          <div class="mt-6 grid gap-2.5">
+            <a
+              href={company.whatsapp}
+              target="_blank"
+              rel="noopener"
+              class="btn btn-wa w-full"
+              data-track="wa-faq"
+            >
+              <Icon name="whatsapp" size={18} />
+              WhatsApp schreiben
+            </a>
+            <a href={company.phoneHref} class="btn btn-ghost w-full" data-track="call-faq">
+              <Icon name="phone" size={17} />
+              {company.phoneDisplay}
+            </a>
+          </div>
+          <p class="text-navy-400 mt-5 flex items-start gap-2 text-[0.8rem] leading-relaxed">
+            <Icon name="clock" size={15} class="mt-0.5 flex-none" />
+            {company.hours}
+          </p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* Geschlossene <details> blenden ihren Inhalt aus, eine Hoehen-
+     Transition greift dort nicht. Stattdessen laeuft beim Oeffnen
+     eine kurze Einblendung. */
+  .faq[open] .faq__body {
+    animation: faq-in 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes faq-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq[open] .faq__body {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Nur ein Eintrag gleichzeitig offen. Ohne dieses Script bleibt das
+   * Akkordeon voll funktionsfaehig, es klappen dann eben mehrere auf.
+   */
+  const items = Array.from(document.querySelectorAll<HTMLDetailsElement>('details.faq'));
+
+  for (const item of items) {
+    item.addEventListener('toggle', () => {
+      if (!item.open) return;
+      for (const other of items) {
+        if (other !== item) other.open = false;
+      }
+    });
+  }
+</script>

@@ -1,0 +1,269 @@
+---
+import Icon from './Icon.astro';
+import { company } from '../data/site';
+
+/**
+ * Rechtstexte als Overlay statt als Unterseiten. Der Text steht real im
+ * HTML (nicht per JS nachgeladen), damit Crawler ihn sehen.
+ *
+ * Alle mit [BITTE ERGÄNZEN] markierten Stellen muss der Kunde vor dem
+ * Go-Live ausfüllen. Liste dazu: docs/handover.md.
+ */
+const address =
+  company.street && company.zip
+    ? `${company.street}, ${company.zip}`
+    : '[BITTE ERGÄNZEN: Straße, Hausnummer, PLZ und Ort]';
+const tax = company.taxId ?? '[BITTE ERGÄNZEN: Steuernummer oder USt-IdNr.]';
+
+const modals = [
+  { id: 'impressum', title: 'Impressum' },
+  { id: 'datenschutz', title: 'Datenschutzerklärung' },
+] as const;
+---
+
+{
+  modals.map((modal) => (
+    <dialog
+      id={`legal-${modal.id}`}
+      class="legal rounded-card bg-navy-850 text-bone-100 m-auto w-[min(44rem,calc(100vw-1.5rem))] border border-white/10 p-0 backdrop:bg-black/70 backdrop:backdrop-blur-sm"
+      aria-labelledby={`legal-${modal.id}-title`}
+    >
+      <div class="bg-navy-850 sticky top-0 flex items-center justify-between gap-4 border-b border-white/8 p-5 sm:p-6">
+        <h2 id={`legal-${modal.id}-title`} class="text-bone-50 text-xl font-bold">
+          {modal.title}
+        </h2>
+        <button
+          type="button"
+          class="text-navy-300 hover:text-bone-50 grid h-10 w-10 flex-none place-items-center rounded-lg border border-white/12 transition-colors hover:bg-white/8"
+          data-dialog-close
+          aria-label="Schließen"
+        >
+          <Icon name="x" size={18} />
+        </button>
+      </div>
+
+      <div class="legal__body max-h-[70vh] overflow-y-auto p-5 sm:p-6">
+        {modal.id === 'impressum' ? (
+          <>
+            <h3>Angaben gemäß § 5 DDG</h3>
+            <p>
+              {company.name}
+              <br />
+              Inhaber: {company.owner}
+              <br />
+              {address}
+            </p>
+
+            <h3>Kontakt</h3>
+            <p>
+              Telefon: {company.phoneDisplay}
+              <br />
+              E-Mail: {company.email}
+            </p>
+
+            <h3>Umsatzsteuer</h3>
+            <p>{tax}</p>
+
+            <h3>Berufsbezeichnung</h3>
+            <p>
+              Kfz-Sachverständiger. Die Berufsbezeichnung wurde in der Bundesrepublik Deutschland
+              verliehen. Die Bezeichnung „Sachverständiger" ist in Deutschland nicht gesetzlich
+              geschützt.
+            </p>
+
+            <h3>Berufshaftpflichtversicherung</h3>
+            <p>[BITTE ERGÄNZEN: Name und Anschrift des Versicherers, räumlicher Geltungsbereich]</p>
+
+            <h3>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h3>
+            <p>
+              {company.owner}
+              <br />
+              {address}
+            </p>
+
+            <h3>Streitschlichtung</h3>
+            <p>
+              Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer
+              Verbraucherschlichtungsstelle teilzunehmen.
+            </p>
+
+            <h3>Haftung für Inhalte</h3>
+            <p>
+              Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten
+              nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind wir als
+              Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde
+              Informationen zu überwachen oder nach Umständen zu forschen, die auf eine
+              rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der
+              Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt.
+              Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer
+              konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden
+              Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.
+            </p>
+
+            <h3>Haftung für Links</h3>
+            <p>
+              Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen
+              Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr
+              übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter
+              oder Betreiber der Seiten verantwortlich. Bei Bekanntwerden von Rechtsverletzungen
+              werden wir derartige Links umgehend entfernen.
+            </p>
+
+            <h3>Urheberrecht</h3>
+            <p>
+              Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten
+              unterliegen dem deutschen Urheberrecht. Beiträge Dritter sind als solche
+              gekennzeichnet. Downloads und Kopien dieser Seite sind nur für den privaten, nicht
+              kommerziellen Gebrauch gestattet.
+            </p>
+          </>
+        ) : (
+          <>
+            <h3>1. Verantwortlicher</h3>
+            <p>
+              Verantwortlich für die Datenverarbeitung auf dieser Website ist:
+              <br />
+              {company.name}, Inhaber {company.owner}
+              <br />
+              {address}
+              <br />
+              Telefon: {company.phoneDisplay}
+              <br />
+              E-Mail: {company.email}
+            </p>
+
+            <h3>2. Hosting</h3>
+            <p>
+              Diese Website wird bei Cloudflare Pages gehostet. Anbieter ist die Cloudflare, Inc.,
+              101 Townsend St., San Francisco, CA 94107, USA, für Kunden im Europäischen
+              Wirtschaftsraum vertreten durch die Cloudflare Germany GmbH, Rosental 7, 80331
+              München. Beim Aufruf der Website verarbeitet Cloudflare technisch notwendige
+              Verbindungsdaten (IP-Adresse, Zeitpunkt der Anfrage, abgerufene Datei, übertragene
+              Datenmenge, Browsertyp und Betriebssystem). Rechtsgrundlage ist Art. 6 Abs. 1 lit. f
+              DSGVO. Unser berechtigtes Interesse liegt im sicheren und leistungsfähigen Betrieb der
+              Website. Mit Cloudflare besteht ein Vertrag zur Auftragsverarbeitung nach Art. 28
+              DSGVO. Soweit Daten in die USA übermittelt werden, erfolgt dies auf Grundlage der
+              Standardvertragsklauseln der EU-Kommission.
+            </p>
+
+            <h3>3. Kontaktformular und E-Mail-Versand</h3>
+            <p>
+              Wenn Sie uns über das Kontaktformular eine Anfrage senden, verarbeiten wir die von
+              Ihnen angegebenen Daten (Name, Telefonnummer, optional E-Mail-Adresse und Kennzeichen
+              sowie Ihre Nachricht) zur Bearbeitung Ihrer Anfrage. Für den technischen Versand
+              dieser Nachricht nutzen wir den Dienst Brevo der Sendinblue GmbH (Brevo GmbH),
+              Köpenicker Straße 126, 10179 Berlin. Die Verarbeitung findet auf Servern innerhalb der
+              Europäischen Union statt. Mit Brevo besteht ein Vertrag zur Auftragsverarbeitung nach
+              Art. 28 DSGVO.
+            </p>
+            <p>
+              Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit Ihre Anfrage auf den Abschluss
+              eines Vertrags gerichtet ist, im Übrigen Art. 6 Abs. 1 lit. f DSGVO aufgrund unseres
+              berechtigten Interesses an der Beantwortung von Anfragen.
+            </p>
+
+            <h3>4. Kontakt per WhatsApp</h3>
+            <p>
+              Wenn Sie uns über WhatsApp kontaktieren, verarbeitet die WhatsApp Ireland Limited,
+              Merrion Road, Dublin 4, D04 X2K5, Irland, die dabei anfallenden Daten nach ihren
+              eigenen Datenschutzbestimmungen. Wir haben darauf keinen Einfluss. Die Kontaktaufnahme
+              über diesen Weg erfolgt freiwillig. Wenn Sie das vermeiden möchten, nutzen Sie bitte
+              das Kontaktformular, das Telefon oder eine E-Mail.
+            </p>
+
+            <h3>5. Keine Cookies, kein Tracking</h3>
+            <p>
+              Diese Website setzt keine Analyse- oder Marketing-Cookies und bindet keine
+              Tracking-Dienste ein. Aus diesem Grund ist auch kein Einwilligungsbanner erforderlich.
+              Schriftarten werden lokal von unserem eigenen Server ausgeliefert, es besteht keine
+              Verbindung zu Google Fonts.
+            </p>
+            <p>
+              Für die einmalige Anzeige der Eingangsanimation speichern wir einen technischen Merker
+              im Sitzungsspeicher (sessionStorage) Ihres Browsers. Dieser enthält keine
+              personenbezogenen Daten und wird beim Schließen des Browser-Tabs automatisch gelöscht.
+            </p>
+
+            <h3>6. Spamschutz</h3>
+            <p>
+              Zum Schutz des Kontaktformulars vor automatisierten Einsendungen setzen wir technische
+              Prüfungen ein. Dabei werden die IP-Adresse und der Zeitpunkt der Absendung kurzzeitig
+              verarbeitet. Sofern der Dienst Cloudflare Turnstile aktiviert ist, wird zu diesem
+              Zweck zusätzlich eine Verbindung zu Cloudflare hergestellt. Turnstile setzt keine
+              Werbe-Cookies und erstellt keine geräteübergreifenden Profile. Rechtsgrundlage ist
+              Art. 6 Abs. 1 lit. f DSGVO mit unserem berechtigten Interesse an der Abwehr von
+              Missbrauch.
+            </p>
+
+            <h3>7. Speicherdauer</h3>
+            <p>
+              Wir speichern Ihre Anfragedaten so lange, wie es für die Bearbeitung erforderlich ist.
+              Führt Ihre Anfrage zu einem Auftrag, gelten die gesetzlichen Aufbewahrungsfristen des
+              Handels- und Steuerrechts von sechs beziehungsweise zehn Jahren. Anfragen ohne
+              Auftragsverhältnis löschen wir spätestens nach sechs Monaten.
+            </p>
+
+            <h3>8. Ihre Rechte</h3>
+            <p>
+              Sie haben jederzeit das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16
+              DSGVO), Löschung (Art. 17 DSGVO), Einschränkung der Verarbeitung (Art. 18 DSGVO),
+              Datenübertragbarkeit (Art. 20 DSGVO) sowie Widerspruch gegen die Verarbeitung (Art. 21
+              DSGVO). Eine erteilte Einwilligung können Sie jederzeit mit Wirkung für die Zukunft
+              widerrufen. Wenden Sie sich dazu an die oben genannten Kontaktdaten.
+            </p>
+
+            <h3>9. Beschwerderecht</h3>
+            <p>
+              Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde über die Verarbeitung
+              Ihrer personenbezogenen Daten zu beschweren. Zuständig ist die Aufsichtsbehörde des
+              Bundeslandes, in dem wir unseren Sitz haben.
+              <br />
+              [BITTE ERGÄNZEN: zuständige Landesdatenschutzbehörde nach Sitz des Unternehmens]
+            </p>
+
+            <h3>10. Änderungen</h3>
+            <p>
+              Wir passen diese Datenschutzerklärung an, sobald Änderungen unserer Leistungen oder
+              der Rechtslage dies erfordern. Es gilt jeweils die auf dieser Seite abrufbare Fassung.
+            </p>
+          </>
+        )}
+      </div>
+    </dialog>
+  ))
+}
+
+<style is:global>
+  .legal .legal__body h3 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-bone-50);
+    margin-top: 1.75rem;
+  }
+
+  .legal .legal__body h3:first-child {
+    margin-top: 0;
+  }
+
+  .legal .legal__body p {
+    margin-top: 0.6rem;
+    font-size: 0.89rem;
+    line-height: 1.7;
+    color: var(--color-navy-300);
+    max-width: 40rem;
+  }
+</style>
+
+<script>
+  /** Öffnet die Rechtstexte über beliebige [data-legal-open]-Trigger. */
+  for (const trigger of document.querySelectorAll<HTMLElement>('[data-legal-open]')) {
+    trigger.addEventListener('click', () => {
+      const dialog = document.getElementById(`legal-${trigger.dataset.legalOpen}`);
+      if (dialog instanceof HTMLDialogElement) {
+        dialog.showModal();
+        document.documentElement.style.overflow = 'hidden';
+      }
+    });
+  }
+</script>

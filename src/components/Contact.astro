@@ -1,0 +1,294 @@
+---
+import Icon from './Icon.astro';
+import { company } from '../data/site';
+
+// Turnstile ist optional. Ist kein Site-Key gesetzt, greifen weiterhin
+// Honeypot, Zeitprüfung und Rate-Limit in der Pages Function.
+const turnstileSiteKey = import.meta.env['PUBLIC_TURNSTILE_SITE_KEY'] ?? '';
+
+const field =
+  'w-full rounded-lg border border-white/12 bg-navy-900 px-4 py-3 text-[0.95rem] text-bone-50 placeholder:text-navy-500 transition-colors duration-200 focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/35';
+const label = 'block text-[0.82rem] font-semibold text-navy-300';
+---
+
+<section id="kontakt" class="section-pad bg-navy-900">
+  <div class="container-page">
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
+      <!-- Direkte Wege zuerst. Wer gerade an der Unfallstelle steht,
+           tippt kein Formular aus. -->
+      <div>
+        <p class="eyebrow" data-reveal>Kontakt</p>
+        <h2
+          class="text-bone-50 mt-4 text-[clamp(1.75rem,3.4vw+0.6rem,2.6rem)] font-bold"
+          data-reveal
+        >
+          Schildern Sie mir kurz, was passiert ist.
+        </h2>
+        <p class="text-navy-300 mt-4 max-w-md text-[1rem] leading-relaxed" data-reveal>
+          Am schnellsten geht ein Anruf oder eine WhatsApp mit Foto. Wenn es Ihnen lieber ist,
+          nehmen Sie das Formular.
+        </p>
+
+        <div class="mt-8 grid gap-2.5" data-reveal>
+          <a
+            href={company.whatsapp}
+            target="_blank"
+            rel="noopener"
+            class="btn btn-wa w-full sm:w-auto"
+            data-track="wa-kontakt"
+          >
+            <Icon name="whatsapp" size={18} />
+            WhatsApp an {company.phoneDisplay}
+          </a>
+          <a
+            href={company.phoneHref}
+            class="btn btn-ghost w-full sm:w-auto"
+            data-track="call-kontakt"
+          >
+            <Icon name="phone" size={17} />
+            Anrufen
+          </a>
+        </div>
+
+        {
+          /*
+          Bewusst eine Liste statt <dl>. Ein <dl> erlaubt zwischen sich
+          und den <dt>/<dd> hoechstens eine <div>-Ebene. Das Icon
+          daneben braucht aber eine eigene Ebene, wodurch die Struktur
+          ungueltig wuerde.
+        */
+        }
+        <ul class="mt-10 grid gap-5 border-t border-white/8 pt-8 text-[0.9rem]" data-reveal>
+          <li class="flex gap-3">
+            <Icon name="clock" size={17} class="text-gold-400 mt-0.5 flex-none" />
+            <div>
+              <p class="text-bone-50 font-semibold">Erreichbarkeit</p>
+              <p class="text-navy-400 mt-1 leading-relaxed">{company.hours}</p>
+            </div>
+          </li>
+          <li class="flex gap-3">
+            <Icon name="map-pin" size={17} class="text-gold-400 mt-0.5 flex-none" />
+            <div>
+              <p class="text-bone-50 font-semibold">Besichtigung</p>
+              <p class="text-navy-400 mt-1 leading-relaxed">
+                Vor Ort bei Ihnen. Werkstatt, Zuhause, Abstellplatz oder Unfallstelle.
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Formular -->
+      <div class="rounded-card bg-navy-850 border border-white/10 p-5 sm:p-8" data-reveal>
+        <form id="contact-form" class="grid gap-5" novalidate>
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label class={label} for="cf-name">Name <span aria-hidden="true">*</span></label>
+              <input
+                id="cf-name"
+                name="name"
+                type="text"
+                required
+                autocomplete="name"
+                maxlength="80"
+                class={`${field} mt-2`}
+                placeholder="Vor- und Nachname"
+              />
+            </div>
+            <div>
+              <label class={label} for="cf-phone">Telefon <span aria-hidden="true">*</span></label>
+              <input
+                id="cf-phone"
+                name="phone"
+                type="tel"
+                required
+                autocomplete="tel"
+                maxlength="40"
+                class={`${field} mt-2`}
+                placeholder="Für den Rückruf"
+              />
+            </div>
+          </div>
+
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label class={label} for="cf-email">E-Mail</label>
+              <input
+                id="cf-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                maxlength="120"
+                class={`${field} mt-2`}
+                placeholder="Optional"
+              />
+            </div>
+            <div>
+              <label class={label} for="cf-plate">Kennzeichen</label>
+              <input
+                id="cf-plate"
+                name="plate"
+                type="text"
+                maxlength="20"
+                class={`${field} mt-2`}
+                placeholder="Optional"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class={label} for="cf-message">
+              Was ist passiert? <span aria-hidden="true">*</span>
+            </label>
+            <textarea
+              id="cf-message"
+              name="message"
+              required
+              rows="4"
+              maxlength="2000"
+              class={`${field} mt-2 resize-y`}
+              placeholder="Ein, zwei Sätze reichen. Wann, wo, wer war beteiligt."></textarea>
+          </div>
+
+          <!-- Honeypot. Für Menschen unsichtbar, aber nicht per
+               display:none, weil manche Bots das erkennen. -->
+          <div class="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+            <label for="cf-website">Website</label>
+            <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <input type="hidden" name="ts" id="cf-ts" value="0" />
+
+          {
+            turnstileSiteKey && (
+              <div
+                class="cf-turnstile"
+                data-sitekey={turnstileSiteKey}
+                data-theme="dark"
+                data-language="de"
+              />
+            )
+          }
+
+          <label
+            class="text-navy-400 flex cursor-pointer items-start gap-3 text-[0.84rem] leading-relaxed"
+          >
+            <input
+              type="checkbox"
+              name="privacy"
+              required
+              class="bg-navy-900 accent-gold-500 mt-0.5 h-5 w-5 flex-none rounded border-white/25"
+            />
+            <span>
+              Ich habe die
+              <button
+                type="button"
+                class="text-gold-400 font-semibold underline underline-offset-2"
+                data-legal-open="datenschutz"
+              >
+                Datenschutzerklärung
+              </button>
+              gelesen und bin damit einverstanden, dass meine Angaben zur Bearbeitung meiner Anfrage verarbeitet
+              werden. <span aria-hidden="true">*</span>
+            </span>
+          </label>
+
+          <button type="submit" class="btn btn-gold w-full" data-track="form-submit">
+            <span data-submit-label>Anfrage senden</span>
+            <Icon name="arrow-right" size={17} />
+          </button>
+
+          <!-- aria-live, damit Screenreader die Rückmeldung mitbekommen -->
+          <p
+            id="cf-status"
+            role="status"
+            aria-live="polite"
+            class="hidden rounded-lg px-4 py-3 text-[0.88rem] leading-relaxed"
+          >
+          </p>
+
+          <noscript>
+            <p
+              class="bg-gold-500/12 text-bone-100 rounded-lg px-4 py-3 text-[0.86rem] leading-relaxed"
+            >
+              Für das Formular wird JavaScript benötigt. Rufen Sie einfach an unter
+              {company.phoneDisplay} oder schreiben Sie an {company.email}.
+            </p>
+          </noscript>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+{
+  turnstileSiteKey && (
+    <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
+  )
+}
+
+<script>
+  const form = document.getElementById('contact-form');
+  const status = document.getElementById('cf-status');
+  const ts = document.getElementById('cf-ts');
+
+  // Zeitstempel des Seitenaufrufs. Die Function verwirft Einsendungen,
+  // die unrealistisch schnell ankommen.
+  if (ts instanceof HTMLInputElement) ts.value = String(Date.now());
+
+  function show(kind: 'ok' | 'error', text: string): void {
+    if (!status) return;
+    status.textContent = text;
+    status.className =
+      kind === 'ok'
+        ? 'rounded-lg bg-wa-500/14 px-4 py-3 text-[0.88rem] leading-relaxed text-wa-500'
+        : 'rounded-lg bg-gold-500/14 px-4 py-3 text-[0.88rem] leading-relaxed text-gold-300';
+  }
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!(form instanceof HTMLFormElement)) return;
+
+    if (!form.reportValidity()) return;
+
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const buttonLabel = form.querySelector<HTMLElement>('[data-submit-label]');
+    const original = buttonLabel?.textContent ?? 'Anfrage senden';
+
+    if (button) button.disabled = true;
+    if (buttonLabel) buttonLabel.textContent = 'Wird gesendet …';
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(new FormData(form).entries())),
+      });
+
+      const data: unknown = await response.json().catch(() => ({}));
+      const message =
+        typeof data === 'object' && data !== null && 'message' in data
+          ? String((data as { message: unknown }).message)
+          : '';
+
+      if (response.ok) {
+        show('ok', message || 'Angekommen. Ich melde mich zeitnah bei Ihnen.');
+        form.reset();
+        if (ts instanceof HTMLInputElement) ts.value = String(Date.now());
+      } else {
+        show(
+          'error',
+          message ||
+            'Das hat gerade nicht geklappt. Rufen Sie mich bitte direkt an, dann geht es schneller.',
+        );
+      }
+    } catch {
+      show(
+        'error',
+        'Keine Verbindung zum Server. Bitte rufen Sie an oder schreiben Sie per WhatsApp.',
+      );
+    } finally {
+      if (button) button.disabled = false;
+      if (buttonLabel) buttonLabel.textContent = original;
+    }
+  });
+</script>

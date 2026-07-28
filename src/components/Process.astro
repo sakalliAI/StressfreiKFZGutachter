@@ -1,0 +1,43 @@
+---
+import SectionHead from './SectionHead.astro';
+import { processSteps } from '../data/site';
+---
+
+<section id="ablauf" class="section-pad bg-navy-850 relative">
+  <div class="container-page">
+    <SectionHead
+      eyebrow="Ablauf"
+      title="Von Ihrer Nachricht bis zum fertigen Gutachten"
+      lead="Vier Schritte. Um alles dazwischen kümmere ich mich."
+      align="center"
+    />
+
+    <ol class="relative mt-14 grid gap-8 md:grid-cols-4 md:gap-6">
+      <!-- Verbindungslinie nur auf breiten Viewports -->
+      <span
+        class="pointer-events-none absolute top-6 right-0 left-0 hidden h-px bg-[linear-gradient(90deg,transparent,var(--color-navy-700)_12%,var(--color-navy-700)_88%,transparent)] md:block"
+        aria-hidden="true"></span>
+
+      {
+        processSteps.map((step, i) => (
+          <li
+            class="relative flex gap-5 md:flex-col md:gap-0"
+            data-reveal
+            style={`--reveal-delay:${i * 90}ms`}
+          >
+            <span
+              class="border-gold-500/40 bg-navy-850 font-display text-gold-400 relative z-1 grid h-12 w-12 flex-none place-items-center rounded-full border text-[0.85rem] font-bold"
+              aria-hidden="true"
+            >
+              {step.n}
+            </span>
+            <div class="md:mt-6">
+              <h3 class="text-bone-50 text-[1.08rem] font-bold">{step.title}</h3>
+              <p class="text-navy-300 mt-2 max-w-xs text-[0.92rem] leading-relaxed">{step.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

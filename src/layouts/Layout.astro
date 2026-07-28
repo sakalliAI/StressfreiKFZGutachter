@@ -1,0 +1,179 @@
+---
+import '../styles/global.css';
+import { company, seo, faqs, services } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = seo.title, description = seo.description } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://mk-stressfrei.sakalli.ai');
+const ogImage = new URL(seo.ogImage, canonical);
+
+/* Schema.org.
+   ProfessionalService statt AutomotiveBusiness: begutachtet wird das
+   Fahrzeug, es wird aber keine Leistung am Fahrzeug erbracht. */
+const businessSchema: Record<string, unknown> = {
+  '@type': 'ProfessionalService',
+  '@id': `${canonical.origin}/#business`,
+  name: company.name,
+  description: seo.description,
+  url: canonical.origin,
+  telephone: company.phoneIntl,
+  email: company.email,
+  image: ogImage.href,
+  priceRange: '$$',
+  founder: { '@type': 'Person', name: company.owner },
+  knowsLanguage: ['de'],
+  makesOffer: services.map((service) => ({
+    '@type': 'Offer',
+    itemOffered: { '@type': 'Service', name: service.title, description: service.claim },
+  })),
+};
+
+// Adresse nur ausgeben, wenn sie wirklich vorliegt. Ein Schema mit
+// Platzhaltern waere schlechter als gar keins.
+if (company.street && company.zip && company.city) {
+  businessSchema['address'] = {
+    '@type': 'PostalAddress',
+    streetAddress: company.street,
+    postalCode: company.zip,
+    addressLocality: company.city,
+    addressCountry: 'DE',
+  };
+}
+
+if (company.city) {
+  businessSchema['areaServed'] = { '@type': 'City', name: company.city };
+}
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    businessSchema,
+    {
+      '@type': 'WebSite',
+      '@id': `${canonical.origin}/#website`,
+      url: canonical.origin,
+      name: company.name,
+      inLanguage: 'de-DE',
+      publisher: { '@id': `${canonical.origin}/#business` },
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${canonical.origin}/#faq`,
+      mainEntity: faqs.map((faq) => ({
+        '@type': 'Question',
+        name: faq.q,
+        acceptedAnswer: { '@type': 'Answer', text: faq.a },
+      })),
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.href} />
+    <meta name="theme-color" content="#0a1226" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content={company.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:image" content={ogImage.href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage.href} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+  </head>
+
+  <body>
+    <a
+      href="#hauptinhalt"
+      class="focus:bg-gold-500 focus:text-navy-950 sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-200 focus:rounded-lg focus:px-4 focus:py-3 focus:font-semibold"
+    >
+      Zum Hauptinhalt springen
+    </a>
+
+    <slot />
+  </body>
+</html>
+
+<script>
+  /* --------------------------------------------------------------
+     Scroll-Reveal.
+
+     Die Startwerte (opacity 0) setzt erst diese Klasse am <html>.
+     Bleibt das Script aus, ist der Inhalt trotzdem sichtbar. Das ist
+     der Grund, warum nach einem Deploy nie ein leerer Bereich unter
+     dem Hero stehen kann.
+     -------------------------------------------------------------- */
+  const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
+
+  if (targets.length > 0 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('js-reveal-ready');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add('is-in');
+          observer.unobserve(entry.target);
+        }
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
+    );
+
+    for (const target of targets) observer.observe(target);
+
+    // Sicherheitsnetz: Was nach 2.5s noch nicht eingeblendet wurde,
+    // wird hart sichtbar gemacht.
+    window.setTimeout(() => {
+      for (const target of targets) target.classList.add('is-in');
+    }, 2500);
+  }
+
+  /* --------------------------------------------------------------
+     Zentraler Dialog-Handler für Leistungen und Rechtstexte.
+     -------------------------------------------------------------- */
+  for (const dialog of document.querySelectorAll<HTMLDialogElement>('dialog')) {
+    dialog.addEventListener('close', () => {
+      document.documentElement.style.overflow = '';
+    });
+
+    dialog.querySelector('[data-dialog-close]')?.addEventListener('click', () => dialog.close());
+
+    // Ein <dialog> im Modal-Modus deckt den ganzen Viewport ab. Ein
+    // Klick gilt daher nur dann als Backdrop-Klick, wenn er ausserhalb
+    // der sichtbaren Dialogbox liegt.
+    dialog.addEventListener('click', (event) => {
+      if (event.target !== dialog) return;
+      const box = dialog.getBoundingClientRect();
+      const inside =
+        event.clientX >= box.left &&
+        event.clientX <= box.right &&
+        event.clientY >= box.top &&
+        event.clientY <= box.bottom;
+      if (!inside) dialog.close();
+    });
+  }
+</script>
