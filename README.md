@@ -28,6 +28,7 @@ Zusätzlich:
 
 ```bash
 node scripts/build-assets.mjs   # Logo freistellen, Icons und OG-Bild erzeugen
+node scripts/build-map.mjs      # Kartenbild fuer das Einsatzgebiet erzeugen (holt OSM-Kacheln)
 node scripts/shots.mjs          # Sichtprüfung Desktop und Mobil, prüft auch den Scrollspy
 node scripts/serve-prod.mjs     # dist/ mit echten Headern und Brotli ausliefern (Port 4322)
 ```

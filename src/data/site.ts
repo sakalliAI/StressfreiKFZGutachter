@@ -32,13 +32,17 @@ export interface Faq {
   readonly a: string;
 }
 
-/** Ort im Einsatzgebiet, verortet ueber Entfernung und Peilung. */
+/**
+ * Ort im Einsatzgebiet.
+ *
+ * Die Koordinaten stammen aus der Ortssuche von OpenStreetMap und
+ * setzen die Marke auf der Karte an die richtige Stelle. Nur deshalb
+ * stehen sie hier, sie werden sonst nirgends verwendet.
+ */
 export interface Place {
   readonly name: string;
-  readonly km: number;
-  readonly bearing: number;
-  /** Kurzform fuer die Karte, wo lange Namen ueber den Rand laufen. */
-  readonly short?: string;
+  readonly lat: number;
+  readonly lon: number;
 }
 
 /* ------------------------------------------------------------------
@@ -73,16 +77,13 @@ export const company = {
   city: 'Ingolstadt' as string | null,
   region: 'Ingolstadt und Umgebung' as string | null,
   radiusKm: 50,
-  /* Entfernung in Kilometern und Peilung in Grad ab Ingolstadt, damit
-     die Einsatzgebiet-Karte die Orte an ihrer ungefaehr richtigen
-     Stelle zeigt statt willkuerlich verteilt. */
   places: [
-    { name: 'Gaimersheim', km: 6, bearing: 315 },
-    { name: 'Kösching', km: 10, bearing: 40 },
-    { name: 'Großmehring', km: 9, bearing: 95 },
-    { name: 'Manching', km: 10, bearing: 185 },
-    { name: 'Neuburg a. d. Donau', km: 22, bearing: 275, short: 'Neuburg' },
-    { name: 'Pfaffenhofen', km: 30, bearing: 150 },
+    { name: 'Gaimersheim', lat: 48.7986, lon: 11.3702 },
+    { name: 'Kösching', lat: 48.8423, lon: 11.5188 },
+    { name: 'Großmehring', lat: 48.7831, lon: 11.5354 },
+    { name: 'Manching', lat: 48.7171, lon: 11.4941 },
+    { name: 'Neuburg a. d. Donau', lat: 48.7456, lon: 11.188 },
+    { name: 'Pfaffenhofen a. d. Ilm', lat: 48.5297, lon: 11.5085 },
   ] as readonly Place[],
 
   /** TODO(Kunde): Ladungsfaehige Anschrift fuer das Impressum. */

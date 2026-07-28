@@ -252,6 +252,17 @@ Drittanbieter-Skripte ein. Damit entfällt die Einwilligungspflicht nach
 schnellste Variante: kein blockierendes Skript, kein Layout-Sprung, kein
 Klick vor dem ersten Inhalt.
 
+Das gilt auch für die Karte im Abschnitt „Über mich". Eine eingebettete
+Karte, ob von Google oder von OpenStreetMap, lädt bei jedem Seitenaufruf
+Kacheln von einem fremden Server und überträgt dabei die IP-Adresse des
+Besuchers. Sie wäre damit einwilligungspflichtig. Stattdessen holt
+`scripts/build-map.mjs` die Kacheln einmal beim Entwickeln, setzt sie
+zusammen, färbt sie ein und legt das Ergebnis als Bild im Projekt ab.
+Ausgeliefert wird ein gewöhnliches WebP vom eigenen Server. Marken und
+Ringe liegen als SVG darüber; beide Seiten rechnen dieselbe Projektion
+aus `src/data/map-config.mjs`, sonst lägen die Punkte neben den Orten.
+Die von der ODbL geforderte Namensnennung steht sichtbar im Bild.
+
 Der einzige clientseitige Speicherzugriff ist ein Merker im
 `sessionStorage`, damit der Opener nur einmal je Sitzung läuft. Er
 enthält keine personenbezogenen Daten und ist in der

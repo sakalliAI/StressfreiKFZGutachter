@@ -1,167 +1,239 @@
 ---
+import { Image } from 'astro:assets';
 import { company } from '../data/site';
+import mapImage from '../assets/karte-einsatzgebiet.webp';
+import { MAP_H, MAP_W, pxPerKm, toMap } from '../data/map-config.mjs';
 
 /**
- * Einsatzgebiet als selbst gezeichnete Karte.
+ * Einsatzgebiet auf einer echten Karte.
  *
- * Bewusst kein Google Maps und kein Kartendienst: Jede eingebettete
- * Karte lädt beim Aufruf Daten von einem Dritten und wäre damit
- * einwilligungspflichtig. Diese Seite kommt ohne Cookie-Banner aus,
- * das soll so bleiben. Zudem sind es null zusätzliche Anfragen.
+ * Der Untergrund stammt von OpenStreetMap, wird aber beim Bauen der
+ * Seite einmal geholt und liegt danach als Bild im Projekt. Zur
+ * Laufzeit geht damit keine einzige Anfrage an einen Dritten hinaus.
+ * Deshalb braucht die Seite weiterhin kein Einwilligungsfenster.
+ * Erzeugt von `scripts/build-map.mjs`.
  *
- * Die Orte stehen an ihrer ungefähr richtigen Stelle: Entfernung und
- * Peilung ab Ingolstadt stehen in `site.ts`.
+ * Marken und Ringe liegen als SVG darüber und rechnen mit derselben
+ * Projektion wie das Bild, siehe `src/data/map-config.mjs`. Das SVG hat
+ * genau das Seitenverhältnis des Bildes, sonst würden die Marken
+ * verrutschen.
  */
 
-const SIZE = 320;
-const CENTER = SIZE / 2;
-/** Der äußere Ring entspricht dem Einsatzradius. */
-const OUTER = 132;
-const PX_PER_KM = OUTER / company.radiusKm;
+const PX_KM = pxPerKm();
+const CX = MAP_W / 2;
+const CY = MAP_H / 2;
 
-const RINGS = [10, 25, company.radiusKm] as const;
+const points = company.places.map((place) => ({
+  name: place.name,
+  ...toMap(place.lat, place.lon),
+}));
 
-const points = company.places.map((place) => {
-  const rad = (place.bearing * Math.PI) / 180;
-  return {
-    name: place.short ?? place.name,
-    x: CENTER + Math.sin(rad) * place.km * PX_PER_KM,
-    y: CENTER - Math.cos(rad) * place.km * PX_PER_KM,
-    // Beschriftung nach außen kippen, damit sie nicht über die Mitte fällt
-    anchor: Math.sin(rad) < -0.2 ? 'end' : 'start',
-  };
-});
+/** Maßstabsbalken unten links. */
+const SCALE_KM = 25;
+const SCALE_PX = SCALE_KM * PX_KM;
 ---
 
 <figure class="rounded-card bg-navy-800/70 overflow-hidden border border-white/8">
-  <div class="coverage relative">
+  <div class="relative" style={`aspect-ratio:${MAP_W}/${MAP_H}`}>
+    <Image
+      src={mapImage}
+      alt={`Karte der Region um ${company.city} mit den Orten, in denen ich Gutachten erstelle`}
+      widths={[440, 660, 880]}
+      sizes="(min-width: 1024px) 34vw, 100vw"
+      format="webp"
+      quality={66}
+      loading="lazy"
+      decoding="async"
+      class="absolute inset-0 h-full w-full object-cover"
+    />
+
+    <!-- Randabdunklung, damit die Karte in die Kachel einsinkt -->
+    <span
+      class="absolute inset-0 bg-[radial-gradient(115%_95%_at_50%_45%,transparent_38%,rgb(4_7_15/0.62)_100%)]"
+      aria-hidden="true"></span>
+
     <svg
-      viewBox={`0 0 ${SIZE} ${SIZE}`}
-      class="block h-auto w-full"
-      role="img"
-      aria-label={`Einsatzgebiet: ${company.city} und rund ${company.radiusKm} Kilometer im Umkreis`}
+      viewBox={`0 0 ${MAP_W} ${MAP_H}`}
+      class="absolute inset-0 h-full w-full"
+      aria-hidden="true"
+      focusable="false"
     >
       <defs>
-        <radialGradient id="cov-glow" cx="50%" cy="50%">
-          <stop offset="0%" stop-color="var(--color-gold-500)" stop-opacity="0.16"></stop>
-          <stop offset="70%" stop-color="var(--color-gold-500)" stop-opacity="0.03"></stop>
-          <stop offset="100%" stop-color="var(--color-gold-500)" stop-opacity="0"></stop>
+        <radialGradient id="cov-reach" cx="50%" cy="50%">
+          <stop offset="0%" stop-color="var(--color-gold-400)" stop-opacity="0.2"></stop>
+          <stop offset="45%" stop-color="var(--color-gold-400)" stop-opacity="0.1"></stop>
+          <stop offset="100%" stop-color="var(--color-gold-400)" stop-opacity="0"></stop>
         </radialGradient>
       </defs>
 
-      <circle cx={CENTER} cy={CENTER} r={OUTER} fill="url(#cov-glow)"></circle>
+      <!-- Reichweite als weicher Verlauf statt harter Kante. Ein Kreis
+           mit klarer Linie wuerde eine Grenze behaupten, die es so
+           nicht gibt. -->
+      <circle cx={CX} cy={CY} r={company.radiusKm * PX_KM} fill="url(#cov-reach)"></circle>
 
-      {/* Entfernungsringe */}
+      <!-- Entfernungsringe. Ohne Beschriftung, die Entfernung liest man
+           am Maßstab unten links ab. -->
       {
-        RINGS.map((km) => (
+        [10, 25].map((km) => (
           <circle
-            cx={CENTER}
-            cy={CENTER}
-            r={km * PX_PER_KM}
+            cx={CX}
+            cy={CY}
+            r={km * PX_KM}
             fill="none"
-            stroke="var(--color-gold-500)"
-            stroke-opacity={km === company.radiusKm ? 0.45 : 0.18}
-            stroke-width="1"
-            stroke-dasharray={km === company.radiusKm ? '0' : '3 5'}
+            stroke="var(--color-gold-400)"
+            stroke-opacity="0.3"
+            stroke-width="1.4"
+            stroke-dasharray="5 7"
           />
         ))
       }
 
-      {/* Zwei Achsen als Andeutung von Hauptstraßen */}
-      <g stroke="var(--color-navy-600)" stroke-opacity="0.5" stroke-width="1">
-        <line x1={CENTER - OUTER} y1={CENTER} x2={CENTER + OUTER} y2={CENTER}></line>
-        <line x1={CENTER} y1={CENTER - OUTER} x2={CENTER} y2={CENTER + OUTER}></line>
-      </g>
-
-      {/* Ausfahrende Impulse. Die eigentliche Bewegung der Karte. */}
-      <g class="coverage-pulse" fill="none" stroke="var(--color-gold-400)" stroke-width="1.5">
-        <circle cx={CENTER} cy={CENTER} r={OUTER} style="--d:0ms"></circle>
-        <circle cx={CENTER} cy={CENTER} r={OUTER} style="--d:1300ms"></circle>
-        <circle cx={CENTER} cy={CENTER} r={OUTER} style="--d:2600ms"></circle>
-      </g>
-
-      {/* Umliegende Orte */}
+      <!-- Orte im Einsatzgebiet -->
       {
         points.map((point) => (
           <g>
-            <circle cx={point.x} cy={point.y} r="3" fill="var(--color-navy-300)" />
-            <text
-              x={point.anchor === 'end' ? point.x - 7 : point.x + 7}
-              y={point.y + 3.5}
-              text-anchor={point.anchor}
-              fill="var(--color-navy-300)"
-              font-size="8.5"
-              font-weight="500"
-            >
-              {point.name}
-            </text>
+            <circle
+              cx={point.x}
+              cy={point.y}
+              r="9"
+              fill="var(--color-gold-400)"
+              fill-opacity="0.2"
+            />
+            <circle
+              cx={point.x}
+              cy={point.y}
+              r="4.5"
+              fill="var(--color-gold-400)"
+              stroke="var(--color-navy-950)"
+              stroke-width="1.5"
+            />
           </g>
         ))
       }
 
-      {/* Standort */}
-      <circle cx={CENTER} cy={CENTER} r="7" fill="var(--color-gold-500)"></circle>
-      <circle cx={CENTER} cy={CENTER} r="12" fill="none" stroke="var(--color-gold-500)" stroke-opacity="0.5"></circle>
+      <!-- Standort -->
+      <circle
+        class="coverage-ping"
+        cx={CX}
+        cy={CY}
+        r="30"
+        fill="none"
+        stroke="var(--color-gold-400)"
+        stroke-width="2"></circle>
+      <circle
+        cx={CX}
+        cy={CY}
+        r="11"
+        fill="var(--color-gold-500)"
+        stroke="var(--color-navy-950)"
+        stroke-width="2.5"></circle>
       <text
-        x={CENTER - 17}
-        y={CENTER + 21}
-        text-anchor="end"
+        x={CX}
+        y={CY + 34}
+        text-anchor="middle"
         fill="var(--color-bone-50)"
-        font-size="11"
+        font-size="21"
         font-weight="700"
+        stroke="rgb(4 7 15 / 0.85)"
+        stroke-width="4"
+        paint-order="stroke"
       >
         {company.city}
       </text>
 
-      {/* Maßstab */}
-      <text
-        x={CENTER + 4}
-        y={CENTER - OUTER + 13}
-        fill="var(--color-gold-400)"
-        fill-opacity="0.75"
-        font-size="8.5"
-      >
-        {company.radiusKm} km
-      </text>
+      <!-- Maßstab -->
+      <g transform={`translate(28 ${MAP_H - 30})`}>
+        <line
+          x1="0"
+          y1="0"
+          x2={SCALE_PX}
+          y2="0"
+          stroke="var(--color-bone-50)"
+          stroke-opacity="0.72"
+          stroke-width="2"></line>
+        <line
+          x1="0"
+          y1="-5"
+          x2="0"
+          y2="5"
+          stroke="var(--color-bone-50)"
+          stroke-opacity="0.72"
+          stroke-width="2"></line>
+        <line
+          x1={SCALE_PX}
+          y1="-5"
+          x2={SCALE_PX}
+          y2="5"
+          stroke="var(--color-bone-50)"
+          stroke-opacity="0.72"
+          stroke-width="2"></line>
+        <text
+          x={SCALE_PX / 2}
+          y="-9"
+          text-anchor="middle"
+          fill="var(--color-bone-50)"
+          fill-opacity="0.8"
+          font-size="15"
+          font-weight="600">{SCALE_KM} km</text
+        >
+      </g>
     </svg>
+
+    <!-- Namensnennung. Die ODbL verlangt sie sichtbar an der Karte,
+         deshalb steht sie im Bild und nicht im Kleingedruckten. -->
+    <p
+      class="bg-navy-950/55 text-navy-300 absolute right-0 bottom-0 rounded-tl-md px-2 py-1 text-[0.6rem] leading-none"
+    >
+      Karte <a
+        href="https://www.openstreetmap.org/copyright"
+        rel="noopener"
+        class="hover:text-bone-100 underline underline-offset-2">© OpenStreetMap</a
+      >
+    </p>
   </div>
 
-  <figcaption class="border-t border-white/8 p-5">
-    <p class="text-bone-50 text-[0.95rem] font-semibold">
-      {company.region}
+  <figcaption class="border-t border-white/8 px-4 py-4">
+    <p class="text-bone-50 text-[0.92rem] font-semibold">
+      {company.region}, rund {company.radiusKm} km im Umkreis
     </p>
-    <p class="text-navy-300 mt-1.5 text-[0.86rem] leading-relaxed">
-      Ich fahre raus, wo Ihr Fahrzeug steht. Werkstatt, Zuhause, Abstellplatz oder direkt zur
-      Unfallstelle.
-    </p>
+    <ul class="mt-2.5 flex flex-wrap gap-1.5">
+      {
+        company.places.map((place) => (
+          <li class="bg-navy-700/60 text-navy-300 rounded-full px-2.5 py-1 text-[0.73rem] font-medium">
+            {place.name}
+          </li>
+        ))
+      }
+    </ul>
   </figcaption>
 </figure>
 
 <style>
-  .coverage-pulse circle {
+  /* Ein einzelner Impuls am Standort. Genug Bewegung, damit die Karte
+     nicht wie ein Screenshot wirkt, wenig genug, um nicht zu stoeren. */
+  .coverage-ping {
     transform-origin: center;
     transform-box: fill-box;
     opacity: 0;
-    animation: coverage-pulse 3900ms ease-out infinite;
-    animation-delay: var(--d);
+    animation: coverage-ping 3400ms ease-out infinite;
   }
 
-  @keyframes coverage-pulse {
+  @keyframes coverage-ping {
     0% {
-      transform: scale(0.08);
+      transform: scale(0.35);
       opacity: 0;
     }
-    12% {
-      opacity: 0.55;
+    18% {
+      opacity: 0.6;
     }
     100% {
-      transform: scale(1);
+      transform: scale(2.6);
       opacity: 0;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .coverage-pulse {
+    .coverage-ping {
       display: none;
     }
   }

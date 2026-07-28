@@ -28,6 +28,14 @@ Ebenfalls prüfen: die Liste der umliegenden Orte (`places` in
 `src/data/site.ts`). Sie ist aus „Ingolstadt und Umgebung" abgeleitet.
 Streichen oder ergänzen, je nachdem wie weit tatsächlich gefahren wird.
 
+Zu jedem Ort gehören dort `lat` und `lon`. Danach setzt die Karte im
+Abschnitt „Über mich" die Marke an die richtige Stelle. Koordinaten
+findet man auf [openstreetmap.org](https://www.openstreetmap.org),
+Rechtsklick auf den Ort, „Adresse anzeigen". Ein neuer Ort außerhalb des
+Kartenausschnitts fällt aus dem Bild; dann in
+`src/data/map-config.mjs` den Wert `M_PER_PX` erhöhen und
+`node scripts/build-map.mjs` erneut laufen lassen.
+
 ### 1.2 Steuernummer oder Umsatzsteuer-Identifikationsnummer (Pflicht)
 
 ```ts

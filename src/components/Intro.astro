@@ -96,14 +96,7 @@ const SHARDS = Array.from({ length: 16 }, (_, i) => {
   <!-- Marke. Liegt ausserhalb der Buehne, weil sie bestehen bleibt,
        waehrend Fahrzeuge und Fahrbahn verschwinden. -->
   <div class="intro__brand">
-    <img
-      class="intro__logo"
-      id="intro-logo"
-      src="/logo.webp"
-      alt=""
-      width="640"
-      height="211"
-    />
+    <img class="intro__logo" id="intro-logo" src="/logo.webp" alt="" width="640" height="211" />
     <span class="intro__name">Stressfrei</span>
     <span class="intro__sub">KFZ-Gutachter</span>
   </div>
@@ -582,7 +575,7 @@ const SHARDS = Array.from({ length: 16 }, (_, i) => {
 
     const LAND_AT = 3350; // Logo steht eine volle Sekunde, dann fliegt es
     const LAND_MS = 900; // Dauer des Flugs
-        /* Nach der Landung kurz stehen lassen, damit der Wechsel auf das
+    /* Nach der Landung kurz stehen lassen, damit der Wechsel auf das
        echte Header-Logo nicht als Sprung wahrgenommen wird. */
     const END_AT = LAND_AT + LAND_MS + 280;
 
