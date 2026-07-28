@@ -25,8 +25,8 @@ CHROME_PATH=<pfad-zu-chrome> npx lighthouse@12 http://127.0.0.1:4323/ \
 | Messwert | Desktop | Mobil | Zielwert |
 | -------- | ------- | ----- | -------- |
 | LCP      | 0.7 s   | 2.7 s | < 2,5 s  |
-| CLS      | 0.001   | 0     | < 0,1    |
-| TBT      | 0 ms    | 0 ms  | < 200 ms |
+| CLS      | 0       | 0.001 | < 0,1    |
+| TBT      | 0 ms    | 30 ms | < 200 ms |
 | FCP      | 0.3 s   | 1.4 s |          |
 
 Die Mobilmessung läuft mit der Standarddrosselung von Lighthouse

@@ -32,7 +32,10 @@ const [landscapeMedium, landscapeLarge, landscapeXl] = await Promise.all([
 ]);
 ---
 
-<section id="top" class="relative isolate flex min-h-[100svh] flex-col overflow-hidden">
+<section
+  id="top"
+  class="relative isolate flex min-h-[max(34rem,min(100svh,48rem))] flex-col overflow-hidden"
+>
   <!-- Vollflächiges Hintergrundbild -->
   <picture>
     <source
@@ -71,8 +74,8 @@ const [landscapeMedium, landscapeLarge, landscapeXl] = await Promise.all([
   >
   </div>
 
-  <div class="container-page flex flex-1 flex-col justify-end pt-[calc(var(--header-h)+2rem)] pb-6">
-    <div class="grid max-w-[52rem] flex-1 content-end">
+  <div class="container-page flex flex-1 flex-col justify-end pt-[calc(var(--header-h)+1.5rem)] pb-6">
+    <div class="grid max-w-[52rem] flex-1 content-center">
       <p class="eyebrow hero-in" style="--i:0">
         Kfz-Sachverständiger{company.city ? ` in ${company.city}` : ''}
       </p>

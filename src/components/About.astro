@@ -21,7 +21,7 @@ const placesLine =
       <div class="rounded-card relative min-h-[20rem] overflow-hidden lg:min-h-full" data-reveal>
         <Image
           src={portrait}
-          alt="Fahrzeugfront bei Nacht im Regen"
+          alt="Kfz-Sachverständiger in Arbeitskleidung in einer Werkstatt"
           widths={[420, 640, 900]}
           sizes="(min-width: 1024px) 34vw, 100vw"
           format="webp"
@@ -58,17 +58,18 @@ const placesLine =
 
         <div class="text-navy-300 mt-6 grid gap-4 text-[1rem] leading-relaxed" data-reveal>
           <p>
-            Ich bin {company.owner}, DESAG geprüfter Kfz-Sachverständiger, und arbeite allein. Kein
-            Großbüro, keine Ticketnummer, keine Warteschleife. Wer bei mir anruft, hat mich am
-            Telefon.
+            Ich bin {company.owner}, DESAG geprüfter Kfz-Sachverständiger{
+              company.city ? ` in ${company.city}` : ''
+            }. Ich arbeite allein, ohne Büro dazwischen. Wer hier anruft, hat mich am Apparat und
+            nicht die Zentrale.
           </p>
           <p>
-            Ein Unfall ist Ärger genug. Dazu kommen Fristen, Rückfragen der Versicherung und
-            Papiere, die niemand versteht. Genau das nehme ich Ihnen ab. Daher der Name.
+            Ein Unfall ist Ärger genug. Dann kommen noch Fristen, Rückfragen der Versicherung und
+            Papiere, die kein Mensch versteht. Das nehme ich Ihnen ab. Daher der Name.
           </p>
           <p class="border-gold-500 text-bone-100 border-l-2 pl-5">
             Bezahlt werde ich für ein sauberes Gutachten, nicht für ein bestimmtes Ergebnis. Von
-            Werkstätten und Versicherungen nehme ich keine Provision an.
+            Werkstätten und Versicherungen nehme ich kein Geld an.
           </p>
         </div>
 

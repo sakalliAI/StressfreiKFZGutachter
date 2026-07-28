@@ -6,7 +6,7 @@ import { emergencySteps, company } from '../data/site';
 
 <section id="sofort" class="section-pad bg-navy-850 relative">
   <div class="container-page">
-    <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-start lg:gap-16">
+    <div class="grid gap-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start lg:gap-16">
       <div class="lg:sticky lg:top-[calc(var(--header-h)+3rem)]">
         <SectionHead
           eyebrow="Gerade passiert"
@@ -14,14 +14,21 @@ import { emergencySteps, company } from '../data/site';
           lead="Ruhig bleiben und der Reihe nach abarbeiten. Danach rufen Sie mich an, den Rest übernehme ich."
         />
 
+        <!--
+          Notruf zuerst. Wer hier landet, während es ernst ist, soll den
+          Hinweis vor der Liste sehen, nicht darunter.
+        -->
         <div
-          class="rounded-card border-gold-500/25 bg-gold-500/8 mt-8 flex flex-col gap-3 border p-5 sm:flex-row sm:items-center sm:justify-between"
+          class="border-gold-500/35 bg-gold-500/8 rounded-card mt-8 flex flex-col gap-4 border p-5 sm:flex-row sm:items-center sm:justify-between"
           data-reveal
         >
           <div class="flex items-start gap-3">
-            <Icon name="triangle-alert" size={20} class="text-gold-400 mt-0.5 flex-none" />
+            <span class="bg-gold-500/15 text-gold-400 grid h-10 w-10 flex-none place-items-center rounded-lg">
+              <Icon name="triangle-alert" size={20} />
+            </span>
             <p class="text-bone-100 text-[0.92rem] leading-relaxed">
-              Verletzte oder Streit über die Schuld? Erst 110, dann mich.
+              Verletzte oder Streit über die Schuld?
+              <span class="text-bone-50 block font-semibold">Erst 110, dann mich.</span>
             </p>
           </div>
           <a href={company.phoneHref} class="btn btn-gold flex-none" data-track="call-sofort">
@@ -31,23 +38,47 @@ import { emergencySteps, company } from '../data/site';
         </div>
       </div>
 
-      <ol class="grid gap-3 sm:grid-cols-2">
-        {
-          emergencySteps.map((step, i) => (
-            <li
-              class="group rounded-card bg-navy-800 hover:border-gold-500/40 flex h-full flex-col border border-white/8 p-5 transition-colors duration-220"
-              data-reveal
-              style={`--reveal-delay:${i * 70}ms`}
-            >
-              <span class="bg-gold-500/14 font-display text-gold-400 grid h-9 w-9 flex-none place-items-center rounded-lg text-sm font-bold">
-                {step.n}
-              </span>
-              <h3 class="text-bone-50 mt-4 text-[1.05rem] font-bold">{step.title}</h3>
-              <p class="text-navy-300 mt-2 text-[0.9rem] leading-relaxed">{step.text}</p>
-            </li>
-          ))
-        }
-      </ol>
+      <!--
+        Eine zusammenhängende Checkliste statt vier gleicher Kästen. Am
+        Straßenrand liest man von oben nach unten und hakt ab, nicht
+        über ein Raster hinweg. Der schräge Warnstreifen oben ist das,
+        was im Kofferraum liegt: Warndreieck und Weste.
+      -->
+      <div class="rounded-card border-white/8 bg-navy-800/70 overflow-hidden border" data-reveal>
+        <div class="hazard-bar h-2" aria-hidden="true"></div>
+
+        <ol class="divide-y divide-white/8">
+          {
+            emergencySteps.map((step) => (
+              <li class="group flex gap-5 p-5 transition-colors duration-220 hover:bg-white/3 sm:gap-6 sm:p-6">
+                <span
+                  class="font-display text-gold-500/55 group-hover:text-gold-400 w-9 flex-none text-[1.75rem] leading-none font-extrabold tabular-nums transition-colors duration-220"
+                  aria-hidden="true"
+                >
+                  {step.n.padStart(2, '0')}
+                </span>
+                <div>
+                  <h3 class="text-bone-50 text-[1.05rem] font-bold">{step.title}</h3>
+                  <p class="text-navy-300 mt-1.5 text-[0.92rem] leading-relaxed">{step.text}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
     </div>
   </div>
 </section>
+
+<style>
+  /* Warnstreifen wie auf Absperrungen. Bewusst schräg und in den
+     Markenfarben, nicht das übliche Gelb-Schwarz. */
+  .hazard-bar {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--color-gold-500) 0 12px,
+      var(--color-navy-850) 12px 24px
+    );
+    opacity: 0.85;
+  }
+</style>

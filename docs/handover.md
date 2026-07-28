@@ -73,13 +73,28 @@ Nichts davon darf ohne Nachweis auf die Seite. Die Bezeichnung
 „Sachverständiger" ist nicht geschützt, eine erfundene Bestellung oder
 Mitgliedschaft wäre nach § 5 UWG irreführend und abmahnfähig.
 
-### 1.7 Porträtfoto
+### 1.7 Porträtfoto (Pflicht vor dem Go-Live)
 
-In der Sektion „Über mich" steht ein Stimmungsbild. Ein echtes Foto von
-Kumalic Mersum ist an dieser Stelle das stärkste Argument gegen ein
-anonymes Großbüro. Aufnahmehinweise stehen in `docs/image-prompts.md`
-unter Punkt 9. Datei als `src/assets/portrait.jpg` ablegen und in
-`src/components/About.astro` den Import ändern.
+In der Sektion „Über mich" steht derzeit ein **Stockfoto einer fremden
+Person**. Daneben stehen Name und Titel von Kumalic Mersum.
+
+**Dieses Bild darf so nicht live gehen.** Ein fremdes Gesicht unter dem
+eigenen Namen ist eine Irreführung über die Person des Anbieters und
+mindestens ein Fall für § 5 UWG, dazu ein Vertrauensbruch, sobald es
+jemandem auffällt. Für die Vorschau ist es in Ordnung, für den
+Echtbetrieb nicht.
+
+Ein echtes Foto ist an dieser Stelle ohnehin das stärkste Argument
+gegen ein anonymes Großbüro. Handyfoto genügt:
+
+- Brustbild, Blick in die Kamera, freundlich und nicht steif
+- Hochformat, ungefähr 4:5
+- Hintergrund: eigenes Fahrzeug, Werkstatt oder schlichte Wand
+- Tageslicht von vorn oder halbseitlich, keine Deckenlampe von oben
+- Arbeitskleidung oder Hemd, so wie beim Termin auch
+
+Datei als `src/assets/portrait-platzhalter.jpg` ersetzen, dann ist
+nichts weiter zu tun.
 
 ### 1.8 Bilder
 

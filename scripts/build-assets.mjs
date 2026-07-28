@@ -6,7 +6,8 @@
  * Nötig, wenn Logo oder Hero-Bild getauscht werden.
  *
  * Ergebnis:
- *   public/logo.webp            Wortmarke freigestellt, für Header, Footer, Opener
+ *   public/logo.webp            Bildzeichen freigestellt, für Header und Opener
+ *   public/logo-lockup.webp     Sperrmarke mit Schriftzug, für den Footer
  *   public/favicon-32.png       Monogramm, kleines Favicon
  *   public/apple-touch-icon.png Monogramm, 180 px
  *   public/icon-512.png         Monogramm, 512 px für das Web-Manifest
@@ -15,6 +16,10 @@
 import sharp from 'sharp';
 
 const LOGO = 'brand/Logo.png';
+/* Vollstaendige Sperrmarke: Bildzeichen mit Schriftzug darunter.
+   Im Footer ist genug Platz dafuer, dort ersetzt sie die Kombination
+   aus Bildzeichen plus separatem Text. */
+const LOGO_LOCKUP = 'brand/LogoMitTitel.png';
 const HERO = 'src/assets/hero.jpeg';
 
 const NAVY = '#0a1226';
@@ -79,6 +84,15 @@ await sharp(logo)
   .resize({ width: 640 })
   .webp({ quality: 82, alphaQuality: 90 })
   .toFile('public/logo.webp');
+
+/* Sperrmarke fuer den Footer, gleiche Freistellung. */
+const lockup = await knockOutWhite(LOGO_LOCKUP);
+const lockupMeta = await sharp(lockup).metadata();
+console.log(`Sperrmarke freigestellt: ${lockupMeta.width}x${lockupMeta.height}`);
+await sharp(lockup)
+  .resize({ width: 640 })
+  .webp({ quality: 82, alphaQuality: 90 })
+  .toFile('public/logo-lockup.webp');
 
 /*
   Favicon aus dem Monogramm. Die volle Wortmarke ist mit rund 3:1 zu
@@ -169,5 +183,5 @@ await sharp(base)
   .toFile('public/og.jpg');
 
 console.log(
-  'Assets erzeugt: logo.webp, favicon-32.png, apple-touch-icon.png, icon-512.png, og.jpg',
+  'Assets erzeugt: logo.webp, logo-lockup.webp, favicon-32.png, apple-touch-icon.png, icon-512.png, og.jpg',
 );

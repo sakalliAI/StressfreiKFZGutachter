@@ -259,39 +259,27 @@ export const processSteps: readonly Step[] = [
 export const faqs: readonly Faq[] = [
   {
     q: 'Wer zahlt das Gutachten?',
-    a: 'Bei einem unverschuldeten Unfall zahlt die Haftpflichtversicherung des Unfallgegners. Das ergibt sich aus § 249 BGB. Sie gehen nicht in Vorleistung. Bei Teilschuld wird anteilig abgerechnet, bei einem Kaskoschaden klären wir die Kostenübernahme vorher mit Ihrer Versicherung.',
+    a: 'Bei einem unverschuldeten Unfall zahlt die Haftpflichtversicherung des Unfallgegners. Das ergibt sich aus § 249 BGB. Sie gehen nicht in Vorleistung. Bei Teilschuld wird anteilig abgerechnet, bei einem Kaskoschaden klären wir die Kostenübernahme vorher mit Ihrer Versicherung. Sind Sie selbst schuld, nenne ich Ihnen vor dem Termin einen Festpreis.',
   },
   {
     q: 'Darf ich den Gutachter frei aussuchen?',
     a: 'Ja. Als Geschädigter bestimmen Sie, wer Ihren Schaden begutachtet. Die gegnerische Versicherung schlägt oft einen eigenen Sachverständigen vor. Sie müssen darauf nicht eingehen.',
   },
   {
-    q: 'Wie schnell bekomme ich einen Termin?',
-    a: 'In der Regel am selben oder am nächsten Werktag. Wenn es eilt, weil ein Mietwagen läuft oder die Werkstatt auf Freigabe wartet, sagen Sie das gleich beim ersten Kontakt.',
+    q: 'Wie schnell geht das?',
+    a: 'Termin in der Regel am selben oder am nächsten Werktag. Nach der Besichtigung dauert es üblicherweise 24 bis 48 Stunden bis zum fertigen Gutachten. Wenn es eilt, weil ein Mietwagen läuft oder die Werkstatt auf Freigabe wartet, sagen Sie das gleich beim ersten Kontakt.',
   },
   {
     q: 'Muss ich das Auto irgendwo hinbringen?',
-    a: 'Nein. Ich komme zu Ihnen, im gesamten Raum Ingolstadt. Zur Werkstatt, nach Hause, auf den Abstellplatz oder zum Abschleppdienst. Ein nicht fahrbereites Fahrzeug ist kein Problem.',
+    a: 'Nein. Ich komme zu Ihnen, im gesamten Raum Ingolstadt. Zur Werkstatt, nach Hause, auf den Abstellplatz oder zum Abschleppdienst. Ein nicht fahrbereites Fahrzeug ist kein Problem. Bringen Sie zum Termin Fahrzeugschein, Führerschein, Ihre Versicherungsdaten und das Kennzeichen des Unfallgegners mit, bei Polizeieinsatz dazu das Aktenzeichen.',
   },
   {
     q: 'Ab welchem Schaden lohnt sich ein Gutachten?',
     a: 'Als Faustregel gilt: ab etwa 750 Euro Schadenhöhe. Darunter erkennen Versicherungen häufig nur einen Kostenvoranschlag an. Ob Ihr Fall darüber liegt, sehe ich meist schon an einem guten Foto.',
   },
   {
-    q: 'Was brauche ich für den Termin?',
-    a: 'Fahrzeugschein, Führerschein, Ihre Versicherungsdaten und das Kennzeichen des Unfallgegners. Wenn die Polizei da war, dazu das Aktenzeichen. Fehlt etwas, reichen wir es nach.',
-  },
-  {
-    q: 'Wie lange dauert das Gutachten?',
-    a: 'Nach der Besichtigung üblicherweise 24 bis 48 Stunden bis zum fertigen Dokument. Bei komplizierten Schäden oder wenn Ersatzteilpreise erst angefragt werden müssen, kann es einen Tag länger dauern.',
-  },
-  {
     q: 'Brauche ich zusätzlich einen Anwalt?',
     a: 'Bei einem unverschuldeten Unfall trägt die Gegenseite in der Regel auch die Anwaltskosten. Das nimmt Ihnen viel Schriftverkehr ab. Ich sage Ihnen ehrlich, wenn ich es in Ihrem Fall für sinnvoll halte, und arbeite auf Wunsch mit Ihrer Kanzlei zusammen.',
-  },
-  {
-    q: 'Was kostet es, wenn ich selbst schuld bin?',
-    a: 'Dann sind Sie Selbstzahler. Ich nenne Ihnen vorher einen Festpreis, der sich an der Schadenhöhe orientiert. Sie wissen also vor dem Termin, woran Sie sind.',
   },
 ];
 

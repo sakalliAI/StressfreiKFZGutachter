@@ -113,6 +113,30 @@ einmal pro Browsersitzung, ist jederzeit überspringbar und entfällt bei
 
 Alternativen mit Veo 3 oder fertigen 3D-Modellen: siehe `docs/opener.md`.
 
+## Die Fahrt in der Ablauf-Sektion
+
+Ein Fahrzeug fährt die vier Schritte ab, die Strecke färbt sich hinter
+ihm gold und jeder Punkt leuchtet in dem Moment auf, in dem das
+Fahrzeug ihn passiert. Ausgelöst wird das einmal, sobald die Sektion im
+Blick ist.
+
+Zwei Entscheidungen stecken darin:
+
+- **Gleichbleibendes Tempo (`linear`).** Punkt i liegt bei i/4 der
+  Strecke und leuchtet deshalb bei i/4 der Dauer auf. Mit einer
+  beschleunigten Kurve müsste man diese Verzögerungen zurückrechnen.
+- **Bewegt wird ein Läufer, nicht das Fahrzeug.** Der Läufer ist so
+  breit wie die Strecke, `translateX(100%)` entspricht also genau ihrer
+  Länge. Der Umweg ist nötig, weil eine Animation von `left` den
+  Browser in jedem Bild neu umbrechen lässt: In der Messung kamen so
+  über zwei Sekunden Layoutarbeit und 640 ms Blockierzeit zusammen, mit
+  `transform` sind es 30 ms.
+
+Wie beim Opener stellt auch hier erst das Script den leeren
+Startzustand her. Ohne JavaScript steht die Grafik fertig da statt leer.
+Ein Zeitfenster als Sicherheitsnetz wäre falsch gewesen, weil ein
+Besucher beliebig lange braucht, bis er unten ankommt.
+
 ## Zweistufiger Header
 
 Am Seitenanfang ist der Header groß und ohne eigenen Hintergrund, er

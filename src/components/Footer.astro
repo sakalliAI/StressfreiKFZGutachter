@@ -1,6 +1,5 @@
 ---
 import Icon from './Icon.astro';
-import Wordmark from './Wordmark.astro';
 import { company, nav } from '../data/site';
 
 const year = new Date().getFullYear();
@@ -10,7 +9,17 @@ const year = new Date().getFullYear();
   <div class="container-page py-14 md:py-16">
     <div class="grid gap-10 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)] md:gap-8">
       <div>
-        <Wordmark style="--logo-h: 2.25rem" />
+        {/* Im Footer ist Platz für die vollständige Sperrmarke mit
+            Schriftzug. Der separate Text daneben entfällt dadurch. */}
+        <img
+          src="/logo-lockup.webp"
+          alt="MK Stressfrei Kfz-Gutachter"
+          width="640"
+          height="330"
+          class="h-24 w-auto sm:h-28"
+          loading="lazy"
+          decoding="async"
+        />
         <p class="text-navy-400 mt-5 max-w-xs text-[0.88rem] leading-relaxed">
           Unabhängige Kfz-Gutachten nach Unfall{company.region ? ` in ${company.region}` : ''}.
           Besichtigung vor Ort, Gutachten direkt an Versicherung und Anwalt.
@@ -80,8 +89,7 @@ const year = new Date().getFullYear();
       class="mt-12 flex flex-col gap-4 border-t border-white/8 pt-7 sm:flex-row sm:items-center sm:justify-between"
     >
       <p class="text-navy-400 text-[0.8rem]">
-        © {year}
-        {company.name}
+        {`© ${year} ${company.name}`}
       </p>
       <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
         <button
