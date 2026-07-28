@@ -515,6 +515,18 @@ const SHARDS = Array.from({ length: 16 }, (_, i) => {
     if (!el) return;
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /*
+      Der Opener laeuft einmal je Browsersitzung. Beim Neuladen bleibt er
+      also weg, was fuer echte Besucher richtig ist: er verdeckt bis zum
+      Ende den Inhalt und wuerde sonst jedes Mal den ersten Bildaufbau
+      verzoegern.
+
+      Zum Vorfuehren reicht `?intro` an der Adresse, dann laeuft er
+      trotzdem. Reduzierte Bewegung bleibt davon unberuehrt.
+    */
+    const force = /[?&]intro\b/.test(window.location.search);
+
     let seen = false;
     try {
       seen = sessionStorage.getItem('mk-intro') === '1';
@@ -523,7 +535,7 @@ const SHARDS = Array.from({ length: 16 }, (_, i) => {
       seen = false;
     }
 
-    if (reduce || seen) {
+    if (reduce || (seen && !force)) {
       el.remove();
       return;
     }

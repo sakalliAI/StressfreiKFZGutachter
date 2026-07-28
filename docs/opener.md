@@ -21,8 +21,12 @@ Eigenschaften:
 
 - Rund 6 KB. Ein vergleichbares Video liegt bei 2 bis 8 MB.
 - Vektorbasiert, also auf jedem Display gestochen scharf.
-- Läuft **einmal pro Browsersitzung**. Wer die Seite am selben Tag noch
-  einmal aufruft, kommt direkt auf den Inhalt.
+- Läuft **einmal pro Browsersitzung**. Beim Neuladen bleibt er weg, weil
+  er bis zum Ende den Inhalt verdeckt und sonst jedes Mal den ersten
+  Bildaufbau verzögern würde.
+- Zum Vorführen: **`?intro` an die Adresse hängen**, dann läuft er
+  wieder, also `https://mk-stressfrei.sakalli.ai/?intro`. Ein neuer Tab
+  oder ein privates Fenster tut es auch.
 - Jederzeit überspringbar: Schaltfläche oben rechts, Klick irgendwohin,
   Escape, Enter oder Leertaste.
 - Entfällt vollständig, wenn im Betriebssystem reduzierte Bewegung
