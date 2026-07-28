@@ -1,0 +1,191 @@
+---
+import { getImage } from 'astro:assets';
+import Icon from './Icon.astro';
+import heroImg from '../assets/hero.jpg';
+import { company } from '../data/site';
+
+const chips = [
+  { icon: 'shield' as const, label: 'DESAG geprüfter Sachverständiger' },
+  { icon: 'clock' as const, label: 'Termin oft am selben Tag' },
+  { icon: 'map-pin' as const, label: 'Besichtigung bei Ihnen' },
+];
+
+/*
+  Eigener Hochformat-Zuschnitt fuers Handy statt eines seitlich
+  beschnittenen Querformats. Sonst landet das Fahrzeug ausserhalb des
+  sichtbaren Bereichs und der Hero wirkt wie eine leere Flaeche.
+  Die Breitenangaben bleiben klein, damit ein 390px-Display keine
+  2560px-Datei laedt.
+*/
+const HERO_ALT =
+  'Fahrzeug bei Nacht auf regennasser Fahrbahn, Scheinwerferlicht spiegelt sich im Wasser';
+
+const [portraitSmall, portraitLarge] = await Promise.all([
+  getImage({ src: heroImg, width: 480, height: 900, format: 'webp', quality: 70 }),
+  getImage({ src: heroImg, width: 900, height: 1690, format: 'webp', quality: 66 }),
+]);
+
+const [landscapeMedium, landscapeLarge, landscapeXl] = await Promise.all([
+  getImage({ src: heroImg, width: 1280, format: 'webp', quality: 72 }),
+  getImage({ src: heroImg, width: 1920, format: 'webp', quality: 70 }),
+  getImage({ src: heroImg, width: 2560, format: 'webp', quality: 66 }),
+]);
+---
+
+<section id="top" class="relative isolate flex min-h-[100svh] flex-col overflow-hidden">
+  <!-- Vollflächiges Hintergrundbild -->
+  <picture>
+    <source
+      media="(max-width: 767px)"
+      type="image/webp"
+      srcset={`${portraitSmall.src} 480w, ${portraitLarge.src} 900w`}
+      sizes="100vw"
+    />
+    <source
+      type="image/webp"
+      srcset={`${landscapeMedium.src} 1280w, ${landscapeLarge.src} 1920w, ${landscapeXl.src} 2560w`}
+      sizes="100vw"
+    />
+    <img
+      src={landscapeLarge.src}
+      alt={HERO_ALT}
+      width={1920}
+      height={1280}
+      loading="eager"
+      fetchpriority="high"
+      decoding="sync"
+      class="absolute inset-0 -z-20 h-full w-full object-cover object-center"
+    />
+  </picture>
+
+  <!-- Abdunklung für Textkontrast. Links kräftiger, damit die Headline
+       auch auf hellen Bildstellen sicher über 4.5:1 liegt. -->
+  <div
+    class="absolute inset-0 -z-10 bg-[linear-gradient(100deg,rgb(4_7_15/0.94)_0%,rgb(6_10_22/0.82)_38%,rgb(6_10_22/0.48)_68%,rgb(4_7_15/0.62)_100%)]"
+    aria-hidden="true"
+  >
+  </div>
+  <div
+    class="absolute inset-x-0 bottom-0 -z-10 h-56 bg-[linear-gradient(to_top,var(--color-navy-900),transparent)]"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="container-page flex flex-1 flex-col justify-end pt-[calc(var(--header-h)+2rem)] pb-6">
+    <div class="grid max-w-[52rem] flex-1 content-end">
+      <p class="eyebrow hero-in" style="--i:0">Kfz-Sachverständiger</p>
+
+      <h1
+        class="hero-in text-bone-50 mt-4 text-[clamp(2.1rem,6.4vw,3.4rem)] font-extrabold"
+        style="--i:1"
+      >
+        Unfall gehabt?<br />
+        <span class="text-gold-400 relative inline-block">
+          Den Rest mache ich.
+          <svg
+            class="hero-underline text-gold-500/70 absolute -bottom-1 left-0 h-[0.42em] w-full"
+            viewBox="0 0 300 16"
+            fill="none"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M3 11.5C58 5.5 138 3.5 297 7.5"
+              stroke="currentColor"
+              stroke-width="4"
+              stroke-linecap="round"></path>
+          </svg>
+        </span>
+      </h1>
+
+      <p
+        class="hero-in text-bone-200 mt-6 max-w-[36rem] text-[1.02rem] leading-relaxed sm:text-lg"
+        style="--i:2"
+      >
+        Unabhängiges Gutachten, Besichtigung bei Ihnen vor Ort. Bei unverschuldetem Unfall zahlt die
+        gegnerische Versicherung.
+      </p>
+
+      <div class="hero-in mt-8 flex flex-wrap gap-3" style="--i:3">
+        <a
+          href={company.whatsapp}
+          target="_blank"
+          rel="noopener"
+          class="btn btn-wa flex-1 sm:flex-none"
+          data-track="wa-hero"
+        >
+          <Icon name="whatsapp" size={19} />
+          Per WhatsApp melden
+        </a>
+        <a
+          href={company.phoneHref}
+          class="btn btn-ghost flex-1 sm:flex-none"
+          data-track="call-hero"
+        >
+          <Icon name="phone" size={17} />
+          {company.phoneDisplay}
+        </a>
+      </div>
+    </div>
+
+    <!-- Vertrauensleiste, sitzt als schmales Band am unteren Rand -->
+    <ul
+      class="hero-in text-bone-200 mt-10 flex flex-wrap items-center gap-x-6 gap-y-2.5 border-t border-white/12 pt-5 text-[0.82rem]"
+      style="--i:4"
+    >
+      {
+        chips.map((chip) => (
+          <li class="inline-flex items-center gap-2">
+            <Icon name={chip.icon} size={15} class="text-gold-400 flex-none" />
+            {chip.label}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* Gestaffelter Auftritt. Startwerte stehen direkt im CSS, damit auch
+     ohne JavaScript nichts unsichtbar bleibt: die Animation laeuft
+     eigenstaendig ab. */
+  .hero-in {
+    animation: hero-in 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i) * 90ms + 120ms);
+  }
+
+  @keyframes hero-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Der Strich unter der zweiten Zeile zeichnet sich selbst. */
+  .hero-underline path {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    animation: hero-draw 900ms cubic-bezier(0.22, 1, 0.36, 1) 620ms forwards;
+  }
+
+  @keyframes hero-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-in {
+      animation: none;
+    }
+
+    .hero-underline path {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+  }
+</style>

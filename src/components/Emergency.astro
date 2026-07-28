@@ -1,0 +1,53 @@
+---
+import Icon from './Icon.astro';
+import SectionHead from './SectionHead.astro';
+import { emergencySteps, company } from '../data/site';
+---
+
+<section id="sofort" class="section-pad bg-navy-850 relative">
+  <div class="container-page">
+    <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-start lg:gap-16">
+      <div class="lg:sticky lg:top-[calc(var(--header-h)+3rem)]">
+        <SectionHead
+          eyebrow="Gerade passiert"
+          title="Die ersten vier Schritte an der Unfallstelle"
+          lead="Ruhig bleiben und der Reihe nach abarbeiten. Danach rufen Sie mich an, den Rest übernehme ich."
+        />
+
+        <div
+          class="rounded-card border-gold-500/25 bg-gold-500/8 mt-8 flex flex-col gap-3 border p-5 sm:flex-row sm:items-center sm:justify-between"
+          data-reveal
+        >
+          <div class="flex items-start gap-3">
+            <Icon name="triangle-alert" size={20} class="text-gold-400 mt-0.5 flex-none" />
+            <p class="text-bone-100 text-[0.92rem] leading-relaxed">
+              Verletzte oder Streit über die Schuld? Erst 110, dann mich.
+            </p>
+          </div>
+          <a href={company.phoneHref} class="btn btn-gold flex-none" data-track="call-sofort">
+            <Icon name="phone" size={17} />
+            Anrufen
+          </a>
+        </div>
+      </div>
+
+      <ol class="grid gap-3 sm:grid-cols-2">
+        {
+          emergencySteps.map((step, i) => (
+            <li
+              class="group rounded-card bg-navy-800 hover:border-gold-500/40 flex h-full flex-col border border-white/8 p-5 transition-colors duration-220"
+              data-reveal
+              style={`--reveal-delay:${i * 70}ms`}
+            >
+              <span class="bg-gold-500/14 font-display text-gold-400 grid h-9 w-9 flex-none place-items-center rounded-lg text-sm font-bold">
+                {step.n}
+              </span>
+              <h3 class="text-bone-50 mt-4 text-[1.05rem] font-bold">{step.title}</h3>
+              <p class="text-navy-300 mt-2 text-[0.9rem] leading-relaxed">{step.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
