@@ -33,20 +33,23 @@ const businessSchema: Record<string, unknown> = {
   })),
 };
 
-// Adresse nur ausgeben, wenn sie wirklich vorliegt. Ein Schema mit
-// Platzhaltern waere schlechter als gar keins.
-if (company.street && company.zip && company.city) {
+/* Adresse so vollstaendig ausgeben, wie sie tatsaechlich vorliegt.
+   Der Ort allein ist fuer die lokale Einordnung schon wertvoll, Strasse
+   und Postleitzahl kommen dazu, sobald sie gepflegt sind. Erfundene
+   Platzhalter haetten hier nichts zu suchen. */
+if (company.city) {
   businessSchema['address'] = {
     '@type': 'PostalAddress',
-    streetAddress: company.street,
-    postalCode: company.zip,
+    ...(company.street ? { streetAddress: company.street } : {}),
+    ...(company.zip ? { postalCode: company.zip } : {}),
     addressLocality: company.city,
     addressCountry: 'DE',
   };
-}
 
-if (company.city) {
-  businessSchema['areaServed'] = { '@type': 'City', name: company.city };
+  businessSchema['areaServed'] = [
+    { '@type': 'City', name: company.city },
+    ...company.places.map((place) => ({ '@type': 'City', name: place })),
+  ];
 }
 
 const jsonLd = {

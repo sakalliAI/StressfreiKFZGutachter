@@ -54,14 +54,24 @@ export const company = {
   email: 'vato-bosna@web.de',
 
   /**
-   * TODO(Kunde): Ort und Einsatzgebiet eintragen.
-   * Solange `city` null ist, rendert die Seite eine neutrale Formulierung.
-   * Sobald hier ein Ort steht, greifen automatisch alle lokalen
-   * SEO-Textbausteine (Title, Schema.org, Einsatzgebiet-Sektion).
+   * Ort und Einsatzgebiet. Steuert Title, Schema.org und alle
+   * Textbausteine, in denen der Ort vorkommt.
+   *
+   * TODO(Kunde): Die Orteliste unten ist aus "Ingolstadt und Umgebung"
+   * abgeleitet. Bitte einmal durchsehen und streichen oder ergaenzen,
+   * je nachdem wie weit tatsaechlich gefahren wird.
    */
-  city: null as string | null,
-  region: null as string | null,
-  radiusKm: 60,
+  city: 'Ingolstadt' as string | null,
+  region: 'Ingolstadt und Umgebung' as string | null,
+  radiusKm: 50,
+  places: [
+    'Manching',
+    'Gaimersheim',
+    'Kösching',
+    'Großmehring',
+    'Neuburg an der Donau',
+    'Pfaffenhofen',
+  ] as readonly string[],
 
   /** TODO(Kunde): Ladungsfaehige Anschrift fuer das Impressum. */
   street: null as string | null,
@@ -261,7 +271,7 @@ export const faqs: readonly Faq[] = [
   },
   {
     q: 'Muss ich das Auto irgendwo hinbringen?',
-    a: 'Nein. Ich komme zu Ihnen. Zur Werkstatt, nach Hause, auf den Abstellplatz oder zum Abschleppdienst. Ein nicht fahrbereites Fahrzeug ist kein Problem.',
+    a: 'Nein. Ich komme zu Ihnen, im gesamten Raum Ingolstadt. Zur Werkstatt, nach Hause, auf den Abstellplatz oder zum Abschleppdienst. Ein nicht fahrbereites Fahrzeug ist kein Problem.',
   },
   {
     q: 'Ab welchem Schaden lohnt sich ein Gutachten?',
@@ -290,8 +300,8 @@ export const faqs: readonly Faq[] = [
    ------------------------------------------------------------------ */
 
 export const seo = {
-  title: 'KFZ Gutachter nach Unfall | MK Stressfrei',
+  title: 'KFZ Gutachter Ingolstadt nach Unfall | MK Stressfrei',
   description:
-    'DESAG geprüfter Kfz-Sachverständiger. Unabhängiges Gutachten nach Unfall, Termin oft am selben Tag, Besichtigung bei Ihnen vor Ort. Bei unverschuldetem Unfall zahlt die gegnerische Versicherung.',
+    'DESAG geprüfter Kfz-Sachverständiger in Ingolstadt und Umgebung. Unabhängiges Unfallgutachten, Termin oft am selben Tag, Besichtigung bei Ihnen vor Ort. Bei unverschuldetem Unfall zahlt die gegnerische Versicherung.',
   ogImage: '/img/og.jpg',
 } as const;

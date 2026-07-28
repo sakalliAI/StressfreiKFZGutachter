@@ -71,7 +71,8 @@ const label = 'block text-[0.82rem] font-semibold text-navy-300';
             <div>
               <p class="text-bone-50 font-semibold">Besichtigung</p>
               <p class="text-navy-400 mt-1 leading-relaxed">
-                Vor Ort bei Ihnen. Werkstatt, Zuhause, Abstellplatz oder Unfallstelle.
+                Vor Ort bei Ihnen{company.region ? ` in ${company.region}` : ''}. Werkstatt,
+                Zuhause, Abstellplatz oder Unfallstelle.
               </p>
             </div>
           </li>

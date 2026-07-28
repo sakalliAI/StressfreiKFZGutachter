@@ -73,7 +73,9 @@ const [landscapeMedium, landscapeLarge, landscapeXl] = await Promise.all([
 
   <div class="container-page flex flex-1 flex-col justify-end pt-[calc(var(--header-h)+2rem)] pb-6">
     <div class="grid max-w-[52rem] flex-1 content-end">
-      <p class="eyebrow hero-in" style="--i:0">Kfz-Sachverständiger</p>
+      <p class="eyebrow hero-in" style="--i:0">
+        Kfz-Sachverständiger{company.city ? ` in ${company.city}` : ''}
+      </p>
 
       <h1
         class="hero-in text-bone-50 mt-4 text-[clamp(2.1rem,6.4vw,3.4rem)] font-extrabold"

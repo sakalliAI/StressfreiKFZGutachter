@@ -8,22 +8,25 @@ Visitenkarte liegen vor und sind eingebaut, siehe Abschnitt 1a.
 
 ### 1.1 Ladungsfähige Anschrift (Pflicht, § 5 DDG)
 
-Ein Postfach reicht nicht. Eintragen in `src/data/site.ts`:
+**Der Ort steht:** Ingolstadt und Umgebung. Damit greifen bereits der
+Seitentitel, das Schema.org-Objekt, das Einsatzgebiet in „Über mich"
+und alle ortsbezogenen Formulierungen im Text.
+
+**Offen bleiben Straße und Postleitzahl.** Ohne sie ist das Impressum
+unvollständig, ein Postfach reicht dafür nicht. Eintragen in
+`src/data/site.ts`:
 
 ```ts
 street: 'Musterstraße 12',
-zip: '44575',
-city: 'Castrop-Rauxel',
+zip: '85049',
 ```
 
-Sobald `city` gefüllt ist, greifen automatisch:
+Sobald beide gefüllt sind, ergänzt sich die vollständige Adresse
+automatisch im Impressum und im Schema.org-Objekt.
 
-- die Adresse im Schema.org-Objekt, damit Google die Seite lokal einordnet,
-- die Angabe des Einsatzgebiets in der Sektion „Über mich",
-- alle ortsbezogenen Suchbegriffe im Text.
-
-**Das ist der wichtigste Einzelpunkt der ganzen Liste.** Ohne Ort gibt es
-keine lokale Sichtbarkeit, weder bei Google noch in KI-Antworten.
+Ebenfalls prüfen: die Liste der umliegenden Orte (`places` in
+`src/data/site.ts`). Sie ist aus „Ingolstadt und Umgebung" abgeleitet.
+Streichen oder ergänzen, je nachdem wie weit tatsächlich gefahren wird.
 
 ### 1.2 Steuernummer oder Umsatzsteuer-Identifikationsnummer (Pflicht)
 

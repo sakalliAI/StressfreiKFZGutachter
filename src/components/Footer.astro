@@ -12,8 +12,8 @@ const year = new Date().getFullYear();
       <div>
         <Wordmark style="--logo-h: 2.25rem" />
         <p class="text-navy-400 mt-5 max-w-xs text-[0.88rem] leading-relaxed">
-          Unabhängige Kfz-Gutachten nach Unfall. Besichtigung vor Ort, Gutachten direkt an
-          Versicherung und Anwalt.
+          Unabhängige Kfz-Gutachten nach Unfall{company.region ? ` in ${company.region}` : ''}.
+          Besichtigung vor Ort, Gutachten direkt an Versicherung und Anwalt.
         </p>
         <a
           href={company.whatsapp}
