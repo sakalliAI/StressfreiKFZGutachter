@@ -8,6 +8,11 @@ import { company } from '../data/site';
  *
  * Alle mit [BITTE ERGÄNZEN] markierten Stellen muss der Kunde vor dem
  * Go-Live ausfüllen. Liste dazu: docs/handover.md.
+ *
+ * Die zustaendige Datenschutzbehoerde steht bereits drin: das BayLDA in
+ * Ansbach ist fuer nicht-oeffentliche Stellen in Bayern zustaendig, und
+ * Ingolstadt liegt in Bayern. Sollte der Firmensitz doch ausserhalb
+ * Bayerns liegen, muss Abschnitt 9 angepasst werden.
  */
 const address =
   company.street && company.zip
@@ -224,9 +229,16 @@ const modals = [
             <p>
               Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde über die Verarbeitung
               Ihrer personenbezogenen Daten zu beschweren. Zuständig ist die Aufsichtsbehörde des
-              Bundeslandes, in dem wir unseren Sitz haben.
+              Bundeslandes, in dem wir unseren Sitz haben:
+            </p>
+            <p>
+              Bayerisches Landesamt für Datenschutzaufsicht (BayLDA)
               <br />
-              [BITTE ERGÄNZEN: zuständige Landesdatenschutzbehörde nach Sitz des Unternehmens]
+              Promenade 27, 91522 Ansbach
+              <br />
+              <a href="https://www.lda.bayern.de" rel="noopener">
+                www.lda.bayern.de
+              </a>
             </p>
 
             <h3>10. Änderungen</h3>

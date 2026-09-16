@@ -49,11 +49,15 @@ In `src/components/LegalModals.astro` die Zeile
 Geltungsbereich]` ersetzen. Der Nachweis ist zugleich ein starkes
 Vertrauenssignal und kann in die Vertrauensleiste aufgenommen werden.
 
-### 1.4 Zuständige Datenschutz-Aufsichtsbehörde (Pflicht)
+### 1.4 Zuständige Datenschutz-Aufsichtsbehörde (erledigt)
 
-In `src/components/LegalModals.astro`, Abschnitt 9 der
-Datenschutzerklärung. Zuständig ist die Behörde des Bundeslandes, in dem
-das Unternehmen sitzt.
+Eingetragen ist das Bayerische Landesamt für Datenschutzaufsicht
+(BayLDA), Promenade 27, 91522 Ansbach. Es ist für nicht-öffentliche
+Stellen in Bayern zuständig, und Ingolstadt liegt in Bayern.
+
+Nur falls der Firmensitz doch außerhalb Bayerns liegt, muss Abschnitt 9
+der Datenschutzerklärung in `src/components/LegalModals.astro`
+angepasst werden.
 
 ### 1.5 Namensreihenfolge prüfen
 
@@ -130,8 +134,8 @@ Daraus erzeugt `node scripts/build-assets.mjs` alle abgeleiteten Assets:
 
 | Datei                         | Verwendung                     |
 | ----------------------------- | ------------------------------ |
-| `public/logo.webp`            | Header und Opener              |
-| `public/logo-lockup.webp`     | Footer                         |
+| `src/assets/logo.webp`        | Header und Opener              |
+| `src/assets/logo-lockup.webp` | Footer                         |
 | `public/favicon-32.png`       | Browser-Tab                    |
 | `public/apple-touch-icon.png` | Startbildschirm auf iOS        |
 | `public/icon-512.png`         | Web-Manifest                   |
@@ -143,8 +147,14 @@ Riegel, den `mkstress_logo_neu.png` unter dem Motiv mitbringt: 221
 Zeilen deckendes Weiß aus dem Export, die auf der dunklen Seite als
 heller Balken stehen würden.
 
-Wird das Logo je ersetzt: neue Dateien unter denselben Namen ablegen,
-Skript laufen lassen, fertig. Weichen die neuen Logofarben ab,
+Die beiden Logodateien landen bewusst in `src/assets` und nicht in
+`public`: Astro hängt dort eine Prüfsumme an den Dateinamen. Ein neues
+Logo bekommt damit eine neue Adresse und ist beim Besucher sofort zu
+sehen. Unter einem festen Namen hätten Wiederkehrer bis zu 30 Tage lang
+das alte Bild aus ihrem Browserspeicher gesehen.
+
+Wird das Logo je ersetzt: neue Dateien unter denselben Namen in
+`brand/` ablegen, Skript laufen lassen, fertig. Weichen die neuen Logofarben ab,
 zusätzlich `--color-copper-*` und `--color-navy-*` in
 `src/styles/global.css` anpassen. Die gesamte Seite zieht nach, weil
 kein Farbwert hart im Markup steht.
