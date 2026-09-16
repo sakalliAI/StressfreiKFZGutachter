@@ -25,6 +25,13 @@
 # sozialen Netzwerken. Sie koennen deshalb nicht gehasht werden und
 # bekommen eine kurze Frist, damit eine Markenaenderung nicht wochenlang
 # im Browserspeicher haengen bleibt.
+#
+# Eine Sammelregel wie `/*.png` gibt es bewusst nicht mehr. Cloudflare
+# fuehrt alle passenden Regeln zusammen, dabei hat die Sammelregel die
+# genaueren ueberschrieben: das gehashte Logo kam mit 30 Tagen statt
+# einem Jahr heraus, das Favicon mit 30 Tagen statt einem Tag. Ausser
+# den vier Dateien hier liegt ohnehin kein Bild mehr ausserhalb von
+# `/_astro/`.
 /favicon-32.png
   Cache-Control: public, max-age=86400, must-revalidate
 
@@ -36,18 +43,6 @@
 
 /og.jpg
   Cache-Control: public, max-age=86400, must-revalidate
-
-/*.webp
-  Cache-Control: public, max-age=2592000
-
-/*.jpg
-  Cache-Control: public, max-age=2592000
-
-/*.png
-  Cache-Control: public, max-age=2592000
-
-/*.svg
-  Cache-Control: public, max-age=2592000
 
 # HTML immer frisch pruefen, damit Inhaltsaenderungen sofort ankommen.
 /
