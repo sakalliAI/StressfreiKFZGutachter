@@ -355,5 +355,10 @@ export const seo = {
   title: 'KFZ Gutachter Ingolstadt nach Unfall | MK Stressfrei',
   description:
     'DESAG geprüfter Kfz-Sachverständiger in Ingolstadt und Umgebung. Unabhängiges Unfallgutachten, Termin oft am selben Tag, Besichtigung bei Ihnen vor Ort. Bei unverschuldetem Unfall zahlt die gegnerische Versicherung.',
-  ogImage: '/img/og.jpg',
+  /* Liegt als `public/og.jpg` und damit direkt unter der Wurzel. Der
+     fruehere Pfad `/img/og.jpg` existierte nicht: Cloudflare Pages
+     lieferte dafuer die Startseite mit Status 200 aus, und jede
+     Linkvorschau in WhatsApp oder Facebook bekam HTML statt eines
+     Bildes zu sehen. */
+  ogImage: '/og.jpg',
 } as const;

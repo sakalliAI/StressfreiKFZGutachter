@@ -6,8 +6,8 @@
  * Nötig, wenn Logo oder Hero-Bild getauscht werden.
  *
  * Ergebnis:
- *   public/logo.webp            Bildzeichen freigestellt, für Header und Opener
- *   public/logo-lockup.webp     Sperrmarke mit Schriftzug, für den Footer
+ *   src/assets/logo.webp        Bildzeichen, für Header und Opener
+ *   src/assets/logo-lockup.webp Sperrmarke mit Schriftzug, für den Footer
  *   public/favicon-32.png       Monogramm, kleines Favicon
  *   public/apple-touch-icon.png Monogramm, 180 px
  *   public/icon-512.png         Monogramm, 512 px für das Web-Manifest
@@ -112,7 +112,7 @@ console.log(`Bildzeichen: ${logoMeta.width}x${logoMeta.height}`);
 await sharp(logo)
   .resize({ width: 640 })
   .webp({ quality: 82, alphaQuality: 90 })
-  .toFile('public/logo.webp');
+  .toFile('src/assets/logo.webp');
 
 /* Sperrmarke fuer den Footer. */
 const lockup = await trimEdges(LOGO_LOCKUP);
@@ -121,7 +121,7 @@ console.log(`Sperrmarke: ${lockupMeta.width}x${lockupMeta.height}`);
 await sharp(lockup)
   .resize({ width: 640 })
   .webp({ quality: 82, alphaQuality: 90 })
-  .toFile('public/logo-lockup.webp');
+  .toFile('src/assets/logo-lockup.webp');
 
 /*
   Favicon aus dem Monogramm.

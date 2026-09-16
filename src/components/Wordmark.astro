@@ -1,15 +1,22 @@
 ---
+import logo from '../assets/logo.webp';
+
 /**
- * Wortmarke aus dem Original-Logo des Kunden.
+ * Wortmarke aus dem Logo des Kunden.
  *
- * `public/logo.png` entsteht aus `brand/Logo.png`, siehe
- * `scripts/build-assets.mjs`. Der weiße Hintergrund ist dort bereits
- * ausgeschlüsselt, das Logo liegt also transparent vor und sitzt ohne
- * hellen Rand auf dunklem Grund.
+ * `src/assets/logo.webp` entsteht aus `brand/mkstress_logo_neu.png`,
+ * siehe `scripts/build-assets.mjs`.
  *
- * Das Bildzeichen ist rund 3:1 breit. Auf Header-Höhe skaliert wären
- * Schriftzüge im Logo unleserlich, deshalb steht der Name daneben als
- * echter Text. Das ist zugleich besser für Suchmaschinen.
+ * Die Datei liegt bewusst in `src/assets` und nicht in `public`: Astro
+ * haengt dort eine Pruefsumme an den Dateinamen. Ein neues Logo bekommt
+ * damit eine neue Adresse, und Besucher sehen es sofort. Unter einem
+ * festen Namen wie `/logo.webp` haetten sie bis zu 30 Tage lang das
+ * alte Bild aus ihrem Browserspeicher gesehen. Die Masse kommen aus
+ * demselben Import, so koennen sie nicht mehr von der Datei abweichen.
+ *
+ * Das Bildzeichen ist rund 2:1 breit. Der Schriftzug im Logo waere auf
+ * Header-Hoehe unleserlich, deshalb steht der Name daneben als echter
+ * Text. Das ist zugleich besser fuer Suchmaschinen.
  */
 interface Props {
   class?: string;
@@ -23,11 +30,11 @@ const { class: className = '', compact = false, style } = Astro.props;
 
 <span class={`inline-flex items-center gap-2.5 sm:gap-3 ${className}`} style={style}>
   <img
-    src="/logo.webp"
+    src={logo.src}
     alt=""
     data-brand-logo
-    width="640"
-    height="211"
+    width={logo.width}
+    height={logo.height}
     class="h-[var(--logo-h)] w-auto flex-none drop-shadow-[0_2px_8px_rgb(0_0_0/0.6)] transition-[height] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]"
     loading="eager"
     decoding="sync"

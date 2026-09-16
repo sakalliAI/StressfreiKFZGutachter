@@ -14,9 +14,28 @@
   X-Robots-Tag: noindex, nofollow
   Cache-Control: no-store
 
-# Von Astro gehashte Assets sind unveraenderlich.
+# Von Astro gehashte Assets sind unveraenderlich. Dort liegen auch die
+# beiden Logodateien, deshalb bekommt ein neues Logo automatisch eine
+# neue Adresse.
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Diese vier brauchen feste Namen: Favicon, Touch-Icon und Manifest-Icon
+# werden vom Browser ueber den Pfad gefunden, das Vorschaubild von den
+# sozialen Netzwerken. Sie koennen deshalb nicht gehasht werden und
+# bekommen eine kurze Frist, damit eine Markenaenderung nicht wochenlang
+# im Browserspeicher haengen bleibt.
+/favicon-32.png
+  Cache-Control: public, max-age=86400, must-revalidate
+
+/apple-touch-icon.png
+  Cache-Control: public, max-age=86400, must-revalidate
+
+/icon-512.png
+  Cache-Control: public, max-age=86400, must-revalidate
+
+/og.jpg
+  Cache-Control: public, max-age=86400, must-revalidate
 
 /*.webp
   Cache-Control: public, max-age=2592000

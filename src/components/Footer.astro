@@ -1,4 +1,5 @@
 ---
+import lockup from '../assets/logo-lockup.webp';
 import Icon from './Icon.astro';
 import { company, nav } from '../data/site';
 
@@ -14,10 +15,10 @@ const year = new Date().getFullYear();
             Schriftzug. Der separate Text daneben entfällt dadurch. */
         }
         <img
-          src="/logo-lockup.webp"
+          src={lockup.src}
           alt="MK Stressfrei Kfz-Gutachter"
-          width="640"
-          height="330"
+          width={lockup.width}
+          height={lockup.height}
           class="h-24 w-auto sm:h-28"
           loading="lazy"
           decoding="async"

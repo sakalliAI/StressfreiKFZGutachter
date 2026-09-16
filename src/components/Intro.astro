@@ -1,4 +1,5 @@
 ---
+import logo from '../assets/logo.webp';
 /**
  * Opener: zwei Fahrzeuge, Aufprall, Marke, Übergang in den Header.
  *
@@ -96,7 +97,14 @@ const SHARDS = Array.from({ length: 16 }, (_, i) => {
   <!-- Marke. Liegt ausserhalb der Buehne, weil sie bestehen bleibt,
        waehrend Fahrzeuge und Fahrbahn verschwinden. -->
   <div class="intro__brand">
-    <img class="intro__logo" id="intro-logo" src="/logo.webp" alt="" width="640" height="211" />
+    <img
+      class="intro__logo"
+      id="intro-logo"
+      src={logo.src}
+      alt=""
+      width={logo.width}
+      height={logo.height}
+    />
     <span class="intro__name">Stressfrei</span>
     <span class="intro__sub">KFZ-Gutachter</span>
   </div>
