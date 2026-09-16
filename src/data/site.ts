@@ -66,6 +66,16 @@ export const company = {
   whatsapp: `https://wa.me/${PHONE_RAW.replace('+', '')}?text=${encodeURIComponent(
     'Hallo, ich hatte einen Unfall und brauche ein Gutachten. Können wir kurz sprechen?',
   )}`,
+  /**
+   * TODO(Kunde): Auf eine Adresse der eigenen Domain umstellen, sobald
+   * mk-stressfrei.de eingerichtet ist, zum Beispiel
+   * `kontakt@mk-stressfrei.de`. Eine web.de-Adresse steht im Impressum
+   * neben einem Firmennamen und wirkt dort wie eine Privatadresse. Das
+   * kostet Vertrauen genau an der Stelle, an der es zaehlt.
+   *
+   * Der Wert steht nur hier. Footer, Impressum, Datenschutzerklaerung
+   * und der Hinweis ohne JavaScript ziehen automatisch nach.
+   */
   email: 'vato-bosna@web.de',
 
   /**
@@ -154,7 +164,7 @@ export const emergencySteps: readonly Step[] = [
   {
     n: '2',
     title: 'Polizei rufen',
-    text: 'Immer bei Verletzten, Streit über die Schuld, Fahrerflucht oder Mietwagen im Spiel.',
+    text: 'Bei Streit über die Schuld, Fahrerflucht, Dienst- oder Mietwagen. Sind Menschen verletzt, geht der Notruf 112 vor.',
   },
   {
     n: '3',
@@ -181,7 +191,7 @@ export const services: readonly Service[] = [
     detail: [
       'Vollständiges Schadengutachten mit Reparaturkosten, Wertminderung, Wiederbeschaffungs- und Restwert.',
       'Ausfallschaden und Nutzungsausfall werden mit erfasst, damit nichts liegen bleibt.',
-      'Bei unverschuldetem Unfall trägt die gegnerische Haftpflichtversicherung die Kosten nach § 249 BGB. Sie zahlen nichts vor.',
+      'Bei unverschuldetem Unfall trägt die gegnerische Haftpflichtversicherung die erforderlichen Gutachterkosten nach § 249 BGB. Sie gehen nicht in Vorleistung.',
       'Sie dürfen den Gutachter frei wählen. Auch wenn die Versicherung der Gegenseite jemand anderen vorschlägt.',
     ],
   },
@@ -276,7 +286,7 @@ export const processSteps: readonly Step[] = [
 export const faqs: readonly Faq[] = [
   {
     q: 'Wer zahlt das Gutachten?',
-    a: 'Bei einem unverschuldeten Unfall zahlt die Haftpflichtversicherung des Unfallgegners. Das ergibt sich aus § 249 BGB. Sie gehen nicht in Vorleistung. Bei Teilschuld wird anteilig abgerechnet, bei einem Kaskoschaden klären wir die Kostenübernahme vorher mit Ihrer Versicherung. Sind Sie selbst schuld, nenne ich Ihnen vor dem Termin einen Festpreis.',
+    a: 'Bei einem unverschuldeten Unfall zahlt die Haftpflichtversicherung des Unfallgegners die erforderlichen Gutachterkosten. Das ergibt sich aus § 249 BGB. Sie gehen nicht in Vorleistung. Bei Teilschuld wird anteilig abgerechnet, bei einem Kaskoschaden klären wir die Kostenübernahme vorher mit Ihrer Versicherung. Sind Sie selbst schuld, nenne ich Ihnen vor dem Termin einen Festpreis.',
   },
   {
     q: 'Darf ich den Gutachter frei aussuchen?',
@@ -299,6 +309,43 @@ export const faqs: readonly Faq[] = [
     a: 'Bei einem unverschuldeten Unfall trägt die Gegenseite in der Regel auch die Anwaltskosten. Das nimmt Ihnen viel Schriftverkehr ab. Ich sage Ihnen ehrlich, wenn ich es in Ihrem Fall für sinnvoll halte, und arbeite auf Wunsch mit Ihrer Kanzlei zusammen.',
   },
 ];
+
+/* ------------------------------------------------------------------
+   Kontaktformular
+   ------------------------------------------------------------------ */
+
+/**
+ * Auswahl "Was ist passiert".
+ *
+ * Steht ganz oben im Formular, damit die erste Entscheidung eine ist,
+ * die jeder ohne Nachdenken treffen kann. Die Werte landen unveraendert
+ * im Betreff der Mail, deshalb sind sie kurz gehalten.
+ */
+export const damageTypes = [
+  'Mir ist jemand reingefahren',
+  'Hagel, Wild oder Vandalismus',
+  'Kleiner Schaden',
+  'Ich möchte den Fahrzeugwert wissen',
+  'Etwas anderes',
+] as const;
+
+/** Wann ein Rueckruf passt. Bei einem Ein-Mann-Betrieb spart das eine Runde. */
+export const reachableSlots = [
+  'Jetzt gleich',
+  'Vormittags',
+  'Nachmittags',
+  'Abends',
+  'Egal, melden Sie sich einfach',
+] as const;
+
+/** Grenzen fuer den Foto-Upload. Werden im Browser und in der Function geprueft. */
+export const upload = {
+  maxFiles: 3,
+  /** Laengste Kante nach der Verkleinerung im Browser. */
+  maxEdge: 1600,
+  /** Obergrenze je Bild nach der Verkleinerung, in Bytes. */
+  maxBytes: 1_200_000,
+} as const;
 
 /* ------------------------------------------------------------------
    SEO

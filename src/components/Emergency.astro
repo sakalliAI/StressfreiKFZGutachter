@@ -19,6 +19,10 @@ import { emergencySteps, company } from '../data/site';
         <!--
           Notruf zuerst. Wer hier landet, während es ernst ist, soll den
           Hinweis vor der Liste sehen, nicht darunter.
+
+          112 und 110 stehen getrennt, weil sie unterschiedliche Stellen
+          erreichen: 112 den Rettungsdienst, 110 die Polizei. Beides in
+          einen Satz zu packen kostet im Ernstfall Zeit.
         -->
         <div
           class="border-gold-500/35 bg-gold-500/8 rounded-card mt-8 flex flex-col gap-4 border p-5 sm:flex-row sm:items-center sm:justify-between"
@@ -30,10 +34,15 @@ import { emergencySteps, company } from '../data/site';
             >
               <Icon name="triangle-alert" size={20} />
             </span>
-            <p class="text-bone-100 text-[0.92rem] leading-relaxed">
-              Verletzte oder Streit über die Schuld?
-              <span class="text-bone-50 block font-semibold">Erst 110, dann mich.</span>
-            </p>
+            <div class="text-[0.92rem] leading-relaxed">
+              <p class="text-bone-50 font-semibold">
+                Verletzte? Sofort <span class="text-gold-400">112</span>.
+              </p>
+              <p class="text-bone-50 font-semibold">
+                Polizei nötig? <span class="text-gold-400">110</span>.
+              </p>
+              <p class="text-bone-100 mt-1">Danach rufen Sie mich an.</p>
+            </div>
           </div>
           <a href={company.phoneHref} class="btn btn-gold flex-none" data-track="call-sofort">
             <Icon name="phone" size={17} />

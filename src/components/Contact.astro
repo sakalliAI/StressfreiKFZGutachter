@@ -1,6 +1,6 @@
 ---
 import Icon from './Icon.astro';
-import { company } from '../data/site';
+import { company, damageTypes, reachableSlots, upload } from '../data/site';
 
 // Turnstile ist optional. Ist kein Site-Key gesetzt, greifen weiterhin
 // Honeypot, Zeitprüfung und Rate-Limit in der Pages Function.
@@ -82,6 +82,20 @@ const label = 'block text-[0.82rem] font-semibold text-navy-300';
       <!-- Formular -->
       <div class="rounded-card bg-navy-850 border border-white/10 p-5 sm:p-8" data-reveal>
         <form id="contact-form" class="grid gap-5" novalidate>
+          <!--
+            Erste Frage in der Sprache des Kunden, nicht in der des
+            Gutachters. Wer gerade einen Schaden hat, weiss ob ihm jemand
+            reingefahren ist. Ob das ein "Haftpflichtschaden" heisst,
+            weiss er nicht.
+          -->
+          <div>
+            <label class={label} for="cf-kind">Was ist passiert?</label>
+            <select id="cf-kind" name="kind" class={`${field} mt-2`}>
+              <option value="">Bitte auswählen</option>
+              {damageTypes.map((type) => <option value={type}>{type}</option>)}
+            </select>
+          </div>
+
           <div class="grid gap-5 sm:grid-cols-2">
             <div>
               <label class={label} for="cf-name">Name <span aria-hidden="true">*</span></label>
@@ -151,6 +165,41 @@ const label = 'block text-[0.82rem] font-semibold text-navy-300';
               placeholder="Ein, zwei Sätze reichen. Wann, wo, wer war beteiligt."></textarea>
           </div>
 
+          <!--
+            Foto-Upload. Der wichtigste Zusatz am Formular: an mehreren
+            Stellen der Seite steht "ein Foto vom Schaden reicht für den
+            Anfang", und bis hierher konnte das Formular genau das nicht
+            annehmen.
+
+            Die Bilder werden im Browser verkleinert, bevor sie gesendet
+            werden. Ein Handyfoto hat leicht 5 MB, verkleinert sind es
+            etwa 300 KB. Das hält den Versand auch bei schlechter
+            Verbindung am Straßenrand in einem Rahmen, der durchgeht.
+          -->
+          <div>
+            <label class={label} for="cf-photos">Fotos vom Schaden</label>
+            <input
+              id="cf-photos"
+              name="photos"
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/heic"
+              multiple
+              class={`${field} mt-2 file:mr-3 file:rounded-md file:border-0 file:bg-white/10 file:px-3 file:py-1.5 file:text-[0.85rem] file:font-semibold file:text-bone-100`}
+            />
+            <p class="text-navy-400 mt-2 text-[0.8rem] leading-relaxed" data-upload-hint>
+              Optional, bis zu {upload.maxFiles} Bilder. Ein Foto vom Schaden reicht oft schon, um Ihnen
+              zu sagen, woran Sie sind.
+            </p>
+          </div>
+
+          <div>
+            <label class={label} for="cf-reach">Wann erreiche ich Sie am besten?</label>
+            <select id="cf-reach" name="reach" class={`${field} mt-2`}>
+              <option value="">Bitte auswählen</option>
+              {reachableSlots.map((slot) => <option value={slot}>{slot}</option>)}
+            </select>
+          </div>
+
           <!-- Honeypot. Für Menschen unsichtbar, aber nicht per
                display:none, weil manche Bots das erkennen. -->
           <div class="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
@@ -188,8 +237,8 @@ const label = 'block text-[0.82rem] font-semibold text-navy-300';
               >
                 Datenschutzerklärung
               </button>
-              gelesen und bin damit einverstanden, dass meine Angaben zur Bearbeitung meiner Anfrage verarbeitet
-              werden. <span aria-hidden="true">*</span>
+              gelesen und bin damit einverstanden, dass meine Angaben und mitgeschickten Fotos zur Bearbeitung
+              meiner Anfrage verarbeitet werden. <span aria-hidden="true">*</span>
             </span>
           </label>
 
@@ -228,9 +277,14 @@ const label = 'block text-[0.82rem] font-semibold text-navy-300';
 }
 
 <script>
+  import { upload } from '../data/site';
+
   const form = document.getElementById('contact-form');
   const status = document.getElementById('cf-status');
   const ts = document.getElementById('cf-ts');
+  const photos = document.getElementById('cf-photos');
+  const hint = document.querySelector<HTMLElement>('[data-upload-hint]');
+  const hintDefault = hint?.textContent ?? '';
 
   // Zeitstempel des Seitenaufrufs. Die Function verwirft Einsendungen,
   // die unrealistisch schnell ankommen.
@@ -244,6 +298,56 @@ const label = 'block text-[0.82rem] font-semibold text-navy-300';
         ? 'rounded-lg bg-wa-500/14 px-4 py-3 text-[0.88rem] leading-relaxed text-wa-500'
         : 'rounded-lg bg-gold-500/14 px-4 py-3 text-[0.88rem] leading-relaxed text-gold-300';
   }
+
+  /**
+   * Verkleinert ein Bild im Browser und gibt es als JPEG in Base64 zurück.
+   *
+   * `createImageBitmap` dreht das Bild anhand der EXIF-Angabe richtig
+   * herum. Ohne `imageOrientation` liegen Hochformataufnahmen vom iPhone
+   * beim Empfänger auf der Seite.
+   */
+  async function shrink(file: File): Promise<{ name: string; content: string } | null> {
+    let bitmap: ImageBitmap;
+    try {
+      bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+    } catch {
+      return null;
+    }
+
+    const scale = Math.min(1, upload.maxEdge / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+
+    const context = canvas.getContext('2d');
+    if (!context) return null;
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close();
+
+    // Bei sehr detailreichen Aufnahmen notfalls ein zweites Mal
+    // herunterdrehen, damit die Obergrenze sicher eingehalten wird.
+    for (const quality of [0.72, 0.58, 0.45]) {
+      const dataUrl = canvas.toDataURL('image/jpeg', quality);
+      const content = dataUrl.slice(dataUrl.indexOf(',') + 1);
+      if (content.length * 0.75 <= upload.maxBytes) {
+        const base = file.name.replace(/\.[^.]+$/, '').slice(0, 40) || 'foto';
+        return { name: `${base}.jpg`, content };
+      }
+    }
+
+    return null;
+  }
+
+  photos?.addEventListener('change', () => {
+    if (!(photos instanceof HTMLInputElement) || !hint) return;
+    const count = photos.files?.length ?? 0;
+    hint.textContent =
+      count > upload.maxFiles
+        ? `Es werden die ersten ${upload.maxFiles} Bilder gesendet.`
+        : count > 0
+          ? `${count} ${count === 1 ? 'Bild' : 'Bilder'} ausgewählt. Wird vor dem Senden verkleinert.`
+          : hintDefault;
+  });
 
   form?.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -259,21 +363,43 @@ const label = 'block text-[0.82rem] font-semibold text-navy-300';
     if (buttonLabel) buttonLabel.textContent = 'Wird gesendet …';
 
     try {
+      const data = new FormData(form);
+      // Die Dateien gehen getrennt als verkleinertes Base64 mit, nicht
+      // als Teil der Felder.
+      data.delete('photos');
+      const payload: Record<string, unknown> = Object.fromEntries(data.entries());
+
+      const files = Array.from(
+        photos instanceof HTMLInputElement ? (photos.files ?? []) : [],
+      ).slice(0, upload.maxFiles);
+
+      if (files.length > 0) {
+        if (buttonLabel) buttonLabel.textContent = 'Fotos werden vorbereitet …';
+        const prepared = await Promise.all(files.map(shrink));
+        const usable = prepared.filter((item) => item !== null);
+        if (usable.length > 0) payload['attachments'] = usable;
+        if (usable.length < files.length) {
+          show('error', 'Mindestens ein Bild ließ sich nicht verarbeiten und wurde weggelassen.');
+        }
+        if (buttonLabel) buttonLabel.textContent = 'Wird gesendet …';
+      }
+
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(new FormData(form).entries())),
+        body: JSON.stringify(payload),
       });
 
-      const data: unknown = await response.json().catch(() => ({}));
+      const result: unknown = await response.json().catch(() => ({}));
       const message =
-        typeof data === 'object' && data !== null && 'message' in data
-          ? String((data as { message: unknown }).message)
+        typeof result === 'object' && result !== null && 'message' in result
+          ? String((result as { message: unknown }).message)
           : '';
 
       if (response.ok) {
         show('ok', message || 'Angekommen. Ich melde mich zeitnah bei Ihnen.');
         form.reset();
+        if (hint) hint.textContent = hintDefault;
         if (ts instanceof HTMLInputElement) ts.value = String(Date.now());
       } else {
         show(

@@ -4,12 +4,17 @@ import SectionHead from './SectionHead.astro';
 import { company } from '../data/site';
 
 /** Die haeufigste Frage vor dem ersten Anruf. Bewusst als Tabelle,
- *  weil Sprachmodelle diese Struktur sauber zitieren koennen. */
+ *  weil Sprachmodelle diese Struktur sauber zitieren koennen.
+ *
+ *  Die Formulierungen bleiben bei dem, was § 249 BGB hergibt: erstattet
+ *  werden die *erforderlichen* Gutachterkosten. Bei einem Bagatellschaden
+ *  kann die Erstattung ausfallen (BGH VI ZR 337/02). Ein pauschales
+ *  "volle Kostenuebernahme" waere in genau diesen Faellen falsch. */
 const cases = [
   {
     situation: 'Unverschuldeter Unfall',
     payer: 'Gegnerische Haftpflicht',
-    note: 'Volle Kostenübernahme nach § 249 BGB. Keine Vorkasse für Sie.',
+    note: 'Die erforderlichen Gutachterkosten nach § 249 BGB. Keine Vorkasse für Sie.',
   },
   {
     situation: 'Teilschuld',

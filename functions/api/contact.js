@@ -21,6 +21,19 @@ const MAX_FILL_MS = 12 * 60 * 60 * 1000;
 const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 
+/*
+  Grenzen fuer die Foto-Anhaenge. Der Browser verkleinert die Bilder vor
+  dem Senden, siehe src/components/Contact.astro. Hier wird trotzdem
+  noch einmal geprueft: auf den Client ist kein Verlass, und Brevo lehnt
+  zu grosse Mails als Ganzes ab.
+*/
+const MAX_ATTACHMENTS = 3;
+/** Je Bild in Base64-Zeichen. Rund 1,2 MB Rohdaten. */
+const MAX_ATTACHMENT_CHARS = 1_600_000;
+/** Ueber alle Anhaenge zusammen, mit Abstand zum Brevo-Limit. */
+const MAX_TOTAL_CHARS = 4_000_000;
+const BASE64 = /^[A-Za-z0-9+/]+={0,2}$/;
+
 /**
  * Rate-Limit im Arbeitsspeicher der Isolate.
  *
@@ -92,6 +105,43 @@ function isSafeHeaderValue(value) {
   return !/[\r\n]/.test(value);
 }
 
+/**
+ * Prueft die mitgeschickten Fotos und bringt sie in die Form, die Brevo
+ * erwartet.
+ *
+ * Verworfen wird still: ein einzelnes kaputtes Bild soll nicht die ganze
+ * Anfrage scheitern lassen. Wer gerade an der Unfallstelle steht, soll
+ * seine Nachricht loswerden, auch wenn ein Foto nicht durchkommt.
+ */
+function sanitizeAttachments(value) {
+  if (!Array.isArray(value)) return [];
+
+  const out = [];
+  let total = 0;
+
+  for (const item of value.slice(0, MAX_ATTACHMENTS)) {
+    if (typeof item !== 'object' || item === null) continue;
+
+    const content = typeof item.content === 'string' ? item.content : '';
+    if (content.length === 0 || content.length > MAX_ATTACHMENT_CHARS) continue;
+    if (!BASE64.test(content)) continue;
+    if (total + content.length > MAX_TOTAL_CHARS) break;
+
+    /* Der Dateiname kommt vom Client und landet in der Mail. Alles ausser
+       harmlosen Zeichen raus, damit daraus kein Pfad und kein Header wird. */
+    const base = clean(item.name, 60)
+      .replace(/\.[^.]*$/, '')
+      .replace(/[^\p{L}\p{N} _-]/gu, '')
+      .trim()
+      .slice(0, 40);
+
+    total += content.length;
+    out.push({ name: `${base || `foto-${out.length + 1}`}.jpg`, content });
+  }
+
+  return out;
+}
+
 async function verifyTurnstile(token, secret, ip) {
   const body = new FormData();
   body.append('secret', secret);
@@ -144,7 +194,10 @@ async function handleContact(request, env) {
   const phone = clean(payload.phone, 40);
   const email = clean(payload.email, 120);
   const plate = clean(payload.plate, 20);
+  const kind = clean(payload.kind, 60);
+  const reach = clean(payload.reach, 40);
   const message = clean(payload.message, 2000);
+  const attachments = sanitizeAttachments(payload.attachments);
   const privacy =
     payload.privacy === true || payload.privacy === 'on' || payload.privacy === 'true';
 
@@ -192,6 +245,9 @@ async function handleContact(request, env) {
     ['Telefon', phone],
     ['E-Mail', email || 'nicht angegeben'],
     ['Kennzeichen', plate || 'nicht angegeben'],
+    ['Schadenart', kind || 'nicht angegeben'],
+    ['Erreichbar', reach || 'nicht angegeben'],
+    ['Fotos', attachments.length > 0 ? `${attachments.length} im Anhang` : 'keine'],
   ];
 
   const textContent = [
@@ -222,7 +278,7 @@ ${rows
 <div style="white-space:pre-wrap;font-size:14px;line-height:1.7;background:#fafafa;border-left:3px solid #e8871e;padding:14px 16px;border-radius:0 6px 6px 0">${escapeHtml(message)}</div>
 </td></tr>
 <tr><td style="padding:14px 24px;background:#fafafa;border-top:1px solid #e4e4e7;font-size:12px;color:#a1a1aa">
-Gesendet über das Kontaktformular von mk-stressfrei.sakalli.ai
+Gesendet über das Kontaktformular von ${escapeHtml(new URL(request.url).host)}
 </td></tr>
 </table></body></html>`;
 
@@ -233,6 +289,10 @@ Gesendet über das Kontaktformular von mk-stressfrei.sakalli.ai
     htmlContent,
     textContent,
   };
+
+  if (attachments.length > 0) {
+    body.attachment = attachments;
+  }
 
   // Antwort geht an den Absender, sofern eine gültige Adresse vorliegt.
   if (email && isEmail(email)) {
