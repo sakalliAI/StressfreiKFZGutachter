@@ -115,7 +115,14 @@ const [landscapeMedium, landscapeLarge, landscapeXl] = await Promise.all([
         class="hero-in text-bone-50 mt-4 text-[clamp(2.1rem,6.4vw,3.4rem)] font-extrabold"
         style="--i:1"
       >
-        Unfall gehabt?<br />
+        <!-- „Kein Stress" verbindet die Schlagzeile mit dem Firmennamen.
+             Vorher kam der Name in der wichtigsten Zeile der Seite gar
+             nicht vor.
+
+             Kein `text-nowrap`: auf 320 px breiten Displays laeuft die
+             Zeile sonst ueber den Rand hinaus und „Stress." wird
+             abgeschnitten. Ein Umbruch ist dort das kleinere Uebel. -->
+        Unfall? Kein Stress.<br />
         <span class="text-copper-400 relative inline-block">
           Den Rest mache ich.
           <svg
