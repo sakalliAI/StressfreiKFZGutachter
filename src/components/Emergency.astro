@@ -25,26 +25,26 @@ import { emergencySteps, company } from '../data/site';
           einen Satz zu packen kostet im Ernstfall Zeit.
         -->
         <div
-          class="border-gold-500/35 bg-gold-500/8 rounded-card mt-8 flex flex-col gap-4 border p-5 sm:flex-row sm:items-center sm:justify-between"
+          class="border-copper-500/35 bg-copper-500/8 rounded-card mt-8 flex flex-col gap-4 border p-5 sm:flex-row sm:items-center sm:justify-between"
           data-reveal
         >
           <div class="flex items-start gap-3">
             <span
-              class="bg-gold-500/15 text-gold-400 grid h-10 w-10 flex-none place-items-center rounded-lg"
+              class="bg-copper-500/15 text-copper-400 grid h-10 w-10 flex-none place-items-center rounded-lg"
             >
               <Icon name="triangle-alert" size={20} />
             </span>
             <div class="text-[0.92rem] leading-relaxed">
               <p class="text-bone-50 font-semibold">
-                Verletzte? Sofort <span class="text-gold-400">112</span>.
+                Verletzte? Sofort <span class="text-copper-400">112</span>.
               </p>
               <p class="text-bone-50 font-semibold">
-                Polizei nötig? <span class="text-gold-400">110</span>.
+                Polizei nötig? <span class="text-copper-400">110</span>.
               </p>
               <p class="text-bone-100 mt-1">Danach rufen Sie mich an.</p>
             </div>
           </div>
-          <a href={company.phoneHref} class="btn btn-gold flex-none" data-track="call-sofort">
+          <a href={company.phoneHref} class="btn btn-copper flex-none" data-track="call-sofort">
             <Icon name="phone" size={17} />
             Anrufen
           </a>
@@ -65,7 +65,7 @@ import { emergencySteps, company } from '../data/site';
             emergencySteps.map((step) => (
               <li class="group flex gap-5 p-5 transition-colors duration-220 hover:bg-white/3 sm:gap-6 sm:p-6">
                 <span
-                  class="font-display text-gold-500/55 group-hover:text-gold-400 w-9 flex-none text-[1.75rem] leading-none font-extrabold tabular-nums transition-colors duration-220"
+                  class="font-display text-copper-500/90 group-hover:text-copper-300 w-9 flex-none text-[1.75rem] leading-none font-extrabold tabular-nums transition-colors duration-220"
                   aria-hidden="true"
                 >
                   {step.n.padStart(2, '0')}
@@ -89,7 +89,7 @@ import { emergencySteps, company } from '../data/site';
   .hazard-bar {
     background-image: repeating-linear-gradient(
       -45deg,
-      var(--color-gold-500) 0 12px,
+      var(--color-copper-500) 0 12px,
       var(--color-navy-850) 12px 24px
     );
     opacity: 0.85;

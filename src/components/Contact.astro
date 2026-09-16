@@ -7,7 +7,7 @@ import { company, damageTypes, reachableSlots, upload } from '../data/site';
 const turnstileSiteKey = import.meta.env['PUBLIC_TURNSTILE_SITE_KEY'] ?? '';
 
 const field =
-  'w-full rounded-lg border border-white/12 bg-navy-900 px-4 py-3 text-[0.95rem] text-bone-50 placeholder:text-navy-500 transition-colors duration-200 focus:border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-500/35';
+  'w-full rounded-lg border border-white/12 bg-navy-900 px-4 py-3 text-[0.95rem] text-bone-50 placeholder:text-navy-500 transition-colors duration-200 focus:border-copper-500 focus:outline-none focus:ring-2 focus:ring-copper-500/35';
 const label = 'block text-[0.82rem] font-semibold text-navy-300';
 ---
 
@@ -60,14 +60,14 @@ const label = 'block text-[0.82rem] font-semibold text-navy-300';
         }
         <ul class="mt-10 grid gap-5 border-t border-white/8 pt-8 text-[0.9rem]" data-reveal>
           <li class="flex gap-3">
-            <Icon name="clock" size={17} class="text-gold-400 mt-0.5 flex-none" />
+            <Icon name="clock" size={17} class="text-copper-400 mt-0.5 flex-none" />
             <div>
               <p class="text-bone-50 font-semibold">Erreichbarkeit</p>
               <p class="text-navy-400 mt-1 leading-relaxed">{company.hours}</p>
             </div>
           </li>
           <li class="flex gap-3">
-            <Icon name="map-pin" size={17} class="text-gold-400 mt-0.5 flex-none" />
+            <Icon name="map-pin" size={17} class="text-copper-400 mt-0.5 flex-none" />
             <div>
               <p class="text-bone-50 font-semibold">Besichtigung</p>
               <p class="text-navy-400 mt-1 leading-relaxed">
@@ -226,13 +226,13 @@ const label = 'block text-[0.82rem] font-semibold text-navy-300';
               type="checkbox"
               name="privacy"
               required
-              class="bg-navy-900 accent-gold-500 mt-0.5 h-5 w-5 flex-none rounded border-white/25"
+              class="bg-navy-900 accent-copper-500 mt-0.5 h-5 w-5 flex-none rounded border-white/25"
             />
             <span>
               Ich habe die
               <button
                 type="button"
-                class="text-gold-400 font-semibold underline underline-offset-2"
+                class="text-copper-400 font-semibold underline underline-offset-2"
                 data-legal-open="datenschutz"
               >
                 Datenschutzerklärung
@@ -242,7 +242,7 @@ const label = 'block text-[0.82rem] font-semibold text-navy-300';
             </span>
           </label>
 
-          <button type="submit" class="btn btn-gold w-full" data-track="form-submit">
+          <button type="submit" class="btn btn-copper w-full" data-track="form-submit">
             <span data-submit-label>Anfrage senden</span>
             <Icon name="arrow-right" size={17} />
           </button>
@@ -258,7 +258,7 @@ const label = 'block text-[0.82rem] font-semibold text-navy-300';
 
           <noscript>
             <p
-              class="bg-gold-500/12 text-bone-100 rounded-lg px-4 py-3 text-[0.86rem] leading-relaxed"
+              class="bg-copper-500/12 text-bone-100 rounded-lg px-4 py-3 text-[0.86rem] leading-relaxed"
             >
               Für das Formular wird JavaScript benötigt. Rufen Sie einfach an unter
               {company.phoneDisplay} oder schreiben Sie an {company.email}.
@@ -296,7 +296,7 @@ const label = 'block text-[0.82rem] font-semibold text-navy-300';
     status.className =
       kind === 'ok'
         ? 'rounded-lg bg-wa-500/14 px-4 py-3 text-[0.88rem] leading-relaxed text-wa-500'
-        : 'rounded-lg bg-gold-500/14 px-4 py-3 text-[0.88rem] leading-relaxed text-gold-300';
+        : 'rounded-lg bg-copper-500/14 px-4 py-3 text-[0.88rem] leading-relaxed text-copper-300';
   }
 
   /**

@@ -33,35 +33,36 @@ werden will).
 
 ## Farben und Typografie
 
-Die Palette stammt **direkt aus dem Logo** (`brand/Logo.png`): ein
-Monogramm aus königsblauem M und goldenem K, eingefasst in eine
+Die Akzentfarbe stammt **aus dem Logo** (`brand/mkstress_logo_neu.png`):
+ein Monogramm aus chromfarbenem M und kupfernem K unter einer
 Fahrzeugsilhouette.
 
-- **Navy** (`#04070f` bis `#b8c3dc`) als Flächenfarbe. Bewusst kein
-  neutrales Grau, sondern dasselbe Blau ins Tiefe gezogen. Dadurch wirkt
-  das Logo eingebettet statt aufgeklebt, und die Bildkacheln stehen
-  ruhig darauf.
-- **Gold** (`#d9a32b`) als einziger Akzent und Farbe aller primären
+- **Navy** (`#04070f` bis `#b8c3dc`) als Flächenfarbe. Sie stammt nicht
+  aus dem Logo, sondern trägt es. Das Logo ist für dunklen Grund
+  gezeichnet, und ein kühler Untergrund trägt das warme Kupfer, ohne mit
+  ihm zu streiten. Bewusst kein neutrales Grau, sondern ein Blau ins
+  Tiefe gezogen, damit die Bildkacheln ruhig darauf stehen.
+- **Kupfer** (`#dd7d38`) als einziger Akzent und Farbe aller primären
   Handlungsflächen. Es kommt aus dem K des Monogramms und hat auf dem
-  dunklen Grund rund 8:1 Kontrast.
-- **Royal** (`#0b3a9e`) ist das Logoblau in Textstärke. Es trägt die
-  Auszeichnungen auf der hellen Kostensektion, wo Gold nur rund 1,9:1
-  erreichen würde.
+  dunklen Grund zwischen 7,4:1 und 9,4:1 Kontrast. Die dunkle Stufe
+  `#a5561e` trägt die Auszeichnungen auf der hellen Kostensektion und
+  kommt dort auf 5,0:1.
 - **Bone** (`#f7f8fc`) für helle Flächen, leicht ins Blaue gezogen statt
   Reinweiß, damit der Bruch zur dunklen Seite nicht kalt wirkt.
+- Das **Chrom** im Logo bekommt keine eigene Farbe. Dafür stehen Bone
+  und `navy-300` bereits bereit.
 - **WhatsApp-Grün** bleibt im Original. Nutzer erkennen die Farbe, ein
   umgefärbter Button verliert genau diesen Vorteil.
-- Das **Rot** der Rücklichter im Logo bleibt dem Logo vorbehalten. Als
-  Flächenfarbe liegt es zu nah an einer Fehlermeldung.
 
-Das Logo wurde auf weißem Grund geliefert. Ein einfaches Ausschlüsseln
-der weißen Pixel hinterlässt an den weichgezeichneten Kanten einen
-hellen Halo, der auf dunklem Untergrund sofort auffällt.
-`scripts/build-assets.mjs` leitet stattdessen die Deckkraft aus dem
-hellsten Kanal ab und rechnet die Farbe gegen Weiß zurück. Das
-funktioniert hier, weil beide Markenfarben jeweils einen Kanal nahe null
-haben. Aus derselben Datei entstehen Favicon, Touch-Icon und das
-Vorschaubild für soziale Netzwerke.
+Beide Logodateien kommen mit Alphakanal, ein Freistellen entfällt.
+`mkstress_logo_neu.png` bringt allerdings unter dem Motiv 221 Zeilen
+deckendes Weiß über die volle Breite mit, ein Überbleibsel aus dem
+Export. Auf der dunklen Seite stünde das als heller Riegel unter dem
+Logo. `scripts/build-assets.mjs` erkennt und entfernt diesen Block,
+statt ihn fest zu verdrahten: kommt die Datei später sauber nach,
+passiert dort einfach nichts. Aus derselben Datei entstehen Favicon,
+Touch-Icon und das Vorschaubild für soziale Netzwerke. Die Icon-Platte
+ist dunkel, weil das Chrom des Logos auf hellem Grund verschwindet.
 
 Schriften: **Archivo** für Überschriften (kräftige, leicht technische
 Grotesk, passt zum Werkstattumfeld), **Inter** für Fließtext. Beide als

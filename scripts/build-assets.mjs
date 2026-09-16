@@ -15,62 +15,91 @@
  */
 import sharp from 'sharp';
 
-const LOGO = 'brand/Logo.png';
-/* Vollstaendige Sperrmarke: Bildzeichen mit Schriftzug darunter.
-   Im Footer ist genug Platz dafuer, dort ersetzt sie die Kombination
-   aus Bildzeichen plus separatem Text. */
-const LOGO_LOCKUP = 'brand/LogoMitTitel.png';
+/*
+  Beide Logodateien kommen bereits mit Alphakanal, 2000 px im Quadrat.
+  Ein Freistellen entfaellt damit, es bleibt das Wegschneiden der
+  transparenten Raender.
+*/
+const LOGO = 'brand/mkstress_logo_neu.png';
+/* Sperrmarke: Bildzeichen mit Schriftzug darunter. Im Footer ist genug
+   Platz dafuer, dort ersetzt sie die Kombination aus Bildzeichen plus
+   separatem Text. */
+const LOGO_LOCKUP = 'brand/mkstress_logo_neu_komplett.png';
 const HERO = 'src/assets/hero.jpeg';
 
 const NAVY = '#0a1226';
-const GOLD = '#d9a32b';
+const COPPER = '#dd7d38';
 const BONE = '#f7f8fc';
 
 /**
- * Stellt ein Logo frei, das auf weißem Grund geliefert wurde.
+ * Schneidet einen durchgehend weissen Block am unteren Rand weg.
  *
- * Ein einfaches Ausschlüsseln der weißen Pixel hinterlässt an den
- * weichgezeichneten Kanten helle Ränder, die auf dunklem Untergrund als
- * Halo sichtbar werden. Deshalb wird die Deckkraft aus dem hellsten
- * Kanal abgeleitet und die Farbe anschließend gegen Weiß zurückgerechnet.
- * Das funktioniert, weil beide Markenfarben, Blau und Gold, jeweils
- * einen Kanal nahe null haben.
+ * `mkstress_logo_neu.png` bringt unter dem Motiv 220 Zeilen deckendes
+ * Weiss mit, ueber die volle Breite. Das ist ein Ueberbleibsel aus dem
+ * Export, kein Gestaltungselement, und wuerde auf der dunklen Seite als
+ * heller Riegel unter dem Logo stehen.
+ *
+ * Erkannt wird der Block, statt ihn fest zu verdrahten: liefert der
+ * Kunde die Datei sauber nach, passiert hier einfach nichts.
  */
-async function knockOutWhite(file) {
-  const { data, info } = await sharp(file)
+async function dropWhiteFooter(input) {
+  const { data, info } = await sharp(input)
     .ensureAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true });
-  const out = Buffer.alloc(data.length);
 
-  for (let i = 0; i < data.length; i += 4) {
-    const r = data[i];
-    const g = data[i + 1];
-    const b = data[i + 2];
-    const min = Math.min(r, g, b);
-    const alpha = 255 - min;
-
-    if (alpha < 6) {
-      out[i] = out[i + 1] = out[i + 2] = out[i + 3] = 0;
-      continue;
+  const isWhiteRow = (y) => {
+    let white = 0;
+    for (let x = 0; x < info.width; x++) {
+      const i = (y * info.width + x) * 4;
+      if (data[i + 3] > 250 && data[i] > 235 && data[i + 1] > 235 && data[i + 2] > 235) white++;
     }
+    return white > info.width * 0.9;
+  };
 
-    const scale = 255 / alpha;
-    out[i] = Math.max(0, Math.min(255, Math.round((r - min) * scale)));
-    out[i + 1] = Math.max(0, Math.min(255, Math.round((g - min) * scale)));
-    out[i + 2] = Math.max(0, Math.min(255, Math.round((b - min) * scale)));
-    out[i + 3] = alpha;
-  }
+  /* Ganz unten sitzen ein paar Zeilen, die deckend, aber nicht weiss
+     sind: die Abrisskante des Artefakts. Die duerfen den Block nicht
+     verdecken, deshalb ein kleiner Spielraum. */
+  let y = info.height - 1;
+  for (let slack = 0; y >= 0 && slack < 6 && !isWhiteRow(y); slack++) y--;
 
-  return sharp(out, { raw: { width: info.width, height: info.height, channels: 4 } })
-    .trim({ threshold: 1 })
+  const runEnd = y;
+  while (y >= 0 && isWhiteRow(y)) y--;
+  const run = runEnd - y;
+
+  /* Unter 20 Zeilen ist es kein Riegel, sondern Teil des Motivs. */
+  if (run < 20) return sharp(input).ensureAlpha().png().toBuffer();
+
+  const height = y + 1;
+  console.log(`  ${info.height - height} Zeilen weisser Rand entfernt`);
+  return sharp(input)
+    .ensureAlpha()
+    .extract({ left: 0, top: 0, width: info.width, height })
     .png()
     .toBuffer();
 }
 
-const logo = await knockOutWhite(LOGO);
+/**
+ * Bringt eine Logodatei auf ihren tatsaechlichen Inhalt.
+ *
+ * Erst die durchsichtigen Raender weg, dann den weissen Riegel, dann
+ * noch einmal die Raender: der Riegel liegt unter dem Motiv, aber ueber
+ * den leeren Zeilen ganz unten, und waere andersherum nicht erreichbar.
+ *
+ * Die Trimm-Schwelle liegt bewusst nicht bei null. Um das Motiv liegt
+ * ein weicher Schein mit sehr geringer Deckkraft, der sonst als breiter
+ * unsichtbarer Rahmen stehen bliebe und das Logo im Header kleiner
+ * erscheinen liesse, als es ist.
+ */
+async function trimEdges(file) {
+  const trimmed = await sharp(file).ensureAlpha().trim({ threshold: 6 }).png().toBuffer();
+  const cleaned = await dropWhiteFooter(trimmed);
+  return sharp(cleaned).trim({ threshold: 6 }).png().toBuffer();
+}
+
+const logo = await trimEdges(LOGO);
 const logoMeta = await sharp(logo).metadata();
-console.log(`Logo freigestellt: ${logoMeta.width}x${logoMeta.height}`);
+console.log(`Bildzeichen: ${logoMeta.width}x${logoMeta.height}`);
 
 /*
   Header-Logo als WebP. Es ist auf schmalen Displays das größte
@@ -85,34 +114,44 @@ await sharp(logo)
   .webp({ quality: 82, alphaQuality: 90 })
   .toFile('public/logo.webp');
 
-/* Sperrmarke fuer den Footer, gleiche Freistellung. */
-const lockup = await knockOutWhite(LOGO_LOCKUP);
+/* Sperrmarke fuer den Footer. */
+const lockup = await trimEdges(LOGO_LOCKUP);
 const lockupMeta = await sharp(lockup).metadata();
-console.log(`Sperrmarke freigestellt: ${lockupMeta.width}x${lockupMeta.height}`);
+console.log(`Sperrmarke: ${lockupMeta.width}x${lockupMeta.height}`);
 await sharp(lockup)
   .resize({ width: 640 })
   .webp({ quality: 82, alphaQuality: 90 })
   .toFile('public/logo-lockup.webp');
 
 /*
-  Favicon aus dem Monogramm. Die volle Wortmarke ist mit rund 3:1 zu
-  breit, um bei 32 px erkennbar zu bleiben, das MK allein trägt.
-  Der Ausschnitt wird relativ zur getrimmten Breite berechnet, damit er
-  bei einer neuen Logodatei nicht verrutscht.
+  Favicon aus dem Monogramm.
+
+  Bei 32 px ist die Fahrzeugkontur nur noch ein Schleier, das MK traegt
+  allein. Der Ausschnitt nimmt deshalb den Buchstabenblock aus der Mitte
+  und laesst die auslaufende Silhouette links und rechts weg. Die Werte
+  sind Anteile der getrimmten Breite, damit sie bei einer neuen
+  Logodatei nicht verrutschen.
 */
 const monogram = await sharp(logo)
   .extract({
-    left: Math.round(logoMeta.width * 0.265),
-    top: 0,
-    width: Math.round(logoMeta.width * 0.5),
-    height: logoMeta.height,
+    left: Math.round(logoMeta.width * 0.2),
+    top: Math.round(logoMeta.height * 0.3),
+    width: Math.round(logoMeta.width * 0.6),
+    height: Math.round(logoMeta.height * 0.7),
   })
-  .trim({ threshold: 1 })
+  .trim({ threshold: 6 })
   .png()
   .toBuffer();
 
+/*
+  Dunkle Platte, nicht helle.
+
+  Das Logo besteht aus Kupfer und Chrom. Chrom ist nahezu weiss und
+  verschwindet auf hellem Grund, das "M" war auf der bisherigen
+  Bone-Platte praktisch unsichtbar. Auf Navy stehen beide Metalle.
+*/
 async function icon(size, file) {
-  const pad = Math.round(size * 0.14);
+  const pad = Math.round(size * 0.12);
   const inner = await sharp(monogram)
     .resize({ width: size - pad * 2, height: size - pad * 2, fit: 'inside' })
     .png()
@@ -121,7 +160,7 @@ async function icon(size, file) {
 
   const plate = Buffer.from(
     `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">
-       <rect width="${size}" height="${size}" rx="${Math.round(size * 0.22)}" fill="${BONE}"/>
+       <rect width="${size}" height="${size}" rx="${Math.round(size * 0.22)}" fill="${NAVY}"/>
      </svg>`,
   );
 
@@ -168,8 +207,8 @@ const scrim = Buffer.from(
      </defs>
      <rect width="${OG_W}" height="${OG_H}" fill="url(#g)"/>
      <text x="76" y="356" font-family="DejaVu Sans" font-size="60" font-weight="bold" fill="${BONE}">Unfall gehabt?</text>
-     <text x="76" y="428" font-family="DejaVu Sans" font-size="60" font-weight="bold" fill="${GOLD}">Den Rest mache ich.</text>
-     <rect x="76" y="468" width="120" height="5" rx="2.5" fill="${GOLD}"/>
+     <text x="76" y="428" font-family="DejaVu Sans" font-size="60" font-weight="bold" fill="${COPPER}">Den Rest mache ich.</text>
+     <rect x="76" y="468" width="120" height="5" rx="2.5" fill="${COPPER}"/>
      <text x="76" y="526" font-family="DejaVu Sans" font-size="25" fill="#b8c3dc">DESAG geprüfter Sachverständiger, Termin oft am selben Tag</text>
    </svg>`,
 );

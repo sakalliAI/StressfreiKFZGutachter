@@ -10,12 +10,12 @@
 /* ------------------------------------------------------------------
    Design-Tokens
 
-   Palette direkt aus dem Logo abgeleitet (brand/Logo.png):
-   Koenigsblau als Traeger, Gold als Akzent. Die dunklen Flaechen sind
-   kein neutrales Grau, sondern dasselbe Blau ins Tiefe gezogen, damit
-   Logo und Untergrund aus einem Guss wirken.
-   Das Rot der Ruecklichter bleibt dem Logo vorbehalten, es ist zu
-   nah an einer Fehlermeldung, um als Flaechenfarbe zu taugen.
+   Akzentfarbe aus dem Logo (brand/mkstress_logo_neu.png): Kupfer.
+   Das Navy stammt nicht aus dem Logo, sondern traegt die Flaechen. Es
+   bleibt, weil das Logo auf dunklem Grund ausgelegt ist und weil ein
+   kuehler Untergrund das warme Kupfer traegt, ohne mit ihm zu streiten.
+   Das Chrom im Logo braucht keine eigene Farbe, dafuer stehen bone und
+   navy-300 bereit.
    WhatsApp-Gruen bleibt im Original, Nutzer erkennen die Farbe.
    Begruendung im Detail: ARCHITECTURE.md
    ------------------------------------------------------------------ */
@@ -31,24 +31,27 @@
   --color-navy-400: #8494bc;
   --color-navy-300: #b8c3dc;
 
-  /* Logoblau als Textfarbe auf hellen Flaechen */
-  --color-royal-400: #3a6fd8;
-  --color-royal-500: #1b4fc4;
-  --color-royal-600: #0b3a9e;
-  --color-royal-700: #062b78;
-
   /* Helle Flaechen, leicht ins Blaue gezogen statt Reinweiss */
   --color-bone-50: #f7f8fc;
   --color-bone-100: #eef1f8;
   --color-bone-200: #dce2ef;
   --color-bone-300: #c2cbe0;
 
-  /* Gold aus dem Monogramm. Traegt alle primaeren Handlungsflaechen. */
-  --color-gold-300: #f4d68f;
-  --color-gold-400: #e9bc5a;
-  --color-gold-500: #d9a32b;
-  --color-gold-600: #b8871c;
-  --color-gold-700: #7a5810;
+  /*
+    Kupfer aus dem Logo. Traegt alle primaeren Handlungsflaechen.
+
+    Abgenommen aus `brand/mkstress_logo_neu.png`: Spitzlicht #ffc080,
+    Mittelton #e08040, Tiefe #c06020. Die Stufen sind so gesetzt, dass
+    sie WCAG 2.2 AA halten: 400 auf Navy liegt zwischen 7.4 und 9.4,
+    600 auf Bone bei 5.0, 500 als Flaeche unter dunkler Schrift bei 6.8.
+    Das Chrom im Logo braucht keine eigene Farbe, dafuer stehen bone
+    und navy-300 bereits bereit.
+  */
+  --color-copper-300: #f7cba6;
+  --color-copper-400: #ee9f66;
+  --color-copper-500: #dd7d38;
+  --color-copper-600: #a5561e;
+  --color-copper-700: #7b4011;
 
   --color-wa-500: #25d366;
   --color-wa-600: #1da851;
@@ -134,13 +137,13 @@
 
   /* Sichtbarer Fokus ueberall, ohne den Maus-Klick zu stoeren */
   :focus-visible {
-    outline: 3px solid var(--color-gold-400);
+    outline: 3px solid var(--color-copper-400);
     outline-offset: 3px;
     border-radius: 4px;
   }
 
   ::selection {
-    background: var(--color-gold-500);
+    background: var(--color-copper-500);
     color: var(--color-navy-950);
   }
 
@@ -230,14 +233,14 @@
     box-shadow: 0 12px 30px -10px rgb(37 211 102 / 0.85);
   }
 
-  .btn-gold {
-    background-color: var(--color-gold-500);
+  .btn-copper {
+    background-color: var(--color-copper-500);
     color: var(--color-navy-950);
-    box-shadow: 0 8px 24px -10px rgb(217 163 43 / 0.8);
+    box-shadow: 0 8px 24px -10px rgb(221 125 56 / 0.8);
   }
 
-  .btn-gold:hover {
-    background-color: var(--color-gold-400);
+  .btn-copper:hover {
+    background-color: var(--color-copper-400);
   }
 
   .btn-ghost {
@@ -261,7 +264,7 @@
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--color-gold-400);
+    color: var(--color-copper-400);
   }
 
   .eyebrow::before {
@@ -275,7 +278,7 @@
   /* Auf hellen Flaechen erreicht das helle Gold keine 4.5:1.
      Die dunkle Stufe kommt auf rund 4.8:1. */
   .eyebrow-on-light {
-    color: var(--color-gold-700);
+    color: var(--color-copper-700);
   }
 }
 

@@ -27,18 +27,18 @@ import { processSteps } from '../data/site';
           <div class="process-track" aria-hidden="true">
             <span class="bg-navy-700 absolute inset-0"></span>
             <span
-              class="process-fill absolute inset-y-0 left-0 w-full origin-left bg-[linear-gradient(90deg,var(--color-gold-600),var(--color-gold-400))]"
+              class="process-fill absolute inset-y-0 left-0 w-full origin-left bg-[linear-gradient(90deg,var(--color-copper-600),var(--color-copper-400))]"
             ></span>
 
             <span class="process-runner absolute inset-y-0 left-0 block w-full">
               <span class="process-car absolute top-1/2 left-0 block -translate-y-1/2">
                 <svg viewBox="0 0 200 92" width="54" height="25">
-                  <ellipse cx="100" cy="84" rx="86" ry="7" fill="#d9a32b" opacity="0.22"></ellipse>
+                  <ellipse cx="100" cy="84" rx="86" ry="7" fill="#dd7d38" opacity="0.22"></ellipse>
                   <path
                     d="M8 62V46q0-6 6-8l30-8 22-16q4-4 12-4h44q8 0 12 4l22 16 30 8q6 2 6 8v16z"
                     fill="#e8ecf7"></path>
                   <path d="M74 30 90 18h30l16 12z" fill="#1e2f52"></path>
-                  <rect x="186" y="40" width="8" height="7" rx="3" fill="#f4d68f"></rect>
+                  <rect x="186" y="40" width="8" height="7" rx="3" fill="#f7cba6"></rect>
                   <circle cx="52" cy="62" r="13" fill="#04070f"></circle>
                   <circle cx="52" cy="62" r="5" fill="#4f66a0"></circle>
                   <circle cx="150" cy="62" r="13" fill="#04070f"></circle>
@@ -143,9 +143,9 @@ import { processSteps } from '../data/site';
   }
 
   .process-dot {
-    border-color: var(--color-gold-500);
-    background-color: color-mix(in srgb, var(--color-gold-500) 14%, transparent);
-    color: var(--color-gold-300);
+    border-color: var(--color-copper-500);
+    background-color: color-mix(in srgb, var(--color-copper-500) 14%, transparent);
+    color: var(--color-copper-300);
     transition:
       border-color 260ms var(--ease-out-soft),
       background-color 260ms var(--ease-out-soft),
@@ -168,9 +168,9 @@ import { processSteps } from '../data/site';
   }
 
   [data-process-pin].is-armed .process-dot.is-lit {
-    border-color: var(--color-gold-500);
-    background-color: color-mix(in srgb, var(--color-gold-500) 14%, transparent);
-    color: var(--color-gold-300);
+    border-color: var(--color-copper-500);
+    background-color: color-mix(in srgb, var(--color-copper-500) 14%, transparent);
+    color: var(--color-copper-300);
   }
 
   [data-process-pin].is-armed [data-process-sticky] {

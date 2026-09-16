@@ -119,29 +119,46 @@ echten Begutachtungen sammelt, sollte sie nach und nach eintauschen.
 
 ## 1a. Logo und Marke, bereits eingebaut
 
-Die vier gelieferten Dateien liegen unverändert in `brand/`. Aus
-`brand/Logo.png` erzeugt `node scripts/build-assets.mjs` alle
-abgeleiteten Assets:
+Im Einsatz sind die beiden neuen Dateien in `brand/`:
+
+| Datei                            | Rolle                                 |
+| -------------------------------- | ------------------------------------- |
+| `mkstress_logo_neu.png`          | Bildzeichen, Fahrzeug mit MK          |
+| `mkstress_logo_neu_komplett.png` | Sperrmarke, zusätzlich mit Schriftzug |
+
+Daraus erzeugt `node scripts/build-assets.mjs` alle abgeleiteten Assets:
 
 | Datei                         | Verwendung                     |
 | ----------------------------- | ------------------------------ |
-| `public/logo.png`             | Header, Footer, Opener         |
+| `public/logo.webp`            | Header und Opener              |
+| `public/logo-lockup.webp`     | Footer                         |
 | `public/favicon-32.png`       | Browser-Tab                    |
 | `public/apple-touch-icon.png` | Startbildschirm auf iOS        |
 | `public/icon-512.png`         | Web-Manifest                   |
 | `public/og.jpg`               | Vorschau beim Teilen von Links |
 
-Der weiße Hintergrund wird dabei ausgeschlüsselt, das Logo sitzt ohne
-hellen Rand auf dunklem Grund. Wird das Logo je ersetzt: neue Datei nach
-`brand/Logo.png`, Skript laufen lassen, fertig. Weichen die neuen
-Logofarben ab, zusätzlich `--color-navy-*`, `--color-royal-*` und
-`--color-gold-*` in `src/styles/global.css` anpassen. Die gesamte Seite
-zieht nach, weil kein Farbwert hart im Markup steht.
+Beide Dateien haben bereits einen Alphakanal, freigestellt werden muss
+also nichts mehr. Das Skript entfernt aber automatisch einen weißen
+Riegel, den `mkstress_logo_neu.png` unter dem Motiv mitbringt: 221
+Zeilen deckendes Weiß aus dem Export, die auf der dunklen Seite als
+heller Balken stehen würden.
 
-`LogoFirma.png` und `LogoMitTitel.png` enthalten dieselbe Marke mit
-Schriftzügen. Auf Header-Höhe skaliert wären diese Schriftzüge
-unleserlich, deshalb steht der Name auf der Website als echter Text
-neben dem Bildzeichen. Das ist zugleich besser für Suchmaschinen.
+Wird das Logo je ersetzt: neue Dateien unter denselben Namen ablegen,
+Skript laufen lassen, fertig. Weichen die neuen Logofarben ab,
+zusätzlich `--color-copper-*` und `--color-navy-*` in
+`src/styles/global.css` anpassen. Die gesamte Seite zieht nach, weil
+kein Farbwert hart im Markup steht.
+
+**Für den Druck reicht keine der Dateien.** Sie sind 2000 px im Quadrat
+und damit fürs Web reichlich, für Visitenkarten und Notfallkarten aber
+knapp. Auch `MK_Stressfrei_Logo_Highest_Quality.pdf` hilft nicht
+weiter: darin steckt kein Vektor, sondern ein PNG mit 1602 × 982 px auf
+565 × 346 mm Seitengröße, also rund 72 dpi. Wer die Karten drucken
+lässt, sollte beim Ersteller des Logos die Vektordatei anfordern (SVG,
+AI oder EPS).
+
+Die älteren Dateien `Logo.png`, `LogoFirma.png` und `LogoMitTitel.png`
+bleiben als frühere Fassung liegen und werden nicht mehr verwendet.
 
 ## 2. Inhalte pflegen
 
