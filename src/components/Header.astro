@@ -1,7 +1,7 @@
 ---
 import Icon from './Icon.astro';
 import Wordmark from './Wordmark.astro';
-import { nav, company } from '../data/site';
+import { nav, company, services } from '../data/site';
 
 interface Props {
   /** Auf der Startseite fuehren die Punkte zu Sektionen (Scrollspy). */
@@ -37,8 +37,8 @@ const hrefFor = (item: (typeof nav)[number]) =>
     <nav aria-label="Hauptnavigation" class="hidden lg:block">
       <ul class="flex items-center gap-1">
         {
-          nav.map((item) => (
-            <li>
+          nav.map((item) => {
+            const link = (
               <a
                 href={hrefFor(item)}
                 data-spy-link={home ? item.id : undefined}
@@ -52,8 +52,71 @@ const hrefFor = (item: (typeof nav)[number]) =>
                   aria-hidden="true"
                 />
               </a>
-            </li>
-          ))
+            );
+            if (item.id !== 'leistungen') return <li>{link}</li>;
+
+            /* Leistungen mit Untermenue. Der Text bleibt ein normaler
+               Link, aufgeklappt wird per Maus beim Darueberfahren oder
+               ueber den eigenen Pfeil-Button (Tastatur, Touch). */
+            return (
+              <li class="relative" data-dd>
+                <div class="flex items-center">
+                  {link}
+                  <button
+                    type="button"
+                    class="text-bone-50/70 hover:text-bone-50 -ml-2 grid h-9 w-7 place-items-center rounded-md transition-colors"
+                    aria-expanded="false"
+                    aria-controls="dd-leistungen"
+                    aria-label="Untermenü Leistungen"
+                    data-dd-toggle
+                  >
+                    <Icon
+                      name="chevron-down"
+                      size={15}
+                      class="dd-chevron transition-transform duration-200"
+                    />
+                  </button>
+                </div>
+                <div
+                  id="dd-leistungen"
+                  class="dd-panel absolute top-full left-1/2 pt-3"
+                  data-dd-panel
+                >
+                  <div class="bg-navy-900/98 rounded-card w-[36rem] border border-white/10 p-2 shadow-[0_24px_60px_-20px_rgb(0_0_0/0.85)] backdrop-blur-lg">
+                    <ul class="grid grid-cols-2 gap-1">
+                      {services.map((service) => (
+                        <li>
+                          <a
+                            href={`/leistungen/${service.slug}/`}
+                            aria-current={
+                              Astro.url.pathname === `/leistungen/${service.slug}/`
+                                ? 'page'
+                                : undefined
+                            }
+                            class="group/dd block rounded-lg px-3.5 py-3 transition-colors hover:bg-white/6 aria-[current=page]:bg-white/6"
+                          >
+                            <span class="text-bone-50 group-hover/dd:text-copper-300 block text-[0.92rem] font-semibold transition-colors">
+                              {service.title}
+                            </span>
+                            <span class="text-navy-300 mt-0.5 block text-[0.8rem] leading-snug">
+                              {service.situation}
+                            </span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                    <a
+                      href="/leistungen/"
+                      class="text-copper-400 hover:text-copper-300 mt-1 flex items-center justify-between rounded-lg border-t border-white/8 px-3.5 pt-3 pb-2.5 text-[0.85rem] font-semibold"
+                    >
+                      Welches Gutachten brauche ich?
+                      <Icon name="arrow-right" size={15} />
+                    </a>
+                  </div>
+                </div>
+              </li>
+            );
+          })
         }
       </ul>
     </nav>
@@ -103,20 +166,67 @@ const hrefFor = (item: (typeof nav)[number]) =>
       <nav aria-label="Navigation mobil" class="container-page py-3">
         <ul class="grid gap-0.5">
           {
-            nav.map((item) => (
-              <li>
-                <a
-                  href={hrefFor(item)}
-                  data-spy-link={home ? item.id : undefined}
-                  aria-current={!home && current === item.id ? 'true' : undefined}
-                  data-nav-close
-                  class="text-navy-300 hover:text-bone-50 aria-[current=true]:text-copper-400 flex min-h-12 items-center justify-between rounded-lg px-3 text-[0.95rem] font-medium transition-colors hover:bg-white/5 aria-[current=true]:bg-white/6"
-                >
-                  {item.label}
-                  <Icon name="arrow-right" size={16} class="opacity-40" />
-                </a>
-              </li>
-            ))
+            nav.map((item) =>
+              item.id !== 'leistungen' ? (
+                <li>
+                  <a
+                    href={hrefFor(item)}
+                    data-spy-link={home ? item.id : undefined}
+                    aria-current={!home && current === item.id ? 'true' : undefined}
+                    data-nav-close
+                    class="text-navy-300 hover:text-bone-50 aria-[current=true]:text-copper-400 flex min-h-12 items-center justify-between rounded-lg px-3 text-[0.95rem] font-medium transition-colors hover:bg-white/5 aria-[current=true]:bg-white/6"
+                  >
+                    {item.label}
+                    <Icon name="arrow-right" size={16} class="opacity-40" />
+                  </a>
+                </li>
+              ) : (
+                <li data-dd>
+                  <div class="flex items-center gap-1">
+                    <a
+                      href={hrefFor(item)}
+                      data-spy-link={home ? item.id : undefined}
+                      aria-current={!home && current === item.id ? 'true' : undefined}
+                      data-nav-close
+                      class="text-navy-300 hover:text-bone-50 aria-[current=true]:text-copper-400 flex min-h-12 flex-1 items-center rounded-lg px-3 text-[0.95rem] font-medium transition-colors hover:bg-white/5 aria-[current=true]:bg-white/6"
+                    >
+                      {item.label}
+                    </a>
+                    <button
+                      type="button"
+                      class="text-navy-300 hover:text-bone-50 grid h-12 w-12 place-items-center rounded-lg transition-colors hover:bg-white/5"
+                      aria-expanded="false"
+                      aria-controls="dd-leistungen-mobil"
+                      aria-label="Untermenü Leistungen"
+                      data-dd-toggle
+                    >
+                      <Icon
+                        name="chevron-down"
+                        size={18}
+                        class="dd-chevron transition-transform duration-200"
+                      />
+                    </button>
+                  </div>
+                  <ul
+                    id="dd-leistungen-mobil"
+                    class="mb-1 ml-3 hidden border-l border-white/10 pl-2"
+                    data-dd-panel
+                  >
+                    {services.map((service) => (
+                      <li>
+                        <a
+                          href={`/leistungen/${service.slug}/`}
+                          data-nav-close
+                          class="text-navy-300 hover:text-bone-50 flex min-h-11 items-center rounded-lg px-3 text-[0.9rem] transition-colors hover:bg-white/5"
+                        >
+                          {service.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ),
+            )
           }
         </ul>
         <a
@@ -140,6 +250,45 @@ const hrefFor = (item: (typeof nav)[number]) =>
 
   a[aria-current='true'] [data-spy-bar] {
     transform: scaleX(1);
+  }
+
+  /* Untermenue Leistungen (Desktop). Verborgen ueber visibility statt
+     display, damit es weich ein- und ausblendet. Die kurze Verzoegerung
+     beim Schliessen verzeiht es, wenn die Maus kurz aus dem Menue
+     rutscht. */
+  .dd-panel {
+    visibility: hidden;
+    opacity: 0;
+    transform: translate(-50%, 6px);
+    transition:
+      opacity 180ms ease,
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 180ms;
+    transition-delay: 120ms, 120ms, 300ms;
+  }
+
+  @media (hover: hover) {
+    [data-dd]:hover .dd-panel {
+      visibility: visible;
+      opacity: 1;
+      transform: translate(-50%, 0);
+      transition-delay: 0s;
+    }
+  }
+
+  [data-dd][data-open='true'] .dd-panel {
+    visibility: visible;
+    opacity: 1;
+    transform: translate(-50%, 0);
+    transition-delay: 0s;
+  }
+
+  [data-dd][data-open='true'] [data-dd-panel]:not(.dd-panel) {
+    display: block;
+  }
+
+  [data-dd][data-open='true'] :global(.dd-chevron) {
+    transform: rotate(180deg);
   }
 
   /* Ganz oben ist der Header durchsichtig. Ueber dem hellen Hero
@@ -275,7 +424,45 @@ const hrefFor = (item: (typeof nav)[number]) =>
     el.addEventListener('click', closeNav);
   }
 
+  /* Untermenues. Der Button schaltet auf und zu, Escape und ein Klick
+     daneben schliessen. Auf dem Desktop oeffnet zusaetzlich Hover per
+     CSS, das hier ist fuer Tastatur und Touch. */
+  const dropdowns = Array.from(document.querySelectorAll<HTMLElement>('[data-dd]'));
+
+  function setDropdown(dd: HTMLElement, open: boolean): void {
+    dd.dataset.open = open ? 'true' : 'false';
+    dd.querySelector('[data-dd-toggle]')?.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  for (const dd of dropdowns) {
+    dd.querySelector('[data-dd-toggle]')?.addEventListener('click', () => {
+      setDropdown(dd, dd.dataset.open !== 'true');
+    });
+    // Verlaesst der Fokus das Menue per Tab, klappt es zu.
+    dd.addEventListener('focusout', (ev) => {
+      const next = ev.relatedTarget;
+      if (next instanceof Node && !dd.contains(next) && !dd.closest('#mobile-nav')) {
+        setDropdown(dd, false);
+      }
+    });
+  }
+
+  document.addEventListener('click', (ev) => {
+    for (const dd of dropdowns) {
+      if (dd.dataset.open === 'true' && ev.target instanceof Node && !dd.contains(ev.target)) {
+        setDropdown(dd, false);
+      }
+    }
+  });
+
   document.addEventListener('keydown', (ev) => {
-    if (ev.key === 'Escape') closeNav();
+    if (ev.key !== 'Escape') return;
+    const open = dropdowns.find((dd) => dd.dataset.open === 'true');
+    if (open) {
+      setDropdown(open, false);
+      open.querySelector<HTMLElement>('[data-dd-toggle]')?.focus();
+      return;
+    }
+    closeNav();
   });
 </script>

@@ -2,7 +2,7 @@
  * Zentrale Inhalts- und Stammdaten der Website.
  *
  * Alles was der Kunde spaeter selbst pflegt, steht hier an einer Stelle.
- * Offene Punkte sind mit TODO markiert und in docs/handover.md gelistet.
+ * Offene Punkte stehen in docs/handover.md.
  */
 
 export interface NavItem {
@@ -156,8 +156,20 @@ export const company = {
     },
   ] as readonly Place[],
 
-  /** TODO(Kunde): Steuernummer oder USt-IdNr. fuer das Impressum. */
-  taxId: null as string | null,
+  /**
+   * Umsatzsteuer-Identifikationsnummer, etwa 'DE123456789'. Nur Pflicht,
+   * wenn eine vergeben ist (§ 5 Abs. 1 Nr. 6 DDG). Die normale
+   * Steuernummer gehoert nicht ins Impressum. Bei null entfaellt der
+   * Abschnitt.
+   */
+  vatId: null as string | null,
+  /**
+   * Berufshaftpflicht, falls vorhanden: Versicherer mit Anschrift und
+   * raeumlicher Geltungsbereich, etwa 'HDI Versicherung AG, HDI-Platz 1,
+   * 30659 Hannover. Geltungsbereich: Deutschland'. Bei null entfaellt
+   * der Abschnitt.
+   */
+  liabilityInsurance: null as string | null,
 
   hours: 'Mo bis Sa, 8 bis 20 Uhr. Nach einem Unfall auch außerhalb.',
 } as const;

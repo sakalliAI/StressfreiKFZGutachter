@@ -342,7 +342,7 @@ Die Seite wiegt roh 187 KB, über die Leitung gehen 28 KB.
 - Hero und Leistungskacheln sind mit Gemini erzeugte Bilder, die Prompts
   liegen in `docs/image-prompts.md`. Logo und Prüfsiegel sind echt.
   Eigene Fotos aus der Praxis wären auf Dauer stärker.
-- Im Bereich „Über mich" steht ein Stimmungsbild, kein Porträt. Ein
-  echtes Foto von Mersum Kumalic ersetzt es ohne Codeänderung.
-- Steuernummer und Berufshaftpflicht im Impressum sind mit
-  `[BITTE ERGÄNZEN]` markiert und müssen vor dem Go-Live gefüllt werden.
+- Im Bereich „Über mich“ steht eine Visitenkarte ohne Foto. Ein echtes
+  Porträt als `src/assets/portrait.jpg` ersetzt sie ohne Codeänderung.
+- USt-IdNr. und Berufshaftpflicht erscheinen im Impressum nur, wenn sie
+  in `site.ts` eingetragen sind (`vatId`, `liabilityInsurance`).

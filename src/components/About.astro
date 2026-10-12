@@ -1,9 +1,22 @@
 ---
 import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import Icon from './Icon.astro';
 import CoverageMap from './CoverageMap.astro';
 import { company, trustPoints } from '../data/site';
-import portrait from '../assets/portrait-platzhalter.jpg';
+import logo from '../assets/logo.webp';
+
+/*
+  Echtes Porträt, sobald es vorliegt: als src/assets/portrait.jpg (oder
+  .jpeg/.png/.webp) ablegen, dann erscheint es hier automatisch. Bis
+  dahin steht eine Visitenkarte ohne Foto. Ein fremdes Stockgesicht
+  unter dem Namen des Inhabers waere irrefuehrend (§ 5 UWG).
+*/
+const portraits = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/portrait.{jpg,jpeg,png,webp}',
+  { eager: true },
+);
+const portrait = Object.values(portraits)[0]?.default ?? null;
 ---
 
 <section id="person" class="section-pad bg-navy-900" aria-labelledby="person-title">
@@ -81,30 +94,63 @@ import portrait from '../assets/portrait-platzhalter.jpg';
            ueberlappten dabei kurz an der Kante. */
       }
       <div class="flex flex-col gap-5 lg:order-first" data-reveal>
-        <div class="rounded-card relative min-h-52 flex-1 overflow-hidden lg:min-h-40">
-          <Image
-            src={portrait}
-            alt="Kfz-Sachverständiger in Arbeitskleidung in einer Werkstatt"
-            widths={[420, 640, 900]}
-            sizes="(min-width: 1024px) 34vw, 100vw"
-            format="webp"
-            quality={70}
-            loading="lazy"
-            decoding="async"
-            class="absolute inset-0 h-full w-full object-cover object-[50%_28%]"
-          />
-          <span
-            class="absolute inset-0 bg-[linear-gradient(to_top,rgb(4_7_15/0.9),rgb(6_10_22/0.15)_62%)]"
-            aria-hidden="true"></span>
-
-          <div class="absolute inset-x-0 bottom-0 p-4">
-            <p class="text-copper-400 text-[0.66rem] font-semibold tracking-[0.18em] uppercase">
-              Ihr Ansprechpartner
-            </p>
-            <p class="font-display text-bone-50 mt-1 text-lg font-bold">{company.owner}</p>
-            <p class="text-navy-300 mt-0.5 text-[0.8rem]">DESAG geprüfter Sachverständiger</p>
-          </div>
-        </div>
+        {
+          portrait ? (
+            <div class="rounded-card relative min-h-52 flex-1 overflow-hidden lg:min-h-40">
+              <Image
+                src={portrait}
+                alt={`${company.owner}, Kfz-Sachverständiger`}
+                widths={[420, 640, 900]}
+                sizes="(min-width: 1024px) 34vw, 100vw"
+                format="webp"
+                quality={70}
+                loading="lazy"
+                decoding="async"
+                class="absolute inset-0 h-full w-full object-cover object-[50%_28%]"
+              />
+              <span
+                class="absolute inset-0 bg-[linear-gradient(to_top,rgb(4_7_15/0.9),rgb(6_10_22/0.15)_62%)]"
+                aria-hidden="true"
+              />
+              <div class="absolute inset-x-0 bottom-0 p-4">
+                <p class="text-copper-400 text-[0.66rem] font-semibold tracking-[0.18em] uppercase">
+                  Ihr Ansprechpartner
+                </p>
+                <p class="font-display text-bone-50 mt-1 text-lg font-bold">{company.owner}</p>
+                <p class="text-navy-300 mt-0.5 text-[0.8rem]">DESAG geprüfter Sachverständiger</p>
+              </div>
+            </div>
+          ) : (
+            <div class="rounded-card bg-navy-850 relative flex flex-1 flex-col justify-end overflow-hidden border border-white/10 p-6">
+              <img
+                src={logo.src}
+                alt=""
+                width={logo.width}
+                height={logo.height}
+                loading="lazy"
+                decoding="async"
+                class="pointer-events-none absolute -top-4 -right-10 w-64 opacity-[0.12]"
+              />
+              <p class="text-copper-400 relative text-[0.7rem] font-semibold tracking-[0.18em] uppercase">
+                Ihr Ansprechpartner
+              </p>
+              <p class="font-display text-bone-50 relative mt-1.5 text-2xl font-bold">
+                {company.owner}
+              </p>
+              <p class="text-navy-300 relative mt-1 text-[0.9rem]">
+                DESAG geprüfter Kfz-Sachverständiger
+              </p>
+              <a
+                href={company.phoneHref}
+                class="text-bone-50 hover:text-copper-300 relative mt-5 inline-flex items-center gap-2 text-[1.05rem] font-semibold transition-colors"
+                data-track="call-person"
+              >
+                <Icon name="phone" size={17} class="text-copper-400" />
+                {company.phoneDisplay}
+              </a>
+            </div>
+          )
+        }
 
         <div class="flex-none">
           <CoverageMap />

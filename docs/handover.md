@@ -2,8 +2,9 @@
 
 ## 1. Was vor dem Go-Live fehlt
 
-Nach Dringlichkeit sortiert. Punkt 1.1 bis 1.4 sind Pflicht, ohne sie
-darf die Seite nicht unter einer eigenen Domain online gehen. Logo und
+Nach Dringlichkeit sortiert. Für den Go-Live fehlt rechtlich nichts
+mehr: Anschrift und E-Mail stehen, USt-IdNr. und Berufshaftpflicht sind
+nur einzutragen, falls es sie gibt. Logo und
 Visitenkarte liegen vor und sind eingebaut, siehe Abschnitt 1a.
 
 ### 1.1 Anschrift und E-Mail (erledigt)
@@ -24,18 +25,27 @@ streicht:
 
 Nur Orte aufnehmen, die wirklich angefahren werden.
 
-### 1.2 Steuernummer oder Umsatzsteuer-Identifikationsnummer (Pflicht)
+### 1.2 Umsatzsteuer-Identifikationsnummer (nur falls vorhanden)
+
+Pflicht nach § 5 DDG nur, wenn eine USt-IdNr. vergeben ist. Die normale
+Steuernummer gehört nicht ins Impressum. Falls vorhanden, in
+`src/data/site.ts` eintragen, der Abschnitt erscheint dann automatisch:
 
 ```ts
-taxId: 'USt-IdNr. DE123456789',
+vatId: 'DE123456789',
 ```
 
-### 1.3 Berufshaftpflichtversicherung (Pflicht, wenn vorhanden)
+### 1.3 Berufshaftpflichtversicherung (nur falls vorhanden)
 
-In `src/pages/impressum.astro` die Zeile
-`[BITTE ERGÄNZEN: Name und Anschrift des Versicherers, räumlicher
-Geltungsbereich]` ersetzen. Der Nachweis ist zugleich ein starkes
-Vertrauenssignal und kann in die Vertrauensleiste aufgenommen werden.
+Die Angabe ist nur nötig, wenn eine Berufshaftpflicht besteht (DL-InfoV
+§ 2), und darf auch im Auftragsformular statt auf der Website stehen.
+Für einen DESAG-geprüften, nicht öffentlich bestellten Sachverständigen
+ist die Versicherung selbst keine Pflicht. Falls vorhanden und
+gewünscht, in `src/data/site.ts`:
+
+```ts
+liabilityInsurance: 'Versicherer, Anschrift. Geltungsbereich: Deutschland',
+```
 
 ### 1.4 Zuständige Datenschutz-Aufsichtsbehörde (erledigt)
 
@@ -73,35 +83,25 @@ Nichts davon darf ohne Nachweis auf die Seite. Die Bezeichnung
 „Sachverständiger" ist nicht geschützt, eine erfundene Bestellung oder
 Mitgliedschaft wäre nach § 5 UWG irreführend und abmahnfähig.
 
-### 1.7 Porträtfoto (Pflicht vor dem Go-Live)
+### 1.7 Porträtfoto (empfohlen)
 
-In der Sektion „Über mich" steht derzeit ein **Stockfoto einer fremden
-Person**. Daneben stehen Name und Titel von Kumalic Mersum.
+Im Bereich „Über mich“ steht derzeit eine Visitenkarte mit Name, Titel
+und Telefonnummer, aber ohne Foto. Das frühere Stockfoto einer fremden
+Person ist entfernt, weil ein fremdes Gesicht unter dem eigenen Namen
+irreführend wäre (§ 5 UWG).
 
-**Dieses Bild darf so nicht live gehen.** Ein fremdes Gesicht unter dem
-eigenen Namen ist eine Irreführung über die Person des Anbieters und
-mindestens ein Fall für § 5 UWG, dazu ein Vertrauensbruch, sobald es
-jemandem auffällt. Für die Vorschau ist es in Ordnung, für den
-Echtbetrieb nicht.
+Ein echtes Foto ist trotzdem das stärkste Argument gegen ein anonymes
+Großbüro. Handyfoto genügt: Brustbild, Blick in die Kamera, Hochformat
+etwa 4:5, Tageslicht, Hintergrund eigenes Fahrzeug oder Werkstatt.
 
-Ein echtes Foto ist an dieser Stelle ohnehin das stärkste Argument
-gegen ein anonymes Großbüro. Handyfoto genügt:
-
-- Brustbild, Blick in die Kamera, freundlich und nicht steif
-- Hochformat, ungefähr 4:5
-- Hintergrund: eigenes Fahrzeug, Werkstatt oder schlichte Wand
-- Tageslicht von vorn oder halbseitlich, keine Deckenlampe von oben
-- Arbeitskleidung oder Hemd, so wie beim Termin auch
-
-Datei als `src/assets/portrait-platzhalter.jpg` ersetzen, dann ist
-nichts weiter zu tun.
+Datei als `src/assets/portrait.jpg` ablegen und neu bauen. Das Foto
+erscheint dann automatisch an Stelle der Visitenkarte.
 
 ### 1.8 Bilder
 
 Hero und alle sechs Leistungskacheln sind mit Gemini erzeugt und
 eingebaut, die Prompts dazu stehen in `docs/image-prompts.md`. Nur das
-Bild in der Sektion „Über mich" ist noch ein Stimmungsbild von Pexels,
-dort gehört das Porträt aus Punkt 1.7 hin.
+In der Sektion „Über mich“ gehört das Porträt aus Punkt 1.7 hin.
 
 Auf Dauer schlagen eigene Fotos aus der täglichen Arbeit jedes
 generierte Bild, weil sie unverwechselbar sind. Wer Aufnahmen von

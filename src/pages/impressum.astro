@@ -4,13 +4,10 @@ import PageHeader from '../components/PageHeader.astro';
 import { company } from '../data/site';
 
 /*
-  Pflichtangaben nach § 5 DDG.
-
-  Alle mit [BITTE ERGÄNZEN] markierten Stellen muss der Kunde vor dem
-  Go-Live unter eigener Domain ausfuellen. Sie stehen bewusst sichtbar
-  im Text, damit sie niemand uebersieht. Liste: docs/handover.md.
+  Pflichtangaben nach § 5 DDG. USt-IdNr. und Berufshaftpflicht stehen
+  nur da, wenn sie in site.ts eingetragen sind. Beides ist nur Pflicht,
+  wenn es sie gibt.
 */
-const tax = company.taxId ?? '[BITTE ERGÄNZEN: Steuernummer oder USt-IdNr.]';
 const crumbs = [{ name: 'Impressum', path: '/impressum/' }];
 ---
 
@@ -38,8 +35,14 @@ const crumbs = [{ name: 'Impressum', path: '/impressum/' }];
           E-Mail: <a href={`mailto:${company.email}`}>{company.email}</a>
         </p>
 
-        <h2>Umsatzsteuer</h2>
-        <p>{tax}</p>
+        {
+          company.vatId && (
+            <>
+              <h2>Umsatzsteuer-Identifikationsnummer</h2>
+              <p>{`Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: ${company.vatId}`}</p>
+            </>
+          )
+        }
 
         <h2>Berufsbezeichnung</h2>
         <p>
@@ -48,8 +51,14 @@ const crumbs = [{ name: 'Impressum', path: '/impressum/' }];
           gesetzlich geschützt.
         </p>
 
-        <h2>Berufshaftpflichtversicherung</h2>
-        <p>[BITTE ERGÄNZEN: Name und Anschrift des Versicherers, räumlicher Geltungsbereich]</p>
+        {
+          company.liabilityInsurance && (
+            <>
+              <h2>Berufshaftpflichtversicherung</h2>
+              <p>{company.liabilityInsurance}</p>
+            </>
+          )
+        }
 
         <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
         <p>
