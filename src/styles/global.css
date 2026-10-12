@@ -172,6 +172,14 @@
     }
   }
 
+  /* Auf grossen Monitoren mitwachsen. Bei fester Breite stand der Inhalt
+     auf 2560 px wie eine Insel in der Mitte. */
+  @media (min-width: 1800px) {
+    .container-page {
+      max-width: 88rem;
+    }
+  }
+
   .section-pad {
     padding-block: 4.5rem;
   }
@@ -279,6 +287,136 @@
      Die dunkle Stufe kommt auf rund 4.8:1. */
   .eyebrow-on-light {
     color: var(--color-copper-700);
+  }
+
+  /*
+    Fliesstext fuer Leistungs-, Orts- und Rechtsseiten.
+
+    Zeilenlaenge um 68 Zeichen, weil laengere Zeilen beim Lesen den
+    Anschluss verlieren. Ueberschriften bekommen oben deutlich mehr Luft
+    als unten, damit sie zum folgenden Absatz gehoeren und nicht zum
+    vorigen. Listen mit eigenem Marker in Kupfer statt Browserpunkt.
+  */
+  .prose-mk {
+    max-width: 68ch;
+    color: var(--color-navy-300);
+    font-size: 1.02rem;
+    line-height: 1.75;
+  }
+
+  .prose-mk > * + * {
+    margin-top: 1.1em;
+  }
+
+  .prose-mk h2 {
+    margin-top: 2.6em;
+    color: var(--color-bone-50);
+    font-size: clamp(1.35rem, 1.2vw + 0.95rem, 1.75rem);
+    line-height: 1.2;
+    scroll-margin-top: calc(var(--header-h-compact) + 1.5rem);
+  }
+
+  .prose-mk h3 {
+    margin-top: 2em;
+    color: var(--color-bone-50);
+    font-size: 1.1rem;
+    line-height: 1.3;
+  }
+
+  .prose-mk h2 + *,
+  .prose-mk h3 + * {
+    margin-top: 0.6em;
+  }
+
+  .prose-mk > :first-child {
+    margin-top: 0;
+  }
+
+  .prose-mk strong {
+    color: var(--color-bone-100);
+    font-weight: 600;
+  }
+
+  .prose-mk a {
+    color: var(--color-copper-400);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition: color 200ms var(--ease-out-soft);
+  }
+
+  .prose-mk a:hover {
+    color: var(--color-copper-300);
+  }
+
+  .prose-mk ul,
+  .prose-mk ol {
+    display: grid;
+    gap: 0.5em;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .prose-mk ul > li {
+    position: relative;
+    padding-left: 1.4em;
+  }
+
+  .prose-mk ul > li::before {
+    content: '';
+    position: absolute;
+    left: 0.2em;
+    top: 0.72em;
+    width: 0.42em;
+    height: 0.42em;
+    border-radius: 999px;
+    background: var(--color-copper-500);
+  }
+
+  .prose-mk ol {
+    counter-reset: mk;
+  }
+
+  .prose-mk ol > li {
+    position: relative;
+    padding-left: 2.1em;
+    counter-increment: mk;
+  }
+
+  .prose-mk ol > li::before {
+    content: counter(mk);
+    position: absolute;
+    left: 0;
+    top: 0.05em;
+    font-family: var(--font-display);
+    font-weight: 800;
+    color: var(--color-copper-400);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .prose-mk blockquote {
+    border-left: 2px solid var(--color-copper-500);
+    padding-left: 1.2em;
+    color: var(--color-bone-100);
+  }
+
+  .prose-mk table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.94rem;
+  }
+
+  .prose-mk th,
+  .prose-mk td {
+    padding: 0.7em 0.9em 0.7em 0;
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .prose-mk th {
+    color: var(--color-bone-50);
+    font-weight: 600;
   }
 }
 

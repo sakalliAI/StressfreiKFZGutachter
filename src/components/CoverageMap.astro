@@ -65,7 +65,7 @@ const alt = `Karte der Region um ${company.city} mit ${company.places
       class="absolute inset-0 h-full w-full object-cover"
     />
 
-    <!-- Randabdunklung, damit die Karte in die Kachel einsinkt -->
+    {/* Randabdunklung, damit die Karte in die Kachel einsinkt */}
     <span
       class="absolute inset-0 bg-[radial-gradient(120%_105%_at_50%_40%,transparent_42%,rgb(4_7_15/0.66)_100%)]"
       aria-hidden="true"></span>
@@ -84,12 +84,14 @@ const alt = `Karte der Region um ${company.city} mit ${company.places
         </radialGradient>
       </defs>
 
-      <!-- Reichweite als weicher Schein statt harter Kante. Ein Kreis
+      {
+        /* Reichweite als weicher Schein statt harter Kante. Ein Kreis
            mit klarer Linie würde eine Grenze behaupten, die es so
-           nicht gibt. -->
+           nicht gibt. */
+      }
       <circle cx={home.x} cy={home.y} r={26 * PX_KM} fill="url(#cov-reach)"></circle>
 
-      <!-- Orte im Einsatzgebiet -->
+      {/* Orte im Einsatzgebiet */}
       {
         points.map((point) => (
           <g>
@@ -125,7 +127,7 @@ const alt = `Karte der Region um ${company.city} mit ${company.places
         ))
       }
 
-      <!-- Standort -->
+      {/* Standort */}
       <circle
         class="coverage-ping"
         cx={home.x}
@@ -155,7 +157,7 @@ const alt = `Karte der Region um ${company.city} mit ${company.places
         {company.city}
       </text>
 
-      <!-- Maßstab -->
+      {/* Maßstab */}
       <g
         transform={`translate(26 ${MAP_H - 26})`}
         stroke="var(--color-bone-50)"
@@ -180,8 +182,10 @@ const alt = `Karte der Region um ${company.city} mit ${company.places
       </g>
     </svg>
 
-    <!-- Namensnennung. Die ODbL verlangt sie sichtbar an der Karte,
-         deshalb steht sie im Bild und nicht im Kleingedruckten. -->
+    {
+      /* Namensnennung. Die ODbL verlangt sie sichtbar an der Karte,
+         deshalb steht sie im Bild und nicht im Kleingedruckten. */
+    }
     <p
       class="bg-navy-950/55 text-navy-300 absolute right-0 bottom-0 rounded-tl-md px-2 py-1 text-[0.6rem] leading-none"
     >

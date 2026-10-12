@@ -3,8 +3,9 @@ import SectionHead from './SectionHead.astro';
 import { processSteps } from '../data/site';
 ---
 
-<section id="ablauf" class="bg-navy-850 relative">
-  <!--
+<section id="ablauf" class="bg-navy-850 relative" aria-labelledby="ablauf-title">
+  {
+    /*
     Scroll-Strecke. Der innere Block bleibt stehen, während die Seite
     daran vorbeiläuft. Das Fahrzeug folgt dabei der Scrollposition, also
     vorwärts beim Runterscrollen und zurück beim Hochscrollen.
@@ -12,37 +13,54 @@ import { processSteps } from '../data/site';
     Bewusst über `position: sticky` gelöst und nicht über abgefangene
     Scroll-Ereignisse. Nur so bleiben Trackpad, Tastatur, Touch und die
     Scrollleiste unverändert bedienbar.
-  -->
+  */
+  }
   <div data-process-pin>
     <div class="section-pad" data-process-sticky>
       <div class="container-page">
         <SectionHead
-          eyebrow="Ablauf"
+          id="ablauf-title"
           title="Von Ihrer Nachricht bis zum fertigen Gutachten"
-          lead="Vier Schritte. Um alles dazwischen kümmere ich mich."
+          lead="Meist liegen zwischen dem ersten Foto und dem Gutachten bei der Versicherung nur wenige Tage. So läuft es ab."
         />
 
         <div class="process mt-14 md:mt-20">
-          <!-- Fahrbahn von Punkt 01 bis Punkt 04, nur ab mittlerer Breite -->
+          {
+            /* Fahrbahn von Punkt 1 bis Punkt 4, nur ab mittlerer Breite.
+              Asphaltband mit Mittelstreifen, die gefahrene Strecke
+              leuchtet in Kupfer nach. */
+          }
           <div class="process-track" aria-hidden="true">
-            <span class="bg-navy-700 absolute inset-0"></span>
+            <span class="process-road absolute inset-0 rounded-full"></span>
             <span
-              class="process-fill absolute inset-y-0 left-0 w-full origin-left bg-[linear-gradient(90deg,var(--color-copper-600),var(--color-copper-400))]"
+              class="process-fill absolute top-1/2 left-0 h-[3px] w-full origin-left -translate-y-1/2 rounded-full"
             ></span>
 
             <span class="process-runner absolute inset-y-0 left-0 block w-full">
               <span class="process-car absolute top-1/2 left-0 block -translate-y-1/2">
-                <svg viewBox="0 0 200 92" width="54" height="25">
-                  <ellipse cx="100" cy="84" rx="86" ry="7" fill="#dd7d38" opacity="0.22"></ellipse>
+                <svg viewBox="0 0 240 64" width="96" height="26">
+                  <defs>
+                    <linearGradient id="pc-beam" x1="0" x2="1">
+                      <stop offset="0" stop-color="#f7cba6" stop-opacity="0.75"></stop>
+                      <stop offset="1" stop-color="#f7cba6" stop-opacity="0"></stop>
+                    </linearGradient>
+                    <linearGradient id="pc-body" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0" stop-color="#f7f8fc"></stop>
+                      <stop offset="1" stop-color="#b8c3dc"></stop>
+                    </linearGradient>
+                  </defs>
+                  <path d="M168 34 240 20v30z" fill="url(#pc-beam)"></path>
+                  <ellipse cx="88" cy="56" rx="78" ry="6" fill="#000" opacity="0.45"></ellipse>
                   <path
-                    d="M8 62V46q0-6 6-8l30-8 22-16q4-4 12-4h44q8 0 12 4l22 16 30 8q6 2 6 8v16z"
-                    fill="#e8ecf7"></path>
-                  <path d="M74 30 90 18h30l16 12z" fill="#1e2f52"></path>
-                  <rect x="186" y="40" width="8" height="7" rx="3" fill="#f7cba6"></rect>
-                  <circle cx="52" cy="62" r="13" fill="#04070f"></circle>
-                  <circle cx="52" cy="62" r="5" fill="#4f66a0"></circle>
-                  <circle cx="150" cy="62" r="13" fill="#04070f"></circle>
-                  <circle cx="150" cy="62" r="5" fill="#4f66a0"></circle>
+                    d="M10 46V36q0-5 5-6.5l26-6 20-12.5q5-3 11-3h34q7 0 12 3.5l18 12 28 4.5q6 1 6 7V46q0 4-4 4H14q-4 0-4-4z"
+                    fill="url(#pc-body)"></path>
+                  <path d="M66 23 78 14h20v9zM104 14h16l14 9h-30z" fill="#14213d"></path>
+                  <rect x="158" y="31" width="9" height="5" rx="2.5" fill="#fff4ea"></rect>
+                  <rect x="10" y="32" width="5" height="5" rx="2" fill="#dd7d38"></rect>
+                  <circle cx="46" cy="49" r="10" fill="#04070f"></circle>
+                  <circle cx="46" cy="49" r="4" fill="#8494bc"></circle>
+                  <circle cx="134" cy="49" r="10" fill="#04070f"></circle>
+                  <circle cx="134" cy="49" r="4" fill="#8494bc"></circle>
                 </svg>
               </span>
             </span>
@@ -66,7 +84,7 @@ import { processSteps } from '../data/site';
                     {step.n}
                   </span>
 
-                  <div class="md:mt-6">
+                  <div class="process-body md:mt-6">
                     <h3 class="text-bone-50 text-[1.08rem] font-bold">{step.title}</h3>
                     <p class="text-navy-300 mt-2 max-w-xs text-[0.92rem] leading-relaxed">
                       {step.text}
@@ -111,11 +129,21 @@ import { processSteps } from '../data/site';
   .process-track {
     display: none;
     position: absolute;
-    top: 1.5rem;
+    top: calc(1.5rem - 9px);
     left: 1.5rem;
     right: calc(25% - var(--process-gap) * 0.75 - 1.5rem);
-    height: 1px;
+    height: 18px;
     pointer-events: none;
+  }
+
+  .process-road {
+    background:
+      repeating-linear-gradient(90deg, rgb(255 255 255 / 0.22) 0 14px, transparent 14px 30px)
+        center / 100% 2px no-repeat,
+      linear-gradient(180deg, #172440, #101a31);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.06),
+      inset 0 -1px 0 rgb(0 0 0 / 0.4);
   }
 
   @media (min-width: 768px) {
@@ -130,7 +158,9 @@ import { processSteps } from '../data/site';
     Bewegung steht so eine fertige Grafik da statt einer leeren Linie.
   */
   .process-fill {
-    transform: scaleX(1);
+    transform: translateY(-50%) scaleX(1);
+    background: linear-gradient(90deg, var(--color-copper-600), var(--color-copper-300));
+    box-shadow: 0 0 12px 1px rgb(221 125 56 / 0.55);
   }
 
   .process-runner {
@@ -139,7 +169,8 @@ import { processSteps } from '../data/site';
   }
 
   .process-car {
-    margin-left: -27px;
+    margin-left: -58px;
+    filter: drop-shadow(0 0 10px rgb(247 203 166 / 0.25));
   }
 
   .process-dot {
@@ -154,7 +185,22 @@ import { processSteps } from '../data/site';
 
   /* Erst wenn das Script übernimmt, wird auf Anfang gestellt. */
   [data-process-pin].is-armed .process-fill {
-    transform: scaleX(0);
+    transform: translateY(-50%) scaleX(0);
+  }
+
+  .process-body :is(h3, p) {
+    transition: color 320ms var(--ease-out-soft);
+  }
+
+  /* Schritte, die das Auto noch nicht erreicht hat, treten zurueck.
+     Ueber die Farbe statt ueber Deckkraft, damit der Kontrast auch im
+     gedimmten Zustand fuer AA reicht. */
+  [data-process-pin].is-armed li:has(.process-dot:not(.is-lit)) .process-body h3 {
+    color: var(--color-navy-300);
+  }
+
+  [data-process-pin].is-armed li:has(.process-dot:not(.is-lit)) .process-body p {
+    color: var(--color-navy-400);
   }
 
   [data-process-pin].is-armed .process-runner {
@@ -214,7 +260,7 @@ import { processSteps } from '../data/site';
 
     function apply(progress: number): void {
       runner!.style.transform = `translateX(${progress * 100}%)`;
-      fill!.style.transform = `scaleX(${progress})`;
+      fill!.style.transform = `translateY(-50%) scaleX(${progress})`;
 
       dots.forEach((dot, i) => {
         // Punkt i sitzt bei i/3 der Fahrbahn. Die kleine Toleranz sorgt

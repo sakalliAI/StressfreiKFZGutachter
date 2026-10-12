@@ -2,77 +2,98 @@
 import Icon from './Icon.astro';
 import SectionHead from './SectionHead.astro';
 import { emergencySteps, company } from '../data/site';
+
+/**
+ * Was an der Unfallstelle zu tun ist.
+ *
+ * Gestaltet wie eine Karte aus dem Handschuhfach: hell, mit Warnstreifen,
+ * Notrufnummern gross und als echte Links. Wer hier gerade mit zitternden
+ * Haenden steht, soll nicht suchen muessen.
+ */
 ---
 
-<section id="sofort" class="section-pad bg-navy-850 relative">
+<section id="sofort" class="section-pad bg-navy-850 relative" aria-labelledby="sofort-title">
   <div class="container-page">
     <div
-      class="grid gap-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start lg:gap-16"
+      class="grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center lg:gap-16"
     >
-      <div class="lg:sticky lg:top-[calc(var(--header-h)+3rem)]">
+      <div>
         <SectionHead
-          eyebrow="Gerade passiert"
-          title="Die ersten vier Schritte an der Unfallstelle"
-          lead="Ruhig bleiben und der Reihe nach abarbeiten. Danach rufen Sie mich an, den Rest übernehme ich."
+          id="sofort-title"
+          title="Gerade gekracht? Erst das, dann ich."
+          lead="Vier Dinge an der Unfallstelle, in dieser Reihenfolge. Alles danach, Versicherung, Werkstatt, Papierkram, übernehme ich."
         />
 
-        <!--
-          Notruf zuerst. Wer hier landet, während es ernst ist, soll den
-          Hinweis vor der Liste sehen, nicht darunter.
-
-          112 und 110 stehen getrennt, weil sie unterschiedliche Stellen
-          erreichen: 112 den Rettungsdienst, 110 die Polizei. Beides in
-          einen Satz zu packen kostet im Ernstfall Zeit.
-        -->
-        <div
-          class="border-copper-500/35 bg-copper-500/8 rounded-card mt-8 flex flex-col gap-4 border p-5 sm:flex-row sm:items-center sm:justify-between"
-          data-reveal
-        >
-          <div class="flex items-start gap-3">
-            <span
-              class="bg-copper-500/15 text-copper-400 grid h-10 w-10 flex-none place-items-center rounded-lg"
-            >
-              <Icon name="triangle-alert" size={20} />
-            </span>
-            <div class="text-[0.92rem] leading-relaxed">
-              <p class="text-bone-50 font-semibold">
-                Verletzte? Sofort <span class="text-copper-400">112</span>.
-              </p>
-              <p class="text-bone-50 font-semibold">
-                Polizei nötig? <span class="text-copper-400">110</span>.
-              </p>
-              <p class="text-bone-100 mt-1">Danach rufen Sie mich an.</p>
-            </div>
-          </div>
-          <a href={company.phoneHref} class="btn btn-copper flex-none" data-track="call-sofort">
+        <div class="mt-8 grid gap-3 sm:flex sm:flex-wrap" data-reveal>
+          <a href={company.phoneHref} class="btn btn-copper" data-track="call-sofort">
             <Icon name="phone" size={17} />
-            Anrufen
+            {company.phoneDisplay}
+          </a>
+          <a
+            href={company.whatsapp}
+            target="_blank"
+            rel="noopener"
+            class="btn btn-ghost"
+            data-track="wa-sofort"
+          >
+            <Icon name="whatsapp" size={18} />
+            Fotos schicken
           </a>
         </div>
       </div>
 
-      <!--
-        Eine zusammenhängende Checkliste statt vier gleicher Kästen. Am
-        Straßenrand liest man von oben nach unten und hakt ab, nicht
-        über ein Raster hinweg. Der schräge Warnstreifen oben ist das,
-        was im Kofferraum liegt: Warndreieck und Weste.
-      -->
-      <div class="rounded-card bg-navy-800/70 overflow-hidden border border-white/8" data-reveal>
-        <div class="hazard-bar h-2" aria-hidden="true"></div>
+      <div class="notcard rounded-card relative overflow-hidden" data-reveal>
+        <div class="hazard-bar h-3" aria-hidden="true"></div>
 
-        <ol class="divide-y divide-white/8">
+        {
+          /* Notrufe zuerst und als Links, damit man direkt waehlen kann.
+            112 und 110 getrennt, weil sie verschiedene Stellen erreichen. */
+        }
+        <div class="border-navy-900/10 grid grid-cols-2 border-b">
+          <a
+            href="tel:112"
+            class="group hover:bg-navy-900/4 flex flex-col items-start gap-1.5 p-4 transition-colors sm:flex-row sm:items-center sm:gap-3 sm:p-5"
+          >
+            <span
+              class="font-display text-[2.1rem] leading-none font-extrabold text-[#b4231a] tabular-nums sm:text-[2.5rem]"
+              >112</span
+            >
+            <span class="text-navy-700 text-[0.85rem] leading-tight font-semibold">
+              Verletzte?<br />Rettungsdienst
+            </span>
+          </a>
+          <a
+            href="tel:110"
+            class="group border-navy-900/10 hover:bg-navy-900/4 flex flex-col items-start gap-1.5 border-l p-4 transition-colors sm:flex-row sm:items-center sm:gap-3 sm:p-5"
+          >
+            <span
+              class="font-display text-navy-900 text-[2.1rem] leading-none font-extrabold tabular-nums sm:text-[2.5rem]"
+              >110</span
+            >
+            <span class="text-navy-700 text-[0.85rem] leading-tight font-semibold">
+              Streit, Flucht?<br />Polizei
+            </span>
+          </a>
+        </div>
+
+        <ol class="px-4 py-2 sm:px-6">
           {
-            emergencySteps.map((step) => (
-              <li class="group flex gap-5 p-5 transition-colors duration-220 hover:bg-white/3 sm:gap-6 sm:p-6">
+            emergencySteps.map((step, i) => (
+              <li
+                class:list={[
+                  'flex gap-4 py-4',
+                  i > 0 && 'border-navy-900/15 border-t border-dashed',
+                ]}
+              >
                 <span
-                  class="font-display text-copper-500/90 group-hover:text-copper-300 w-9 flex-none text-[1.75rem] leading-none font-extrabold tabular-nums transition-colors duration-220"
+                  class="font-display border-navy-900/70 text-navy-900 grid h-8 w-8 flex-none place-items-center rounded-full border-2 text-[0.9rem] font-extrabold"
                   aria-hidden="true"
                 >
-                  {step.n.padStart(2, '0')}
+                  {step.n}
                 </span>
                 <div>
-                  <h3 class="text-bone-50 text-[1.05rem] font-bold">{step.title}</h3>
-                  <p class="text-navy-300 mt-1.5 text-[0.92rem] leading-relaxed">{step.text}</p>
+                  <h3 class="text-navy-900 text-[1.02rem] font-bold">{step.title}</h3>
+                  <p class="text-navy-600 mt-1 text-[0.92rem] leading-relaxed">{step.text}</p>
                 </div>
               </li>
             ))
@@ -84,14 +105,28 @@ import { emergencySteps, company } from '../data/site';
 </section>
 
 <style>
-  /* Warnstreifen wie auf Absperrungen. Bewusst schräg und in den
-     Markenfarben, nicht das übliche Gelb-Schwarz. */
+  .notcard {
+    background:
+      radial-gradient(120% 80% at 100% 0%, rgb(255 255 255 / 0.7), transparent 60%),
+      var(--color-bone-50);
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.6) inset,
+      0 30px 60px -25px rgb(0 0 0 / 0.65),
+      0 0 0 1px rgb(255 255 255 / 0.08);
+  }
+
+  @media (min-width: 1024px) {
+    .notcard {
+      transform: rotate(0.6deg);
+    }
+  }
+
+  /* Warnstreifen wie auf einer Absperrbake. */
   .hazard-bar {
     background-image: repeating-linear-gradient(
       -45deg,
-      var(--color-copper-500) 0 12px,
-      var(--color-navy-850) 12px 24px
+      var(--color-copper-500) 0 14px,
+      var(--color-navy-900) 14px 28px
     );
-    opacity: 0.85;
   }
 </style>

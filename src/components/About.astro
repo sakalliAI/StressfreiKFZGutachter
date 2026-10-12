@@ -6,22 +6,23 @@ import { company, trustPoints } from '../data/site';
 import portrait from '../assets/portrait-platzhalter.jpg';
 ---
 
-<section id="person" class="section-pad bg-navy-900">
+<section id="person" class="section-pad bg-navy-900" aria-labelledby="person-title">
   <div class="container-page">
     <div class="grid gap-10 lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] lg:gap-16">
-      <!--
+      {
+        /*
         Text.
 
         Steht bewusst vor der Bildspalte. So stimmt die Reihenfolge
         im Markup mit der Lesereihenfolge auf dem Handy überein, ohne
         dass Vorlesewerkzeuge und Tastaturbedienung einer anderen
         Abfolge folgen als das Auge.
-      -->
+      */
+      }
       <div class="flex flex-col justify-start">
-        <p class="eyebrow" data-reveal>Über mich</p>
-
         <h2
-          class="text-bone-50 mt-4 text-[clamp(1.75rem,3.4vw+0.6rem,2.6rem)] font-bold"
+          id="person-title"
+          class="text-bone-50 text-[clamp(1.9rem,3vw+0.8rem,3rem)] font-bold"
           data-reveal
         >
           Sie bekommen keinen Sachbearbeiter. Sie bekommen mich.
@@ -60,7 +61,8 @@ import portrait from '../assets/portrait-platzhalter.jpg';
           }
         </ul>
       </div>
-      <!--
+      {
+        /*
         Bildspalte: oben das Porträt, darunter die Karte.
 
         Das Porträt bekommt `flex-1` und keine feste Höhe. Damit nimmt
@@ -71,10 +73,13 @@ import portrait from '../assets/portrait-platzhalter.jpg';
         Im Markup steht sie hinter dem Text, damit auf dem Handy
         zuerst zu lesen ist, worum es geht. Ab der zweispaltigen
         Ansicht rückt sie über `lg:order-first` nach links.
-      -->
-      <!-- Ein gemeinsames `data-reveal` fuer beide Kacheln. Getrennt
+      */
+      }
+      {
+        /* Ein gemeinsames `data-reveal` fuer beide Kacheln. Getrennt
            bewegten sie sich waehrend des Einblendens gegeneinander und
-           ueberlappten dabei kurz an der Kante. -->
+           ueberlappten dabei kurz an der Kante. */
+      }
       <div class="flex flex-col gap-5 lg:order-first" data-reveal>
         <div class="rounded-card relative min-h-52 flex-1 overflow-hidden lg:min-h-40">
           <Image
@@ -103,6 +108,14 @@ import portrait from '../assets/portrait-platzhalter.jpg';
 
         <div class="flex-none">
           <CoverageMap />
+          <p class="text-navy-300 mt-3 text-[0.88rem] leading-relaxed">
+            Unterwegs im Umkreis von rund {company.radiusKm} km.{' '}
+            <a
+              href="/kfz-gutachter/"
+              class="text-copper-400 hover:text-copper-300 decoration-copper-500/40 font-semibold underline underline-offset-4"
+              >Anfahrt und Fahrzeiten ansehen</a
+            >
+          </p>
         </div>
       </div>
     </div>

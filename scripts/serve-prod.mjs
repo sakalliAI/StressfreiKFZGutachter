@@ -87,8 +87,10 @@ createServer(async (request, response) => {
     response.writeHead(200, { ...headers, ...extra, 'Content-Type': type });
     response.end(body);
   } catch {
-    response.writeHead(404, { 'Content-Type': 'text/plain' });
-    response.end('404');
+    // Wie Cloudflare Pages: die eigene 404-Seite mit echtem Status 404.
+    const page = await readFile(join(ROOT, '404.html')).catch(() => Buffer.from('404'));
+    response.writeHead(404, { ...headers, 'Content-Type': 'text/html; charset=utf-8' });
+    response.end(page);
   }
 }).listen(PORT, '127.0.0.1', () => {
   console.log(`Produktionsnahe Auslieferung auf http://127.0.0.1:${PORT}`);

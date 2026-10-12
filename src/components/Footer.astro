@@ -1,19 +1,26 @@
 ---
 import lockup from '../assets/logo-lockup.webp';
 import Icon from './Icon.astro';
-import { company, nav } from '../data/site';
+import { company, services } from '../data/site';
 
 const year = new Date().getFullYear();
+
+/*
+  Der Footer verlinkt jede Leistungs- und jede Ortsseite. Das ist keine
+  Fleissarbeit fuer Suchmaschinen allein: wer unten ankommt, sucht meist
+  genau eine bestimmte Seite, und hier findet er sie ohne Umweg ueber
+  die Navigation.
+*/
+const heading = 'text-navy-400 text-[0.72rem] font-semibold tracking-[0.16em] uppercase';
+const link = 'text-navy-300 hover:text-copper-400 text-[0.88rem] transition-colors';
 ---
 
 <footer id="footer" class="bg-navy-950 border-t border-white/8">
   <div class="container-page py-14 md:py-16">
-    <div class="grid gap-10 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)] md:gap-8">
-      <div>
-        {
-          /* Im Footer ist Platz für die vollständige Sperrmarke mit
-            Schriftzug. Der separate Text daneben entfällt dadurch. */
-        }
+    <div
+      class="grid gap-10 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-8"
+    >
+      <div class="sm:col-span-2 lg:col-span-1">
         <img
           src={lockup.src}
           alt="MK Stressfrei Kfz-Gutachter"
@@ -24,34 +31,41 @@ const year = new Date().getFullYear();
           decoding="async"
         />
         <p class="text-navy-400 mt-5 max-w-xs text-[0.88rem] leading-relaxed">
-          Unabhängige Kfz-Gutachten nach Unfall{company.region ? ` in ${company.region}` : ''}.
-          Besichtigung vor Ort, Gutachten direkt an Versicherung und Anwalt.
+          Unabhängige Kfz-Gutachten nach Unfall in {company.region}. Besichtigung vor Ort, Gutachten
+          direkt an Versicherung und Anwalt.
         </p>
-        <a
-          href={company.whatsapp}
-          target="_blank"
-          rel="noopener"
-          class="btn btn-wa mt-6"
-          data-track="wa-footer"
-        >
-          <Icon name="whatsapp" size={18} />
-          WhatsApp schreiben
-        </a>
       </div>
 
-      <nav aria-label="Fußnavigation">
-        <h2 class="text-navy-400 text-[0.72rem] font-semibold tracking-[0.16em] uppercase">
-          Seite
+      <nav aria-label="Leistungen">
+        <h2 class={heading}>
+          <a href="/leistungen/" class="hover:text-bone-100 transition-colors">Leistungen</a>
         </h2>
         <ul class="mt-4 grid gap-2.5">
           {
-            nav.map((item) => (
+            services.map((service) => (
               <li>
-                <a
-                  href={`#${item.id}`}
-                  class="text-navy-300 hover:text-copper-400 text-[0.88rem] transition-colors"
-                >
-                  {item.label}
+                <a href={`/leistungen/${service.slug}/`} class={link}>
+                  {service.title}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <nav aria-label="Einsatzgebiet">
+        <h2 class={heading}>
+          <a href="/kfz-gutachter/" class="hover:text-bone-100 transition-colors">Einsatzgebiet</a>
+        </h2>
+        <ul class="mt-4 grid gap-2.5">
+          <li>
+            <a href="/" class={link}>Ingolstadt</a>
+          </li>
+          {
+            company.places.map((place) => (
+              <li>
+                <a href={`/kfz-gutachter/${place.slug}/`} class={link}>
+                  {place.name}
                 </a>
               </li>
             ))
@@ -60,31 +74,39 @@ const year = new Date().getFullYear();
       </nav>
 
       <div>
-        <h2 class="text-navy-400 text-[0.72rem] font-semibold tracking-[0.16em] uppercase">
-          Direkt
-        </h2>
-        <ul class="mt-4 grid gap-2.5 text-[0.88rem]">
-          <li>
-            <a
-              href={company.phoneHref}
-              class="text-navy-300 hover:text-copper-400 inline-flex items-center gap-2 transition-colors"
-              data-track="call-footer"
-            >
-              <Icon name="phone" size={15} />
-              {company.phoneDisplay}
-            </a>
-          </li>
-          <li>
-            <a
-              href={`mailto:${company.email}`}
-              class="text-navy-300 hover:text-copper-400 inline-flex items-center gap-2 break-all transition-colors"
-            >
-              <Icon name="mail" size={15} />
-              {company.email}
-            </a>
-          </li>
-          <li class="text-navy-400 mt-1">{company.hours}</li>
-        </ul>
+        <h2 class={heading}>Kontakt</h2>
+        <address class="mt-4 grid gap-2.5 text-[0.88rem] not-italic">
+          <a
+            href={company.phoneHref}
+            class="text-navy-300 hover:text-copper-400 inline-flex items-center gap-2 transition-colors"
+            data-track="call-footer"
+          >
+            <Icon name="phone" size={15} />
+            {company.phoneDisplay}
+          </a>
+          <a
+            href={company.whatsapp}
+            target="_blank"
+            rel="noopener"
+            class="text-navy-300 hover:text-copper-400 inline-flex items-center gap-2 transition-colors"
+            data-track="wa-footer"
+          >
+            <Icon name="whatsapp" size={15} />
+            WhatsApp
+          </a>
+          <a
+            href={`mailto:${company.email}`}
+            class="text-navy-300 hover:text-copper-400 inline-flex items-center gap-2 transition-colors"
+          >
+            <Icon name="mail" size={15} />
+            {company.email}
+          </a>
+          <span class="text-navy-300 mt-2 leading-relaxed">
+            {company.street}<br />
+            {`${company.zip} ${company.city}`}
+          </span>
+          <span class="text-navy-400 leading-relaxed">{company.hours}</span>
+        </address>
       </div>
     </div>
 
@@ -94,22 +116,20 @@ const year = new Date().getFullYear();
       <p class="text-navy-400 text-[0.8rem]">
         {`© ${year} ${company.name}`}
       </p>
-      <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
-        <button
-          type="button"
+      <nav aria-label="Rechtliches" class="flex flex-wrap items-center gap-x-5 gap-y-2">
+        <a
+          href="/impressum/"
           class="text-navy-400 hover:text-bone-100 text-[0.8rem] transition-colors"
-          data-legal-open="impressum"
         >
           Impressum
-        </button>
-        <button
-          type="button"
+        </a>
+        <a
+          href="/datenschutz/"
           class="text-navy-400 hover:text-bone-100 text-[0.8rem] transition-colors"
-          data-legal-open="datenschutz"
         >
           Datenschutz
-        </button>
-      </div>
+        </a>
+      </nav>
     </div>
 
     <div class="mt-6 text-center sm:text-right">

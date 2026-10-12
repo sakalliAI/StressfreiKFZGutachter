@@ -71,48 +71,51 @@ damit kein Drittlandthema.
 
 ## Der Opener
 
-Der Kunde wünscht sich einen Einstieg mit zwei Fahrzeugen, die
-kollidieren, und einem Übergang zur Seite. Umgesetzt als **SVG plus
-CSS-Keyframes**, nicht als Video und nicht als 3D-Szene.
+Zwei Fahrzeuge, Aufprall, Übergang zur Seite. Umgesetzt als **SVG plus
+CSS-Keyframes**, dazu ein kurzlebiges Canvas für die Funken. Kein Video,
+keine 3D-Szene.
 
-Gründe:
+Die Bildidee kommt aus dem Logo: das M ist Chrom, das K Kupfer, darüber
+liegt eine Fahrzeuglinie. Also fährt von links ein Wagen in Chrom, von
+rechts einer in Kupfer, beide als Lichtkontur im Stil dieser Linie
+gezeichnet, mit Lichtspur, Scheinwerferkegel und Spiegelung auf der
+Fahrbahn. Beim Aufprall gibt es Blitz, weiche Druckwelle, Funken mit
+Schwerkraft und Abprall, Glassplitter und eine kurze Erschütterung. Aus
+dem Licht wächst das Logo, ein Glanz fährt darüber, der Schriftzug
+erscheint Buchstabe für Buchstabe. Danach fliegt das Logo in den Header,
+und die Nacht öffnet sich kreisförmig zur Seite.
 
-- Rund 6 KB statt mehrerer Megabyte. Ein Video hätte den größten
-  Ladeposten der Seite gestellt, ausgerechnet für Besucher am Straßenrand.
-- Gestochen scharf auf jedem Display, kein Reencoding, kein Codec-Thema.
-- Kein Autoplay-Problem auf iOS, keine Lizenzfrage bei Stockmaterial.
-- Der LCP der Seite bleibt das Hero-Bild. Der Opener liegt darüber und
-  hält den Messwert nicht auf.
+Gründe für diese Technik:
 
-Der Übergang am Ende ist eine FLIP-Animation: Das Script misst die
-Position des Header-Logos, rechnet Verschiebung und Maßstab aus und
-schiebt das Bildzeichen des Openers genau dorthin.
+- Wenige Kilobyte statt mehrerer Megabyte.
+- Gestochen scharf auf jedem Display, kein Codec-Thema, kein
+  Autoplay-Problem auf iOS, keine Lizenzfrage.
+- Die Funken laufen nur rund 1,5 Sekunden und das Canvas entfernt sich
+  danach selbst.
 
-Wichtig dabei: Der Opener steht im Dokument **vor** dem Header, und sein
-Script läuft inline beim Parsen. Beide Elemente dürfen deshalb erst im
-Moment des Abflugs gesucht werden, nicht beim Start. Andernfalls ist das
-Ziel schlicht noch nicht da, die Suche liefert `null` und der Flug fällt
-lautlos aus, während der Rest der Sequenz normal weiterläuft. Aus
-demselben Grund wird das Header-Logo nicht direkt ausgeblendet, sondern
-über eine Klasse am `<html>`. Das echte Header-Logo
-ist währenddessen ausgeblendet und erscheint erst, wenn das Overlay
-verschwindet. Feste Pixelwerte müssten für jede Bildschirmbreite neu
-gepflegt werden und wären beim nächsten Umbau der Kopfzeile wieder falsch.
+Details, die man beim Umbau kennen muss:
 
-Die Fläche gibt die Seite bewusst erst mit dem Abflug des Logos frei.
-Stünde die Marke über der bereits sichtbaren Seite, wirkte sie wie ein
-Fremdkörper mitten im Hero statt wie ein eigener Auftritt. Der Preis
-dafür sind rund 0,3 Sekunden beim mobilen LCP, 2,7 statt 2,4. Ab dem
-zweiten Aufruf der Sitzung entfällt der Opener ohnehin.
-
-Umgekehrte Sichtbarkeitslogik: Das Overlay steht mit `hidden` im HTML und
-wird nur von einem Inline-Skript eingeblendet. Fällt JavaScript aus, ist
-sofort die Seite zu sehen. Andersherum könnte ein Skriptfehler die
-gesamte Seite hinter einer schwarzen Fläche verstecken. Der Opener läuft
-einmal pro Browsersitzung, ist jederzeit überspringbar und entfällt bei
-`prefers-reduced-motion` vollständig.
-
-Alternativen mit Veo 3 oder fertigen 3D-Modellen: siehe `docs/opener.md`.
+- **Die Uhr startet mit der ersten CSS-Animation**, nicht mit dem
+  Script. Der Browser beginnt Keyframes erst beim nächsten Zeichnen, das
+  kann sich auf dem Handy um ein paar hundert Millisekunden verzögern.
+  Ohne diese Kopplung flogen die Funken, bevor sich die Wagen berührten.
+- **Das Intro-Logo ist nie `opacity: 0`**, verdeckt wird es allein über
+  eine Maske. Für das Auge gleich, aber der Browser zählt es so ab dem
+  ersten Bild als gezeichnet (LCP). Der Hero füllt den ganzen
+  Bildschirm und gilt deshalb nicht als LCP-Kandidat.
+- **Der Glanz nutzt keine Maske aus der Logodatei.** Eine CSS-Maske mit
+  `url()` lädt das Bild im CORS-Modus ein zweites Mal. Das hat den
+  mobilen Performance-Wert von 96 auf 91 gedrückt.
+- Der Flug in den Header ist eine FLIP-Animation. Ziel und Quelle werden
+  erst im Moment des Abflugs gesucht, weil das Script beim Parsen läuft
+  und der Header dann noch nicht existiert.
+- Das Overlay steht mit `hidden` im HTML und wird nur vom Inline-Script
+  eingeblendet. Fällt JavaScript aus, ist sofort die Seite zu sehen.
+- Läuft nur, wenn die Startseite die **erste Seite der Sitzung** ist
+  (`mk-seen` in sessionStorage, von jeder Seite am Ende gesetzt) und nur
+  einmal (`mk-intro`). `?intro` erzwingt ihn zum Vorführen.
+  Überspringbar per Klick, Escape, Enter, Leertaste. Entfällt bei
+  `prefers-reduced-motion`.
 
 ## Die Fahrt in der Ablauf-Sektion
 
@@ -182,14 +185,29 @@ Höhe und Logogröße hängen an denselben zwei Variablen (`--header-h`,
 ziehen Kopfhöhe, Logo, `scroll-padding-top` und der obere Abstand des
 Heros gemeinsam nach, ohne dass irgendwo eine Zahl doppelt gepflegt wird.
 
-## Warum ein Onepager
+## Seitenstruktur
 
-Sechs Leistungen und ein Ansprechpartner rechtfertigen keine
-Unterseitenstruktur. Ein durchgehender Scroll mit Ankern hält den
-Besucher im Fluss und vermeidet Ladezeiten zwischen Seiten. Details zu
-den Leistungen und die Rechtstexte liegen in `<dialog>`-Overlays: der
-Text steht real im HTML, ist also für Suchmaschinen und Sprachmodelle
-lesbar, kostet aber keinen Seitenwechsel.
+Ursprünglich ein Onepager mit Dialogen. Auf Kundenwunsch und für die
+Auffindbarkeit jetzt mehrseitig, die Startseite bleibt der Einstieg:
+
+| Pfad                           | Inhalt                                                          |
+| ------------------------------ | --------------------------------------------------------------- |
+| `/`                            | Startseite, alle Sektionen                                      |
+| `/leistungen/`                 | „Welches Gutachten brauche ich?“, nach Lage sortiert            |
+| `/leistungen/<slug>/`          | je Leistung eine Seite, Text in `src/content/leistungen/`       |
+| `/kfz-gutachter/`              | Einsatzgebiet mit Fahrzeiten                                    |
+| `/kfz-gutachter/<ort>/`        | je Ort eine Seite mit echter Route, Text in `src/content/orte/` |
+| `/impressum/`, `/datenschutz/` | Rechtstexte                                                     |
+
+Jede Unterseite hat eigenen Titel, Beschreibung, Canonical,
+Brotkrümelnavigation und Schema.org (WebPage, Service, FAQPage,
+BreadcrumbList). `robots.txt` und `llms.txt` werden beim Build aus
+`astro.config.mjs` (`SITE`) erzeugt.
+
+Ortsseiten nur für Orte, die wirklich angefahren werden, und jede mit
+eigenen Daten (Entfernung, Fahrzeit, Strecke, Landkreis aus OSRM und
+Nominatim). Austauschbare Stadtseiten mit getauschtem Ortsnamen wertet
+Google als Doorway Pages ab.
 
 ## Scrollspy
 
@@ -303,7 +321,7 @@ Ein Testserver ohne Kompression misst hier deutlich zu pessimistisch:
 Die Seite wiegt roh 187 KB, über die Leitung gehen 28 KB.
 
 - CSS wird vollständig inline ausgeliefert (`inlineStylesheets: 'always'`).
-  Bei einem Onepager spart das einen render-blockierenden Request.
+  Spart auf jeder Seite einen render-blockierenden Request.
 - Das Hero-Bild lädt mit `fetchpriority="high"`, alle übrigen Bilder mit
   `loading="lazy"`.
 - Für Viewports unter 768 px gibt es einen eigenen Hochformat-Zuschnitt
@@ -317,7 +335,7 @@ Die Seite wiegt roh 187 KB, über die Leitung gehen 28 KB.
 - Von den Schriften wird nur die aufrechte Gewichtsachse eingebunden
   (`wght.css`), nicht das komplette Paket mit Kursiven.
 - Gesamtes clientseitiges JavaScript: rund 4 KB, aufgeteilt auf
-  Scrollspy, Dialoge, Reveal, Sticky-CTA und Formular.
+  Scrollspy, Reveal, Sticky-CTA, Formular, Routenkarte und FAQ.
 
 ## Bekannte Grenzen
 
@@ -326,6 +344,5 @@ Die Seite wiegt roh 187 KB, über die Leitung gehen 28 KB.
   Eigene Fotos aus der Praxis wären auf Dauer stärker.
 - Im Bereich „Über mich" steht ein Stimmungsbild, kein Porträt. Ein
   echtes Foto von Mersum Kumalic ersetzt es ohne Codeänderung.
-- Adresse, Steuernummer, Berufshaftpflicht und Aufsichtsbehörde in den
-  Rechtstexten sind mit `[BITTE ERGÄNZEN]` markiert und müssen vor dem
-  Go-Live gefüllt werden.
+- Steuernummer und Berufshaftpflicht im Impressum sind mit
+  `[BITTE ERGÄNZEN]` markiert und müssen vor dem Go-Live gefüllt werden.

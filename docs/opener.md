@@ -7,46 +7,40 @@ verwenden.
 
 ## Was jetzt drin ist
 
-Eine in SVG und CSS gebaute Sequenz, rund 4,5 Sekunden lang.
+Eine in SVG, CSS und einem kurzen Canvas gebaute Sequenz, rund vier
+Sekunden lang. Die Idee kommt aus dem Logo: M in Chrom, K in Kupfer,
+darüber eine Fahrzeuglinie. Von links kommt ein Wagen in Chrom, von
+rechts einer in Kupfer, beide als leuchtende Kontur. Beim Aufprall
+verschmelzen sie zum Logo.
 
-Auf die Reihenfolge am Ende kommt es an: Die Marke steht auf dunklem
-Grund, nicht im Hero. Die Seite kommt erst zum Vorschein, während das
-Logo nach oben links unterwegs ist.
-
-| Zeit          | Was passiert                                                                                        |
-| ------------- | --------------------------------------------------------------------------------------------------- |
-| 0,00 – 0,30 s | Die Fahrbahnlinie zieht sich auf                                                                    |
-| 0,30 – 1,45 s | Zwei Fahrzeuge beschleunigen aus dem Bild heraus aufeinander zu, Scheinwerferkegel wachsen mit      |
-| 1,45 s        | Aufprall. Weißer Blitz, zwei Schockwellen, sechzehn Splitter, beide Fahrzeuge federn zurück         |
-| 1,70 s        | Das Logo tritt an die Stelle der Fahrzeuge, weiterhin auf dunklem Grund                             |
-| 1,90 s        | Der Schriftzug erscheint darunter                                                                   |
-| 2,35 – 3,35 s | Die Marke steht still, eine volle Sekunde                                                           |
-| 3,35 – 4,25 s | Das Logo fliegt an seinen Platz im Header. Erst dabei teilt sich die Fläche und gibt die Seite frei |
-| 4,25 – 4,53 s | Das Logo liegt still auf seiner Endposition, dann verschwindet das Overlay                          |
+| Zeit        | Was passiert                                                                                         |
+| ----------- | ---------------------------------------------------------------------------------------------------- |
+| 0,0 – 0,9 s | Nacht, die Fahrbahn glimmt auf, der Boden spiegelt                                                   |
+| 0,1 – 1,2 s | Beide Wagen zeichnen sich als Lichtlinie und beschleunigen aufeinander zu, mit Lichtspur und Kegel   |
+| 1,2 s       | Aufprall: Blitz, weiche Druckwelle, Funken mit Schwerkraft und Abprall, Glassplitter, Erschütterung  |
+| 1,3 – 2,2 s | Das Logo wächst kreisförmig aus dem Licht, leicht überbelichtet, dann normal                         |
+| 1,7 – 2,4 s | „Stressfrei“ Buchstabe für Buchstabe, darunter „Kfz-Gutachter · Ingolstadt“                          |
+| 1,9 – 3,0 s | Ein Glanz fährt über Chrom und Kupfer                                                                |
+| 3,0 – 3,9 s | Das Logo fliegt an seinen Platz im Header, die Nacht öffnet sich kreisförmig und gibt die Seite frei |
 
 Eigenschaften:
 
-- Wenige Kilobyte. Ein vergleichbares Video liegt bei 2 bis 8 MB.
-- Der Flug am Ende ist gemessen, nicht fest verdrahtet: Das Script
-  ermittelt zur Laufzeit, wo das Header-Logo sitzt, und schiebt das
-  Bildzeichen genau dorthin. Passt damit auf jeder Bildschirmbreite.
-- Vektorbasiert, also auf jedem Display gestochen scharf.
-- Läuft **einmal pro Browsersitzung**. Beim Neuladen bleibt er weg, weil
-  er bis zum Ende den Inhalt verdeckt und sonst jedes Mal den ersten
-  Bildaufbau verzögern würde.
-- Zum Vorführen: **`?intro` an die Adresse hängen**, dann läuft er
-  wieder, also `https://mk-stressfrei.sakalli.ai/?intro`. Ein neuer Tab
-  oder ein privates Fenster tut es auch.
+- Wenige Kilobyte, kein Video.
+- Der Flug am Ende ist gemessen, nicht fest verdrahtet, passt also auf
+  jede Bildschirmbreite.
+- Läuft nur, wenn die Startseite die **erste Seite der Sitzung** ist,
+  und nur einmal. Wer über Google auf einer Leistungsseite landet und
+  dann zur Startseite wechselt, sieht ihn nicht.
+- Zum Vorführen: **`?intro` an die Adresse hängen**, also
+  `https://mk-stressfrei.sakalli.ai/?intro`.
 - Jederzeit überspringbar: Schaltfläche oben rechts, Klick irgendwohin,
   Escape, Enter oder Leertaste.
 - Entfällt vollständig, wenn im Betriebssystem reduzierte Bewegung
   eingestellt ist.
-- Kein Autoplay-Problem auf iPhones und keine Lizenzfrage.
 
-Die Darstellung ist bewusst abstrakt gehalten: geometrische Silhouetten,
-kein realistisches Blech, keine Personen. Ein fotorealistischer Crash am
+Der Aufprall ist als Lichtereignis inszeniert, nicht als Unglück: keine
+Personen, kein realistisches Blech. Ein fotorealistischer Crash am
 Anfang einer Seite, die Unfallgeschädigte aufrufen, wäre geschmacklos.
-Der Aufprall ist als Lichtereignis inszeniert, nicht als Unglück.
 
 ## Wenn es doch ein Video sein soll
 
@@ -185,11 +179,8 @@ die Lizenzfrage bei kommerzieller Nutzung als Markenauftritt.
 
 ## Logo im Opener
 
-Der Opener endet auf dem echten Logo. Die Fahrzeugfarben der Sequenz
-sind daran angeglichen: das linke Fahrzeug hell, das rechte im Blau des
-Monogramms, der Aufprall in Gold. Splitter und Blitz nehmen denselben
-Goldton auf, den auch die Schaltflächen der Seite tragen.
-
-Wird das Logo je ersetzt, genügt ein Lauf von
-`node scripts/build-assets.mjs`. Der Opener zieht automatisch nach, weil
-er dieselbe Datei `public/logo.png` verwendet wie Header und Footer.
+Der Opener endet auf dem echten Logo und verwendet dieselbe Datei
+`src/assets/logo.webp` wie der Header. Wird das Logo ersetzt, genügt
+`node scripts/build-assets.mjs`. Die Fahrzeugfarben (Chrom, Kupfer)
+stehen als Verläufe `ic-chrome` und `ic-copper` oben in
+`src/components/Intro.astro`.

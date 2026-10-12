@@ -1,0 +1,105 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import CoverageMap from '../../components/CoverageMap.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Icon from '../../components/Icon.astro';
+import routes from '../../data/routes.json';
+import { company } from '../../data/site';
+import { webPageSchema } from '../../lib/schema';
+
+type RouteEntry = { km: number; minutes: number; county: string | null };
+const data = routes.places as Record<string, RouteEntry>;
+
+/* Nach Fahrzeit sortiert, nicht alphabetisch. Wer nachsieht, ob sein Ort
+   dabei ist, liest ohnehin den Namen; die Reihenfolge zeigt zugleich, wie
+   nah es ist. */
+const rows = company.places
+  .map((place) => ({ place, route: data[place.slug] }))
+  .filter((r): r is { place: (typeof company.places)[number]; route: RouteEntry } => !!r.route)
+  .sort((a, b) => a.route.minutes - b.route.minutes);
+
+const site = Astro.site ?? new URL('https://mk-stressfrei.sakalli.ai');
+const url = new URL('/kfz-gutachter/', site).href;
+const crumbs = [{ name: 'Einsatzgebiet', path: '/kfz-gutachter/' }];
+const title = `Kfz-Gutachter in ${company.region}`;
+const description = `Einsatzgebiet: ${company.city} und rund ${company.radiusKm} km im Umkreis, darunter ${company.places
+  .slice(0, 4)
+  .map((p) => p.name)
+  .join(', ')} und mehr. Besichtigung bei Ihnen vor Ort.`;
+---
+
+<Layout
+  title={`Einsatzgebiet: ${company.region} | ${company.shortName}`}
+  description={description.length > 160 ? description.slice(0, 157) + '…' : description}
+  breadcrumbs={crumbs}
+  schema={[webPageSchema({ url, name: title, description, origin: site.origin })]}
+>
+  <PageHeader
+    title={title}
+    lead={`Ich komme zu Ihnen, in ${company.city} und rund ${company.radiusKm} Kilometer im Umkreis. Die Liste unten zeigt die Orte, in die ich am häufigsten gerufen werde, mit echter Fahrstrecke ab Büro. Ihr Ort fehlt? Rufen Sie trotzdem an.`}
+    breadcrumbs={crumbs}
+  />
+
+  <section class="bg-navy-900 py-14 md:py-20">
+    <div
+      class="container-page grid gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-start"
+    >
+      <div>
+        <h2 class="text-bone-50 text-[1.35rem] font-bold">Orte im Einsatzgebiet</h2>
+        <ul class="mt-6 divide-y divide-white/8 border-y border-white/8">
+          <li>
+            <a
+              href="/"
+              class="group -mx-3 grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-4 rounded-lg px-3 py-4 transition-colors hover:bg-white/3"
+            >
+              <span>
+                <span
+                  class="text-bone-50 group-hover:text-copper-400 block font-semibold transition-colors"
+                >
+                  {company.city}
+                </span>
+                <span class="text-navy-400 block text-[0.82rem]"
+                  >Sitz des Büros, kreisfreie Stadt</span
+                >
+              </span>
+              <span class="text-navy-300 text-right text-[0.9rem] tabular-nums">vor Ort</span>
+              <Icon name="arrow-right" size={16} class="text-navy-500" />
+            </a>
+          </li>
+          {
+            rows.map(({ place, route }) => (
+              <li>
+                <a
+                  href={`/kfz-gutachter/${place.slug}/`}
+                  class="group -mx-3 grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-4 rounded-lg px-3 py-4 transition-colors hover:bg-white/3"
+                >
+                  <span>
+                    <span class="text-bone-50 group-hover:text-copper-400 block font-semibold transition-colors">
+                      {place.fullName}
+                    </span>
+                    <span class="text-navy-400 block text-[0.82rem]">{route.county}</span>
+                  </span>
+                  <span class="text-navy-300 text-right text-[0.9rem] tabular-nums">
+                    {route.km.toLocaleString('de-DE')} km
+                    <span class="text-navy-500 block text-[0.78rem]">ca. {route.minutes} min</span>
+                  </span>
+                  <Icon name="arrow-right" size={16} class="text-navy-500" />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="text-navy-400 mt-4 text-[0.82rem] leading-relaxed">
+          Fahrstrecke und Fahrzeit ab {company.street}, ohne Stau. Berechnet mit OpenStreetMap.
+        </p>
+      </div>
+
+      <div class="lg:sticky lg:top-[calc(var(--header-h-compact)+2rem)]">
+        <CoverageMap />
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</Layout>

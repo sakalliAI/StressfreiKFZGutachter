@@ -2,6 +2,20 @@
 import Icon from './Icon.astro';
 import Wordmark from './Wordmark.astro';
 import { nav, company } from '../data/site';
+
+interface Props {
+  /** Auf der Startseite fuehren die Punkte zu Sektionen (Scrollspy). */
+  home?: boolean;
+  /** Aktiver Punkt auf einer Unterseite, etwa 'leistungen'. */
+  current?: string | undefined;
+}
+
+const { home = false, current } = Astro.props;
+
+/* Auf Unterseiten fuehrt ein Punkt zu seiner eigenen Seite, falls es
+   eine gibt, sonst zurueck zur Sektion auf der Startseite. */
+const hrefFor = (item: (typeof nav)[number]) =>
+  home ? `#${item.id}` : (item.page ?? `/#${item.id}`);
 ---
 
 <header
@@ -12,7 +26,11 @@ import { nav, company } from '../data/site';
   <div
     class="container-page flex h-[var(--header-h)] items-center justify-between gap-4 transition-[height] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]"
   >
-    <a href="#top" class="flex items-center rounded-md py-1">
+    <a
+      href={home ? '#top' : '/'}
+      class="flex items-center rounded-md py-1"
+      aria-label="Stressfrei KFZ-Gutachter, zur Startseite"
+    >
       <Wordmark />
     </a>
 
@@ -22,8 +40,9 @@ import { nav, company } from '../data/site';
           nav.map((item) => (
             <li>
               <a
-                href={`#${item.id}`}
-                data-spy-link={item.id}
+                href={hrefFor(item)}
+                data-spy-link={home ? item.id : undefined}
+                aria-current={!home && current === item.id ? 'true' : undefined}
                 class="text-bone-50/90 hover:text-bone-50 aria-[current=true]:text-bone-50 relative block rounded-md px-2.5 py-2 text-[0.88rem] font-medium whitespace-nowrap transition-colors duration-200"
               >
                 {item.label}
@@ -74,7 +93,7 @@ import { nav, company } from '../data/site';
     </div>
   </div>
 
-  <!-- Mobiles Menü -->
+  {/* Mobiles Menü */}
   <div
     id="mobile-nav"
     class="bg-navy-950/97 grid grid-rows-[0fr] overflow-hidden border-t border-white/8 backdrop-blur-lg transition-[grid-template-rows] duration-350 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden"
@@ -87,8 +106,9 @@ import { nav, company } from '../data/site';
             nav.map((item) => (
               <li>
                 <a
-                  href={`#${item.id}`}
-                  data-spy-link={item.id}
+                  href={hrefFor(item)}
+                  data-spy-link={home ? item.id : undefined}
+                  aria-current={!home && current === item.id ? 'true' : undefined}
                   data-nav-close
                   class="text-navy-300 hover:text-bone-50 aria-[current=true]:text-copper-400 flex min-h-12 items-center justify-between rounded-lg px-3 text-[0.95rem] font-medium transition-colors hover:bg-white/5 aria-[current=true]:bg-white/6"
                 >
@@ -118,7 +138,7 @@ import { nav, company } from '../data/site';
     grid-template-rows: 1fr;
   }
 
-  [data-spy-link][aria-current='true'] [data-spy-bar] {
+  a[aria-current='true'] [data-spy-bar] {
     transform: scaleX(1);
   }
 

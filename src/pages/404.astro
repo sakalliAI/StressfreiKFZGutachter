@@ -1,0 +1,62 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import { company, services } from '../data/site';
+
+/*
+  Eigene 404-Seite.
+
+  Ohne sie liefert Cloudflare Pages auf jede unbekannte Adresse die
+  Startseite mit Status 200 aus. Genau so ist frueher das Vorschaubild
+  unbemerkt kaputtgegangen: /img/og.jpg gab es nicht, kam aber als
+  "erfolgreich" zurueck. Mit dieser Datei antwortet der Server ehrlich
+  mit 404, und Suchmaschinen indexieren keine Phantom-Adressen.
+*/
+---
+
+<Layout
+  title={`Seite nicht gefunden | ${company.shortName}`}
+  description="Diese Adresse gibt es nicht. Hier geht es zurück zur Startseite und zu den Leistungen."
+  noindex
+>
+  <section id="top" class="bg-navy-950 pt-[calc(var(--header-h)+4rem)] pb-24" data-cta-zone>
+    <div class="container-page max-w-3xl">
+      <p class="font-display text-copper-400 text-[5rem] leading-none font-extrabold tabular-nums">
+        404
+      </p>
+      <h1 class="text-bone-50 mt-4 text-[clamp(1.8rem,3vw+0.8rem,2.6rem)] font-bold">
+        Diese Seite gibt es nicht.
+      </h1>
+      <p class="text-navy-300 mt-4 text-[1.05rem] leading-relaxed">
+        Vielleicht ein Tippfehler in der Adresse, oder der Link ist veraltet. Wenn Sie gerade einen
+        Schaden haben, rufen Sie einfach an.
+      </p>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href={company.phoneHref} class="btn btn-copper">
+          <Icon name="phone" size={17} />
+          {company.phoneDisplay}
+        </a>
+        <a href="/" class="btn btn-ghost">Zur Startseite</a>
+      </div>
+
+      <h2 class="text-navy-400 mt-14 text-[0.75rem] font-semibold tracking-[0.16em] uppercase">
+        Leistungen
+      </h2>
+      <ul class="mt-4 grid gap-2 sm:grid-cols-2">
+        {
+          services.map((service) => (
+            <li>
+              <a
+                href={`/leistungen/${service.slug}/`}
+                class="text-bone-100 hover:text-copper-400 transition-colors"
+              >
+                {service.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Layout>

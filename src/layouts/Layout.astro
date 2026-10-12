@@ -1,79 +1,127 @@
 ---
 import '../styles/global.css';
-import { company, seo, faqs, services } from '../data/site';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import StickyCta from '../components/StickyCta.astro';
+import { company, seo, services } from '../data/site';
 
-interface Props {
-  title?: string;
-  description?: string;
+export interface Crumb {
+  readonly name: string;
+  readonly path: string;
 }
 
-const { title = seo.title, description = seo.description } = Astro.props;
+interface Props {
+  /** Vollstaendiger Seitentitel. Ohne Angabe gilt der der Startseite. */
+  title?: string;
+  description?: string;
+  /** Pfad ohne Startseite, etwa [{ name: 'Leistungen', path: '/leistungen/' }]. */
+  breadcrumbs?: readonly Crumb[];
+  /** Weitere Schema.org-Knoten nur fuer diese Seite. */
+  schema?: readonly Record<string, unknown>[];
+  noindex?: boolean;
+  /** Startseite: Scrollspy auf Sektionen, Opener, Anker statt Links. */
+  home?: boolean;
+  /** Welcher Navigationspunkt auf einer Unterseite als aktuell gilt. */
+  current?: string;
+}
 
-const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://mk-stressfrei.sakalli.ai');
-const ogImage = new URL(seo.ogImage, canonical);
+const {
+  title = seo.title,
+  description = seo.description,
+  breadcrumbs = [],
+  schema = [],
+  noindex = false,
+  home = false,
+  current,
+} = Astro.props;
 
-/* Schema.org.
-   ProfessionalService statt AutomotiveBusiness: begutachtet wird das
-   Fahrzeug, es wird aber keine Leistung am Fahrzeug erbracht. */
-const businessSchema: Record<string, unknown> = {
+const site = Astro.site ?? new URL('https://mk-stressfrei.sakalli.ai');
+const canonical = new URL(Astro.url.pathname, site);
+const ogImage = new URL(seo.ogImage, site);
+const origin = site.origin;
+
+/*
+  Schema.org, Kern auf jeder Seite.
+
+  ProfessionalService statt AutomotiveBusiness: begutachtet wird das
+  Fahrzeug, es wird aber keine Leistung am Fahrzeug erbracht. Der Knoten
+  hat eine feste @id und steht auf jeder Seite gleich. Unterseiten
+  verweisen darauf, statt ihn zu wiederholen.
+*/
+const business = {
   '@type': 'ProfessionalService',
-  '@id': `${canonical.origin}/#business`,
+  '@id': `${origin}/#business`,
   name: company.name,
+  alternateName: company.shortName,
   description: seo.description,
-  url: canonical.origin,
+  url: `${origin}/`,
   telephone: company.phoneIntl,
   email: company.email,
   image: ogImage.href,
-  priceRange: '$$',
+  logo: `${origin}/icon-512.png`,
+  priceRange: '€€',
   founder: { '@type': 'Person', name: company.owner },
   knowsLanguage: ['de'],
-  makesOffer: services.map((service) => ({
-    '@type': 'Offer',
-    itemOffered: { '@type': 'Service', name: service.title, description: service.claim },
-  })),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: company.street,
+    postalCode: company.zip,
+    addressLocality: company.city,
+    addressRegion: company.state,
+    addressCountry: 'DE',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: company.office.lat,
+    longitude: company.office.lon,
+  },
+  areaServed: [
+    { '@type': 'City', name: company.city },
+    ...company.places.map((place) => ({
+      '@type': 'City',
+      name: place.fullName,
+      url: `${origin}/kfz-gutachter/${place.slug}/`,
+    })),
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Leistungen',
+    itemListElement: services.map((service) => ({
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: service.title,
+        url: `${origin}/leistungen/${service.slug}/`,
+      },
+    })),
+  },
 };
 
-/* Adresse so vollstaendig ausgeben, wie sie tatsaechlich vorliegt.
-   Der Ort allein ist fuer die lokale Einordnung schon wertvoll, Strasse
-   und Postleitzahl kommen dazu, sobald sie gepflegt sind. Erfundene
-   Platzhalter haetten hier nichts zu suchen. */
-if (company.city) {
-  businessSchema['address'] = {
-    '@type': 'PostalAddress',
-    ...(company.street ? { streetAddress: company.street } : {}),
-    ...(company.zip ? { postalCode: company.zip } : {}),
-    addressLocality: company.city,
-    addressCountry: 'DE',
-  };
+const website = {
+  '@type': 'WebSite',
+  '@id': `${origin}/#website`,
+  url: `${origin}/`,
+  name: company.name,
+  inLanguage: 'de-DE',
+  publisher: { '@id': `${origin}/#business` },
+};
 
-  businessSchema['areaServed'] = [
-    { '@type': 'City', name: company.city },
-    ...company.places.map((place) => ({ '@type': 'City', name: place.name })),
-  ];
-}
+const breadcrumbList =
+  breadcrumbs.length > 0
+    ? {
+        '@type': 'BreadcrumbList',
+        itemListElement: [{ name: 'Startseite', path: '/' }, ...breadcrumbs].map((crumb, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: crumb.name,
+          item: new URL(crumb.path, site).href,
+        })),
+      }
+    : null;
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@graph': [
-    businessSchema,
-    {
-      '@type': 'WebSite',
-      '@id': `${canonical.origin}/#website`,
-      url: canonical.origin,
-      name: company.name,
-      inLanguage: 'de-DE',
-      publisher: { '@id': `${canonical.origin}/#business` },
-    },
-    {
-      '@type': 'FAQPage',
-      '@id': `${canonical.origin}/#faq`,
-      mainEntity: faqs.map((faq) => ({
-        '@type': 'Question',
-        name: faq.q,
-        acceptedAnswer: { '@type': 'Answer', text: faq.a },
-      })),
-    },
-  ],
+  '@graph': [business, website, ...(breadcrumbList ? [breadcrumbList] : []), ...schema],
 };
 ---
 
@@ -86,7 +134,10 @@ const jsonLd = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical.href} />
     <meta name="theme-color" content="#0a1226" />
-    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta
+      name="robots"
+      content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'}
+    />
 
     <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -117,7 +168,32 @@ const jsonLd = {
       Zum Hauptinhalt springen
     </a>
 
-    <slot />
+    <slot name="intro" />
+    <Header home={home} current={current} />
+
+    <main id="hauptinhalt">
+      <slot />
+    </main>
+
+    <Footer />
+    <StickyCta />
+
+    {
+      /*
+      Merkt sich, dass in dieser Sitzung schon eine Seite gezeigt wurde.
+      Der Opener auf der Startseite laeuft nur, wenn sie die erste Seite
+      des Besuchs ist. Wer ueber Google auf einer Leistungsseite landet
+      und dann zur Startseite wechselt, will kein Intro mehr sehen.
+      Steht bewusst am Ende: der Opener liest den Wert vorher.
+    */
+    }
+    <script is:inline>
+      try {
+        sessionStorage.setItem('mk-seen', '1');
+      } catch {
+        /* privater Modus: dann laeuft der Opener eben noch einmal */
+      }
+    </script>
   </body>
 </html>
 
@@ -125,10 +201,9 @@ const jsonLd = {
   /* --------------------------------------------------------------
      Scroll-Reveal.
 
-     Die Startwerte (opacity 0) setzt erst diese Klasse am <html>.
-     Bleibt das Script aus, ist der Inhalt trotzdem sichtbar. Das ist
-     der Grund, warum nach einem Deploy nie ein leerer Bereich unter
-     dem Hero stehen kann.
+     Die Startwerte setzt erst diese Klasse am <html>. Bleibt das Script
+     aus, ist der Inhalt trotzdem sichtbar. Das ist der Grund, warum nach
+     einem Deploy nie ein leerer Bereich unter dem Hero stehen kann.
      -------------------------------------------------------------- */
   const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
 
@@ -153,30 +228,5 @@ const jsonLd = {
     window.setTimeout(() => {
       for (const target of targets) target.classList.add('is-in');
     }, 2500);
-  }
-
-  /* --------------------------------------------------------------
-     Zentraler Dialog-Handler für Leistungen und Rechtstexte.
-     -------------------------------------------------------------- */
-  for (const dialog of document.querySelectorAll<HTMLDialogElement>('dialog')) {
-    dialog.addEventListener('close', () => {
-      document.documentElement.style.overflow = '';
-    });
-
-    dialog.querySelector('[data-dialog-close]')?.addEventListener('click', () => dialog.close());
-
-    // Ein <dialog> im Modal-Modus deckt den ganzen Viewport ab. Ein
-    // Klick gilt daher nur dann als Backdrop-Klick, wenn er ausserhalb
-    // der sichtbaren Dialogbox liegt.
-    dialog.addEventListener('click', (event) => {
-      if (event.target !== dialog) return;
-      const box = dialog.getBoundingClientRect();
-      const inside =
-        event.clientX >= box.left &&
-        event.clientX <= box.right &&
-        event.clientY >= box.top &&
-        event.clientY <= box.bottom;
-      if (!inside) dialog.close();
-    });
   }
 </script>

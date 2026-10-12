@@ -1,0 +1,197 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import FaqList from '../../components/FaqList.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Icon from '../../components/Icon.astro';
+import { company, services } from '../../data/site';
+import { serviceImages } from '../../data/service-images';
+import { faqSchema, serviceSchema, webPageSchema } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('leistungen');
+  return services.map((service) => {
+    const entry = entries.find((e) => e.data.service === service.id);
+    // Lieber ein klarer Abbruch beim Bauen als eine Leistung ohne Seite.
+    if (!entry) throw new Error(`Kein Text in src/content/leistungen/ fuer "${service.id}"`);
+    return { params: { slug: service.slug }, props: { entry, service } };
+  });
+}
+
+const { entry, service } = Astro.props;
+const { Content } = await render(entry);
+const data = entry.data;
+
+const site = Astro.site ?? new URL('https://mk-stressfrei.sakalli.ai');
+const url = new URL(`/leistungen/${service.slug}/`, site).href;
+
+const image = serviceImages[service.id];
+const related = data.related
+  .map((id) => services.find((s) => s.id === id))
+  .filter((s): s is (typeof services)[number] => s !== undefined);
+
+const crumbs = [
+  { name: 'Leistungen', path: '/leistungen/' },
+  { name: service.title, path: `/leistungen/${service.slug}/` },
+];
+
+const updated = new Intl.DateTimeFormat('de-DE', { month: 'long', year: 'numeric' }).format(
+  data.updated,
+);
+
+const schema = [
+  webPageSchema({
+    url,
+    name: data.seoTitle,
+    description: data.description,
+    origin: site.origin,
+    about: `${url}#service`,
+  }),
+  serviceSchema({
+    origin: site.origin,
+    url,
+    name: data.title,
+    description: data.lead,
+    serviceType: service.title,
+    areaServed: [company.city, ...company.places.map((p) => p.fullName)],
+  }),
+  faqSchema(data.faqs, `${url}#faq`),
+];
+---
+
+<Layout
+  title={data.seoTitle}
+  description={data.description}
+  breadcrumbs={crumbs}
+  schema={schema}
+  current="leistungen"
+>
+  <PageHeader
+    title={data.title}
+    lead={data.lead}
+    breadcrumbs={crumbs}
+    image={image}
+    imageAlt={service.alt}
+  >
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a
+        href={company.whatsapp}
+        target="_blank"
+        rel="noopener"
+        class="btn btn-wa"
+        data-track={`wa-${service.id}`}
+      >
+        <Icon name="whatsapp" size={18} />
+        Foto per WhatsApp schicken
+      </a>
+      <a href={company.phoneHref} class="btn btn-ghost" data-track={`call-${service.id}`}>
+        <Icon name="phone" size={17} />
+        {company.phoneDisplay}
+      </a>
+    </div>
+  </PageHeader>
+
+  <section class="bg-navy-900 py-14 md:py-20">
+    <div class="container-page grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,21rem)] lg:gap-16">
+      {
+        /*
+        Im Markup vor dem Text, damit die Zusammenfassung auf dem Handy
+        zuerst kommt und Vorlesewerkzeuge sie in derselben Reihenfolge
+        hoeren. Ab der breiten Ansicht steht sie rechts und bleibt beim
+        Scrollen stehen.
+      */
+      }
+      <aside class="lg:order-2">
+        <div class="lg:sticky lg:top-[calc(var(--header-h-compact)+2rem)]">
+          <div class="rounded-card bg-navy-850 border border-white/10 p-6">
+            <h2 class="text-bone-50 text-[1rem] font-bold">Auf einen Blick</h2>
+            <dl class="mt-4 grid gap-4">
+              {
+                data.facts.map((fact) => (
+                  <div class="border-t border-white/8 pt-4 first:border-t-0 first:pt-0">
+                    <dt class="text-navy-400 text-[0.78rem] font-semibold tracking-[0.06em] uppercase">
+                      {fact.label}
+                    </dt>
+                    <dd class="text-bone-100 mt-1 text-[0.95rem] leading-snug">{fact.value}</dd>
+                  </div>
+                ))
+              }
+            </dl>
+          </div>
+
+          <p class="text-navy-400 mt-4 px-1 text-[0.8rem] leading-relaxed">
+            Stand: {updated}. Allgemeine Hinweise, keine Rechtsberatung im Einzelfall.
+          </p>
+        </div>
+      </aside>
+
+      <article class="prose-mk lg:order-1">
+        <Content />
+      </article>
+    </div>
+  </section>
+
+  <section class="bg-navy-850 py-14 md:py-20" aria-labelledby="faq-titel">
+    <div class="container-page">
+      <div class="max-w-3xl">
+        <h2 id="faq-titel" class="text-bone-50 text-[clamp(1.5rem,2vw+0.9rem,2.1rem)] font-bold">
+          Häufige Fragen
+        </h2>
+        <div class="mt-8">
+          <FaqList items={data.faqs} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-navy-900 py-14 md:py-20" aria-labelledby="verwandt-titel">
+    <div class="container-page">
+      <h2
+        id="verwandt-titel"
+        class="text-bone-50 text-[clamp(1.4rem,1.6vw+0.9rem,1.9rem)] font-bold"
+      >
+        Passt vielleicht auch
+      </h2>
+      <ul class="mt-8 grid gap-4 sm:grid-cols-3">
+        {
+          related.map((item) => {
+            const cover = serviceImages[item.id];
+            return (
+              <li>
+                <a
+                  href={`/leistungen/${item.slug}/`}
+                  class="group rounded-card bg-navy-850 hover:border-copper-500/50 flex h-full items-center gap-4 border border-white/10 p-3 transition-colors"
+                >
+                  {cover && (
+                    <Image
+                      src={cover}
+                      alt=""
+                      widths={[160]}
+                      sizes="80px"
+                      format="webp"
+                      quality={60}
+                      loading="lazy"
+                      class="h-16 w-20 flex-none rounded-lg object-cover"
+                    />
+                  )}
+                  <span>
+                    <span class="text-bone-50 group-hover:text-copper-400 block font-semibold transition-colors">
+                      {item.title}
+                    </span>
+                    <span class="text-navy-400 mt-0.5 block text-[0.85rem] leading-snug">
+                      {item.claim}
+                    </span>
+                  </span>
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand />
+</Layout>

@@ -1,7 +1,8 @@
 # MK Stressfrei KFZ Gutachter
 
-Website für Mersum Kumalic, Kfz-Sachverständiger. Onepager auf Astro,
-gehostet auf Cloudflare Pages, Kontaktformular über Brevo.
+Website für Mersum Kumalic, Kfz-Sachverständiger in Ingolstadt. Astro,
+gehostet auf Cloudflare Pages, Kontaktformular über Brevo. Startseite plus
+Seiten je Leistung und je Ort, Impressum und Datenschutz.
 
 Vorschau: https://mk-stressfrei.sakalli.ai
 
@@ -29,6 +30,8 @@ Zusätzlich:
 ```bash
 node scripts/build-assets.mjs   # Logo freistellen, Icons und OG-Bild erzeugen
 node scripts/build-map.mjs      # Kartenbild fuer das Einsatzgebiet erzeugen (holt OSM-Kacheln)
+node scripts/build-routes.mjs   # Routen Buero -> Orte (OSRM, Nominatim) nach src/data/routes.json
+node scripts/build-route-maps.mjs  # Kartenbilder der Ortsseiten nach src/assets/orte/
 node scripts/shots.mjs          # Sichtprüfung Desktop und Mobil, prüft auch den Scrollspy
 node scripts/serve-prod.mjs     # dist/ mit echten Headern und Brotli ausliefern (Port 4322)
 ```
@@ -38,14 +41,19 @@ node scripts/serve-prod.mjs     # dist/ mit echten Headern und Brotli ausliefern
 ```
 src/
   data/site.ts        Alle Inhalte und Stammdaten an einer Stelle
+  content/            Texte der Leistungs- und Ortsseiten (Markdown)
   components/         Eine Datei pro Sektion
   layouts/Layout.astro  Head, Schema.org, globale Scripts
+  lib/                Schema-Helfer, Kartenprojektion
   pages/index.astro   Reihenfolge der Sektionen
+  pages/leistungen/   Leistungsseiten
+  pages/kfz-gutachter/  Ortsseiten
+  pages/robots.txt.ts, llms.txt.ts  werden beim Build erzeugt
   styles/global.css   Design-Tokens und wiederkehrende Klassen
   assets/             Bilder, laufen durch die Astro-Bildpipeline
 brand/                Originaldateien des Kunden (Logo, Visitenkarte)
 functions/            Cloudflare Pages Functions
-public/               Statische Dateien, _headers, robots.txt
+public/               Statische Dateien, _headers
                       logo.png und die Icons entstehen aus brand/
 docs/                 Recherche, Bildprompts, Übergabe
 ```

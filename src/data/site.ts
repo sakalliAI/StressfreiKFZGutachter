@@ -6,19 +6,32 @@
  */
 
 export interface NavItem {
+  /** Sektion auf der Startseite. */
   readonly id: string;
   readonly label: string;
+  /**
+   * Eigene Seite zu diesem Punkt. Auf Unterseiten fuehrt der Link
+   * dorthin statt zurueck zur Sektion der Startseite.
+   */
+  readonly page?: string;
 }
 
 export interface Service {
   readonly id: string;
+  /** Adresse der eigenen Seite: /leistungen/<slug>/ */
+  readonly slug: string;
   readonly title: string;
+  /**
+   * Die Lage in den Worten des Kunden. Wer gerade einen Schaden hat,
+   * weiss, ob ihm jemand reingefahren ist. Ob das "Haftpflichtschaden"
+   * heisst, weiss er nicht. Fuehrt deshalb auf Startseite und Uebersicht.
+   */
+  readonly situation: string;
   readonly claim: string;
-  /** Alt-Text des Kartenbilds. Die Bilddatei selbst wird in
-   *  Services.astro ueber die id zugeordnet (astro:assets braucht
+  /** Alt-Text des Kartenbilds. Die Bilddatei selbst ordnet
+   *  service-images.ts ueber die id zu (astro:assets braucht
    *  statische Importe). */
   readonly alt: string;
-  readonly detail: readonly string[];
 }
 
 export interface Step {
@@ -35,12 +48,19 @@ export interface Faq {
 /**
  * Ort im Einsatzgebiet.
  *
- * Die Koordinaten stammen aus der Ortssuche von OpenStreetMap und
- * setzen die Marke auf der Karte an die richtige Stelle. Nur deshalb
- * stehen sie hier, sie werden sonst nirgends verwendet.
+ * Die Koordinaten sind das Rathaus des Ortes, aus der Ortssuche von
+ * OpenStreetMap. Bewusst nicht der Gemeindemittelpunkt: der liegt bei
+ * Koesching 3,5 km und bei Grossmehring 2 km neben dem Ort auf freiem
+ * Feld, und die Route endete dort auf einem Feldweg. Sie
+ * setzen die Marke auf der Karte und sind der Endpunkt der Route, die
+ * `scripts/build-routes.mjs` ab dem Buero berechnet. Jeder Ort hat eine
+ * eigene Seite unter /kfz-gutachter/<slug>/.
  */
 export interface Place {
+  readonly slug: string;
   readonly name: string;
+  /** Amtlicher Name, wie er in Ueberschriften und im Schema steht. */
+  readonly fullName: string;
   readonly lat: number;
   readonly lon: number;
   /** Kurzform fuer die Karte, wo lange Namen ueber den Rand laufen. */
@@ -67,42 +87,74 @@ export const company = {
     'Hallo, ich hatte einen Unfall und brauche ein Gutachten. Können wir kurz sprechen?',
   )}`,
   /**
-   * TODO(Kunde): Auf eine Adresse der eigenen Domain umstellen, sobald
-   * mk-stressfrei.de eingerichtet ist, zum Beispiel
-   * `kontakt@mk-stressfrei.de`. Eine web.de-Adresse steht im Impressum
-   * neben einem Firmennamen und wirkt dort wie eine Privatadresse. Das
-   * kostet Vertrauen genau an der Stelle, an der es zaehlt.
+   * Der Wert steht nur hier. Footer, Impressum, Datenschutzerklaerung,
+   * Schema und der Hinweis ohne JavaScript ziehen automatisch nach.
    *
-   * Der Wert steht nur hier. Footer, Impressum, Datenschutzerklaerung
-   * und der Hinweis ohne JavaScript ziehen automatisch nach.
+   * Hinweis: Das ist die Adresse, die auf der Seite steht. Wohin das
+   * Kontaktformular zustellt, regelt davon unabhaengig das Secret
+   * MAIL_TO in Cloudflare, siehe docs/handover.md.
    */
-  email: 'vato-bosna@web.de',
+  email: 'info@mk-stressfrei.de',
+
+  /** Ladungsfaehige Anschrift, vom Kunden bestaetigt. */
+  street: 'Friedensstraße 1b',
+  zip: '85055',
+  city: 'Ingolstadt',
+  region: 'Ingolstadt und Umgebung',
+  /** Bundesland, fuer Schema.org und die Datenschutzbehoerde. */
+  state: 'Bayern',
 
   /**
-   * Ort und Einsatzgebiet. Steuert Title, Schema.org und alle
-   * Textbausteine, in denen der Ort vorkommt.
-   *
-   * TODO(Kunde): Die Orteliste unten ist aus "Ingolstadt und Umgebung"
-   * abgeleitet. Bitte einmal durchsehen und streichen oder ergaenzen,
-   * je nachdem wie weit tatsaechlich gefahren wird.
+   * Bueroadresse als Koordinate. Aus der OSM-Ortssuche, auf Strassen-
+   * ebene: die Hausnummer ist in OSM nicht erfasst. Reicht fuer das
+   * Schema und als Startpunkt der Routen zu den Ortsseiten.
    */
-  city: 'Ingolstadt' as string | null,
-  region: 'Ingolstadt und Umgebung' as string | null,
-  radiusKm: 50,
-  /** Standort auf der Karte im Abschnitt "Ueber mich". */
-  coords: { lat: 48.763, lon: 11.425 },
-  places: [
-    { name: 'Gaimersheim', lat: 48.7986, lon: 11.3702 },
-    { name: 'Kösching', lat: 48.8423, lon: 11.5188 },
-    { name: 'Großmehring', lat: 48.7831, lon: 11.5354 },
-    { name: 'Manching', lat: 48.7171, lon: 11.4941 },
-    { name: 'Neuburg a. d. Donau', lat: 48.7456, lon: 11.188, short: 'Neuburg' },
-    { name: 'Pfaffenhofen a. d. Ilm', lat: 48.5297, lon: 11.5085, short: 'Pfaffenhofen' },
-  ] as readonly Place[],
+  office: { lat: 48.78535, lon: 11.45474 },
 
-  /** TODO(Kunde): Ladungsfaehige Anschrift fuer das Impressum. */
-  street: null as string | null,
-  zip: null as string | null,
+  radiusKm: 50,
+  /** Mitte der Region auf der Karte im Abschnitt "Ueber mich". */
+  coords: { lat: 48.763, lon: 11.425 },
+
+  /*
+    TODO(Kunde): Die Orteliste ist aus "Ingolstadt und Umgebung"
+    abgeleitet. Bitte durchsehen und streichen oder ergaenzen, je nachdem
+    wie weit tatsaechlich gefahren wird. Ein neuer Ort braucht danach
+    `node scripts/build-routes.mjs`, siehe docs/handover.md.
+  */
+  places: [
+    {
+      slug: 'gaimersheim',
+      name: 'Gaimersheim',
+      fullName: 'Gaimersheim',
+      lat: 48.80895,
+      lon: 11.3703,
+    },
+    { slug: 'koesching', name: 'Kösching', fullName: 'Kösching', lat: 48.81091, lon: 11.50043 },
+    {
+      slug: 'grossmehring',
+      name: 'Großmehring',
+      fullName: 'Großmehring',
+      lat: 48.76507,
+      lon: 11.53361,
+    },
+    { slug: 'manching', name: 'Manching', fullName: 'Manching', lat: 48.71735, lon: 11.49397 },
+    {
+      slug: 'neuburg-an-der-donau',
+      name: 'Neuburg a. d. Donau',
+      fullName: 'Neuburg an der Donau',
+      lat: 48.73777,
+      lon: 11.17893,
+      short: 'Neuburg',
+    },
+    {
+      slug: 'pfaffenhofen-an-der-ilm',
+      name: 'Pfaffenhofen a. d. Ilm',
+      fullName: 'Pfaffenhofen an der Ilm',
+      lat: 48.52962,
+      lon: 11.50887,
+      short: 'Pfaffenhofen',
+    },
+  ] as readonly Place[],
 
   /** TODO(Kunde): Steuernummer oder USt-IdNr. fuer das Impressum. */
   taxId: null as string | null,
@@ -143,7 +195,7 @@ export const trustPoints = [
 
 export const nav: readonly NavItem[] = [
   { id: 'sofort', label: 'Sofort-Hilfe' },
-  { id: 'leistungen', label: 'Leistungen' },
+  { id: 'leistungen', label: 'Leistungen', page: '/leistungen/' },
   { id: 'ablauf', label: 'Ablauf' },
   { id: 'kosten', label: 'Kosten' },
   { id: 'person', label: 'Über mich' },
@@ -185,70 +237,51 @@ export const emergencySteps: readonly Step[] = [
 export const services: readonly Service[] = [
   {
     id: 'haftpflicht',
+    slug: 'haftpflichtschaden',
+    situation: 'Mir ist jemand reingefahren',
     title: 'Haftpflichtschaden',
     claim: 'Unverschuldet erwischt worden. Die Gegenseite zahlt das Gutachten.',
     alt: 'Eingedrückter Kotflügel und gebrochener Scheinwerfer nach einer Kollision',
-    detail: [
-      'Vollständiges Schadengutachten mit Reparaturkosten, Wertminderung, Wiederbeschaffungs- und Restwert.',
-      'Ausfallschaden und Nutzungsausfall werden mit erfasst, damit nichts liegen bleibt.',
-      'Bei unverschuldetem Unfall trägt die gegnerische Haftpflichtversicherung die erforderlichen Gutachterkosten nach § 249 BGB. Sie gehen nicht in Vorleistung.',
-      'Sie dürfen den Gutachter frei wählen. Auch wenn die Versicherung der Gegenseite jemand anderen vorschlägt.',
-    ],
   },
   {
     id: 'kasko',
+    slug: 'kaskoschaden',
+    situation: 'Wild, Hagel, Marder oder selbst verursacht',
     title: 'Kaskoschaden',
-    claim: 'Wildunfall, Hagel, Vandalismus oder selbst verursacht.',
+    claim: 'Teil- oder Vollkasko. Ich kläre vorher mit Ihnen, was Ihr Tarif übernimmt.',
     alt: 'Glassplitter einer zerborstenen Scheibe auf der Rückbank',
-    detail: [
-      'Aufnahme und Bewertung des Schadens für Teil- und Vollkasko.',
-      'Abstimmung mit Ihrer eigenen Versicherung, damit die Regulierung nicht hängen bleibt.',
-      'Kostenübernahme klären wir vorher gemeinsam. Manche Versicherer beauftragen selbst, dann sage ich Ihnen das ehrlich.',
-    ],
   },
   {
     id: 'kurzgutachten',
+    slug: 'kurzgutachten',
+    situation: 'Nur ein kleiner Schaden',
     title: 'Kurzgutachten',
-    claim: 'Kleiner Schaden unterhalb der Bagatellgrenze.',
+    claim: 'Unter rund 750 Euro reicht oft ein Kurzgutachten. Ich sage Ihnen vorher, ob das passt.',
     alt: 'Delle mit aufgerissenem Lack an einer Fahrzeugtür im Gegenlicht',
-    detail: [
-      'Für Schäden unter rund 750 Euro erkennen Versicherungen oft nur einen Kostenvoranschlag an.',
-      'Ich schaue mir den Schaden an und sage Ihnen, was in Ihrem Fall sinnvoll ist.',
-      'Kalkulation mit den üblichen Systemen, damit die Zahlen für die Versicherung nachvollziehbar sind.',
-    ],
   },
   {
     id: 'wertgutachten',
+    slug: 'wertgutachten',
+    situation: 'Ich will wissen, was mein Auto wert ist',
     title: 'Wertgutachten',
     claim: 'Für Verkauf, Versicherung oder den Oldtimer in der Garage.',
     alt: 'Oldtimer in einer Werkstatt, angeleuchtet von einer Arbeitsleuchte',
-    detail: [
-      'Zeitwert, Marktwert oder Wiederbeschaffungswert, je nachdem wofür Sie den Nachweis brauchen.',
-      'Oldtimer- und Youngtimerbewertung inklusive Zustandsnote für die Versicherung.',
-      'Festpreis vorher abgesprochen. Keine Überraschung auf der Rechnung.',
-    ],
   },
   {
     id: 'beweissicherung',
+    slug: 'beweissicherung',
+    situation: 'Es gibt Streit, oder der Verursacher ist weg',
     title: 'Beweissicherung',
     claim: 'Schaden dokumentiert, bevor jemand daran schraubt.',
     alt: 'Schichtdickenmessgerät an einer beschädigten Fahrzeugtür',
-    detail: [
-      'Lückenlose Fotodokumentation und Vermessung, solange der Zustand noch original ist.',
-      'Wichtig bei strittiger Schuldfrage oder wenn ein Rechtsstreit im Raum steht.',
-      'Die Unterlagen sind so aufbereitet, dass Anwalt und Gericht damit arbeiten können.',
-    ],
   },
   {
     id: 'leasing',
+    slug: 'leasingrueckgabe',
+    situation: 'Mein Leasingvertrag läuft aus',
     title: 'Leasingrückgabe',
     claim: 'Zustand prüfen, bevor der Händler die Rechnung schreibt.',
     alt: 'Prüfprotokoll auf einem Klemmbrett, abgelegt auf einer Motorhaube',
-    detail: [
-      'Neutrale Zustandsaufnahme vor der Rückgabe, mit klarer Trennung von normalem Verschleiß und echtem Schaden.',
-      'Damit haben Sie eine Grundlage in der Hand, falls Nachforderungen kommen.',
-      'Am besten ein bis zwei Wochen vor dem Rückgabetermin.',
-    ],
   },
 ];
 
@@ -354,7 +387,7 @@ export const upload = {
 export const seo = {
   title: 'KFZ Gutachter Ingolstadt nach Unfall | MK Stressfrei',
   description:
-    'DESAG geprüfter Kfz-Sachverständiger in Ingolstadt und Umgebung. Unabhängiges Unfallgutachten, Termin oft am selben Tag, Besichtigung bei Ihnen vor Ort. Bei unverschuldetem Unfall zahlt die gegnerische Versicherung.',
+    'Kfz-Gutachter in Ingolstadt: DESAG geprüft, unabhängig, Besichtigung vor Ort. Termin oft am selben Tag. Bei unverschuldetem Unfall zahlt die Gegenseite.',
   /* Liegt als `public/og.jpg` und damit direkt unter der Wurzel. Der
      fruehere Pfad `/img/og.jpg` existierte nicht: Cloudflare Pages
      lieferte dafuer die Startseite mit Status 200 aus, und jede

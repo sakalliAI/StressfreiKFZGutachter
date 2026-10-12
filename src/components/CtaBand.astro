@@ -1,0 +1,48 @@
+---
+import Icon from './Icon.astro';
+import { company } from '../data/site';
+
+/**
+ * Abschluss jeder Unterseite: ein klarer naechster Schritt.
+ *
+ * Steht am Ende statt zwischendurch, weil wer bis hier gelesen hat, sich
+ * entschieden hat. Mitten im Text wuerde ein Kasten mit Schaltflaechen
+ * das Lesen unterbrechen.
+ */
+interface Props {
+  title?: string;
+  text?: string;
+}
+
+const {
+  title = 'Schaden gehabt? Schicken Sie mir ein Foto.',
+  text = 'Ich sage Ihnen, woran Sie sind, bevor irgendetwas beauftragt wird. Termin meist noch am selben oder am nächsten Tag.',
+} = Astro.props;
+---
+
+<section class="bg-navy-950 border-t border-white/8" data-cta-zone>
+  <div
+    class="container-page flex flex-col gap-8 py-16 md:flex-row md:items-center md:justify-between md:py-20"
+  >
+    <div class="max-w-xl">
+      <h2 class="text-bone-50 text-[clamp(1.6rem,2.4vw+0.8rem,2.3rem)] font-bold">{title}</h2>
+      <p class="text-navy-300 mt-3 text-[1rem] leading-relaxed">{text}</p>
+    </div>
+    <div class="flex flex-col gap-3 sm:flex-row md:flex-none">
+      <a
+        href={company.whatsapp}
+        target="_blank"
+        rel="noopener"
+        class="btn btn-wa"
+        data-track="wa-cta-band"
+      >
+        <Icon name="whatsapp" size={18} />
+        Per WhatsApp schicken
+      </a>
+      <a href={company.phoneHref} class="btn btn-ghost" data-track="call-cta-band">
+        <Icon name="phone" size={17} />
+        {company.phoneDisplay}
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,232 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import RouteMap from '../../components/RouteMap.astro';
+import FaqList from '../../components/FaqList.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Icon from '../../components/Icon.astro';
+import routes from '../../data/routes.json';
+import { company, services, type Place } from '../../data/site';
+import { faqSchema, webPageSchema } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('orte');
+  return company.places.map((place) => {
+    const entry = entries.find((e) => e.data.place === place.slug);
+    if (!entry) throw new Error(`Kein Text in src/content/orte/ fuer "${place.slug}"`);
+    return { params: { slug: place.slug }, props: { entry, place } };
+  });
+}
+
+interface Props {
+  entry: Awaited<ReturnType<typeof getCollection<'orte'>>>[number];
+  place: Place;
+}
+
+const { entry, place } = Astro.props;
+const { Content } = await render(entry);
+
+type RouteEntry = { km: number; minutes: number; roads: { road: string }[]; county: string | null };
+const route = (routes.places as Record<string, RouteEntry>)[place.slug];
+if (!route) throw new Error(`Keine Route fuer ${place.slug}`);
+
+const km = route.km.toLocaleString('de-DE', { maximumFractionDigits: 1 });
+const minutes = route.minutes;
+/* Nur nummerierte Strassen nennen. "ueber die A 9" sagt jedem etwas,
+   "ueber die Ingolstaedter Strasse" gibt es in jedem zweiten Ort. */
+const roads = route.roads.map((r) => r.road).filter((r) => /^(A|B|St|[A-Z]{2,3}) \d/.test(r));
+const via = roads.length > 0 ? roads.join(' und ') : null;
+const county = route.county;
+
+/* Die beiden naechstgelegenen anderen Orte, Luftlinie. */
+const dist = (a: Place, b: Place) =>
+  Math.hypot((a.lat - b.lat) * 111, (a.lon - b.lon) * 111 * Math.cos((a.lat * Math.PI) / 180));
+const neighbours = company.places
+  .filter((p) => p.slug !== place.slug)
+  .sort((a, b) => dist(place, a) - dist(place, b))
+  .slice(0, 2);
+
+const site = Astro.site ?? new URL('https://mk-stressfrei.sakalli.ai');
+const url = new URL(`/kfz-gutachter/${place.slug}/`, site).href;
+const crumbs = [
+  { name: 'Einsatzgebiet', path: '/kfz-gutachter/' },
+  { name: place.fullName, path: `/kfz-gutachter/${place.slug}/` },
+];
+
+const title = `Kfz-Gutachter für ${place.fullName}`;
+const lead = `Ja, ich komme nach ${place.fullName}. Vom Büro in ${company.city} sind es ${km} Kilometer${
+  via ? ` über die ${via}` : ''
+}, ohne Stau etwa ${minutes} Minuten. Termin meist am selben oder am nächsten Werktag.`;
+
+/* Standardfragen aus den Routendaten. Stehen hier statt im Markdown,
+   damit Zahlen im Text nie von den Zahlen auf der Karte abweichen. */
+const faqs = [
+  {
+    q: `Kommen Sie für ein Gutachten nach ${place.fullName}?`,
+    a: `Ja. Vom Büro in der ${company.street} in ${company.city} sind es ${km} Kilometer${
+      via ? ` über die ${via}` : ''
+    }, ohne Stau etwa ${minutes} Minuten. Ich komme zu Ihnen nach Hause, in die Werkstatt oder zum Abschleppdienst.`,
+  },
+  {
+    q: `Wie schnell bekomme ich in ${place.fullName} einen Termin?`,
+    a: 'Meist noch am selben oder am nächsten Werktag. Läuft schon ein Mietwagen oder wartet die Werkstatt auf Freigabe, sagen Sie es gleich beim ersten Kontakt, dann geht es schneller.',
+  },
+  ...(county
+    ? [
+        {
+          q: `${place.fullName} liegt im ${county}. Gehört das zu Ihrem Einsatzgebiet?`,
+          a: `Ja. Mein Einsatzgebiet richtet sich nach der Fahrstrecke, nicht nach Landkreisgrenzen. Ich fahre rund ${company.radiusKm} Kilometer um ${company.city}, ${place.fullName} liegt gut darin.`,
+        },
+      ]
+    : []),
+  {
+    q: `Mir ist in ${place.fullName} jemand reingefahren. Wer bezahlt das Gutachten?`,
+    a: 'Bei einem unverschuldeten Unfall die Haftpflichtversicherung des Unfallgegners, egal wo der Unfall passiert ist. Sie dürfen den Gutachter selbst wählen und müssen nicht in Vorleistung gehen.',
+  },
+  ...entry.data.faqs,
+];
+
+const schema = [
+  webPageSchema({
+    url,
+    name: title,
+    description: entry.data.description,
+    origin: site.origin,
+  }),
+  faqSchema(faqs, `${url}#faq`),
+];
+
+const facts = [
+  { label: 'Entfernung', value: `${km} km`, note: 'Fahrstrecke ab Büro' },
+  { label: 'Fahrzeit', value: `${minutes} min`, note: 'ohne Stau' },
+  { label: 'Strecke', value: via ?? 'Landstraße', note: 'Hauptverbindung' },
+  { label: 'Landkreis', value: county?.replace(/^Landkreis /, '') ?? '', note: 'Verwaltung' },
+].filter((f) => f.value !== '');
+---
+
+<Layout
+  title={`Kfz-Gutachter ${place.fullName} | ${company.shortName}`}
+  description={entry.data.description}
+  breadcrumbs={crumbs}
+  schema={schema}
+>
+  <PageHeader title={title} lead={lead} breadcrumbs={crumbs}>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a
+        href={company.whatsapp}
+        target="_blank"
+        rel="noopener"
+        class="btn btn-wa"
+        data-track={`wa-ort-${place.slug}`}
+      >
+        <Icon name="whatsapp" size={18} />
+        Foto per WhatsApp schicken
+      </a>
+      <a href={company.phoneHref} class="btn btn-ghost" data-track={`call-ort-${place.slug}`}>
+        <Icon name="phone" size={17} />
+        {company.phoneDisplay}
+      </a>
+    </div>
+  </PageHeader>
+
+  <section class="bg-navy-900 py-12 md:py-16" aria-labelledby="anfahrt-titel">
+    <div class="container-page">
+      <h2 id="anfahrt-titel" class="sr-only">Anfahrt nach {place.fullName}</h2>
+
+      <dl
+        class="rounded-card grid grid-cols-2 gap-px overflow-hidden border border-white/10 bg-white/10 lg:grid-cols-4"
+      >
+        {
+          facts.map((fact) => (
+            <div class="bg-navy-900 px-5 py-5 md:px-6">
+              <dt class="text-navy-400 text-[0.75rem] font-semibold tracking-[0.12em] uppercase">
+                {fact.label}
+              </dt>
+              <dd class="font-display text-bone-50 mt-1.5 text-[clamp(1.3rem,1.6vw+0.8rem,1.9rem)] leading-tight font-bold">
+                {fact.value}
+              </dd>
+              <dd class="text-navy-400 mt-1 text-[0.8rem]">{fact.note}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="mt-6">
+        <RouteMap place={place} />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-navy-900 pb-14 md:pb-20">
+    <div class="container-page grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-16">
+      <article class="prose-mk">
+        <h2>Gutachten in {place.fullName}</h2>
+        <Content />
+      </article>
+
+      <aside>
+        <h2 class="text-bone-50 text-[1rem] font-bold">Leistungen in {place.fullName}</h2>
+        <ul class="mt-4 grid gap-1">
+          {
+            services.map((service) => (
+              <li>
+                <a
+                  href={`/leistungen/${service.slug}/`}
+                  class="group -mx-3 flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-white/4"
+                >
+                  <span>
+                    <span class="text-bone-100 group-hover:text-copper-400 block text-[0.95rem] font-semibold transition-colors">
+                      {service.title}
+                    </span>
+                    <span class="text-navy-400 block text-[0.82rem]">{service.situation}</span>
+                  </span>
+                  <Icon name="arrow-right" size={16} class="text-navy-500 flex-none" />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+
+        <h2 class="text-bone-50 mt-10 text-[1rem] font-bold">In der Nähe</h2>
+        <ul class="mt-3 flex flex-wrap gap-2">
+          {
+            neighbours.map((n) => (
+              <li>
+                <a
+                  href={`/kfz-gutachter/${n.slug}/`}
+                  class="text-navy-300 hover:border-copper-500/60 hover:text-bone-50 inline-flex rounded-full border border-white/12 px-3.5 py-1.5 text-[0.88rem] transition-colors"
+                >
+                  {n.name}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a
+              href="/kfz-gutachter/"
+              class="text-navy-300 hover:border-copper-500/60 hover:text-bone-50 inline-flex rounded-full border border-white/12 px-3.5 py-1.5 text-[0.88rem] transition-colors"
+            >
+              Ganzes Einsatzgebiet
+            </a>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <section class="bg-navy-850 py-14 md:py-20" aria-labelledby="faq-titel">
+    <div class="container-page">
+      <div class="max-w-3xl">
+        <h2 id="faq-titel" class="text-bone-50 text-[clamp(1.5rem,2vw+0.9rem,2.1rem)] font-bold">
+          Fragen aus {place.fullName}
+        </h2>
+        <div class="mt-8">
+          <FaqList items={faqs} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</Layout>

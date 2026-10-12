@@ -1,26 +1,29 @@
 ---
+/**
+ * Ueberschrift einer Sektion auf der Startseite.
+ *
+ * Ohne Ueberzeile. Die Kombination aus kleiner Kategoriezeile mit
+ * Strich, grosser Ueberschrift und grauer Einleitung ueber jeder Sektion
+ * ist das deutlichste Erkennungszeichen von Baukasten-Seiten. Eine
+ * Ueberschrift, die konkret sagt, worum es geht, braucht keine Zeile
+ * darueber, die es noch einmal in einem Wort sagt.
+ */
 interface Props {
-  eyebrow: string;
   title: string;
   lead?: string;
-  align?: 'left' | 'center';
+  id?: string;
   tone?: 'dark' | 'light';
   class?: string;
 }
 
-const { eyebrow, title, lead, align = 'left', tone = 'dark', class: className = '' } = Astro.props;
+const { title, lead, id, tone = 'dark', class: className = '' } = Astro.props;
 ---
 
-<div class:list={['max-w-2xl', align === 'center' && 'mx-auto text-center', className]} data-reveal>
-  <p
-    class="eyebrow"
-    class:list={[align === 'center' && 'justify-center', tone === 'light' && 'eyebrow-on-light']}
-  >
-    {eyebrow}
-  </p>
+<div class:list={['max-w-2xl', className]} data-reveal>
   <h2
+    id={id}
     class:list={[
-      'mt-4 text-[clamp(1.75rem,3.4vw+0.6rem,2.6rem)] font-bold',
+      'text-[clamp(1.9rem,3vw+0.8rem,3rem)] font-bold',
       tone === 'light' ? 'text-navy-900' : 'text-bone-50',
     ]}
   >
@@ -30,7 +33,7 @@ const { eyebrow, title, lead, align = 'left', tone = 'dark', class: className = 
     lead && (
       <p
         class:list={[
-          'mt-4 text-[1.02rem] leading-relaxed',
+          'mt-4 text-[1.05rem] leading-relaxed',
           tone === 'light' ? 'text-navy-600' : 'text-navy-300',
         ]}
       >

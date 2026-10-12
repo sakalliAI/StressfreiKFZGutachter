@@ -6,35 +6,23 @@ Nach Dringlichkeit sortiert. Punkt 1.1 bis 1.4 sind Pflicht, ohne sie
 darf die Seite nicht unter einer eigenen Domain online gehen. Logo und
 Visitenkarte liegen vor und sind eingebaut, siehe Abschnitt 1a.
 
-### 1.1 Ladungsfähige Anschrift (Pflicht, § 5 DDG)
+### 1.1 Anschrift und E-Mail (erledigt)
 
-**Der Ort steht:** Ingolstadt und Umgebung. Damit greifen bereits der
-Seitentitel, das Schema.org-Objekt, das Einsatzgebiet in „Über mich"
-und alle ortsbezogenen Formulierungen im Text.
+Eingetragen in `src/data/site.ts`: Friedensstraße 1b, 85055 Ingolstadt,
+info@mk-stressfrei.de. Beides erscheint im Impressum, im Footer, im
+Kontaktbereich und im Schema.org-Objekt.
 
-**Offen bleiben Straße und Postleitzahl.** Ohne sie ist das Impressum
-unvollständig, ein Postfach reicht dafür nicht. Eintragen in
-`src/data/site.ts`:
+Die Orte im Einsatzgebiet stehen in `places` in `src/data/site.ts`, mit
+den Koordinaten des jeweiligen Rathauses. Wer einen Ort ergänzt oder
+streicht:
 
-```ts
-street: 'Musterstraße 12',
-zip: '85049',
-```
+1. `places` in `site.ts` anpassen, dazu eine Markdown-Datei in
+   `src/content/orte/` (Vorlage: eine der vorhandenen).
+2. `node scripts/build-routes.mjs` holt Strecke, Fahrzeit und Landkreis.
+3. `node scripts/build-route-maps.mjs` erzeugt das Kartenbild.
+4. Bauen. Die Ortsseite, die Übersicht und die Sitemap ziehen nach.
 
-Sobald beide gefüllt sind, ergänzt sich die vollständige Adresse
-automatisch im Impressum und im Schema.org-Objekt.
-
-Ebenfalls prüfen: die Liste der umliegenden Orte (`places` in
-`src/data/site.ts`). Sie ist aus „Ingolstadt und Umgebung" abgeleitet.
-Streichen oder ergänzen, je nachdem wie weit tatsächlich gefahren wird.
-
-Zu jedem Ort gehören dort `lat` und `lon`. Danach setzt die Karte im
-Abschnitt „Über mich" die Marke an die richtige Stelle. Koordinaten
-findet man auf [openstreetmap.org](https://www.openstreetmap.org),
-Rechtsklick auf den Ort, „Adresse anzeigen". Ein neuer Ort außerhalb des
-Kartenausschnitts fällt aus dem Bild; dann in
-`src/data/map-config.mjs` den Wert `M_PER_PX` erhöhen und
-`node scripts/build-map.mjs` erneut laufen lassen.
+Nur Orte aufnehmen, die wirklich angefahren werden.
 
 ### 1.2 Steuernummer oder Umsatzsteuer-Identifikationsnummer (Pflicht)
 
@@ -44,7 +32,7 @@ taxId: 'USt-IdNr. DE123456789',
 
 ### 1.3 Berufshaftpflichtversicherung (Pflicht, wenn vorhanden)
 
-In `src/components/LegalModals.astro` die Zeile
+In `src/pages/impressum.astro` die Zeile
 `[BITTE ERGÄNZEN: Name und Anschrift des Versicherers, räumlicher
 Geltungsbereich]` ersetzen. Der Nachweis ist zugleich ein starkes
 Vertrauenssignal und kann in die Vertrauensleiste aufgenommen werden.
@@ -56,8 +44,8 @@ Eingetragen ist das Bayerische Landesamt für Datenschutzaufsicht
 Stellen in Bayern zuständig, und Ingolstadt liegt in Bayern.
 
 Nur falls der Firmensitz doch außerhalb Bayerns liegt, muss Abschnitt 9
-der Datenschutzerklärung in `src/components/LegalModals.astro`
-angepasst werden.
+der Datenschutzerklärung in `src/pages/datenschutz.astro` angepasst
+werden.
 
 ### 1.5 Namensreihenfolge prüfen
 
@@ -184,15 +172,22 @@ npx wrangler pages deploy dist --project-name mk-stressfrei --branch main
 | Telefon, E-Mail         | `company`        |
 | Erreichbarkeit          | `company.hours`  |
 | Vertrauensmerkmale      | `trustPoints`    |
-| Leistungen und Details  | `services`       |
+| Leistungen (Kacheln)    | `services`       |
 | Checkliste Unfallstelle | `emergencySteps` |
 | Ablaufschritte          | `processSteps`   |
 | Häufige Fragen          | `faqs`           |
 | Titel, Beschreibung     | `seo`            |
 
+Die ausführlichen Texte der Leistungsseiten stehen in
+`src/content/leistungen/<slug>.md`, die der Ortsseiten in
+`src/content/orte/<slug>.md`. Oben in jeder Datei stehen Titel,
+Beschreibung für Google, Eckdaten und Fragen. Ein Build prüft diese
+Felder und bricht mit einer klaren Meldung ab, wenn etwas fehlt oder
+zu lang ist.
+
 Neue FAQ-Einträge landen automatisch im FAQPage-Schema. Neue Leistungen
-brauchen zusätzlich ein Bild in `src/assets/` und einen Eintrag in der
-Zuordnung `covers` in `src/components/Services.astro`.
+brauchen zusätzlich ein Bild in `src/assets/`, einen Eintrag in
+`src/data/service-images.ts` und eine Datei in `src/content/leistungen/`.
 
 Die Reihenfolge der Sektionen steht in `src/pages/index.astro`, die
 Navigationspunkte in `nav` in `site.ts`. Beide müssen zusammenpassen,
@@ -221,8 +216,10 @@ Settings → Variables and Secrets zwei normale Variablen anlegen:
 | `MAIL_TO`   | zunächst `emosa7758@gmail.com`            |
 
 **`MAIL_TO` bleibt bis zum Go-Live auf der Testadresse.** Erst wenn alles
-geprüft ist, auf `vato-bosna@web.de` umstellen, und danach keine
-Testanfrage mehr absenden.
+geprüft ist, auf die Kundenadresse umstellen (info@mk-stressfrei.de,
+sobald das Postfach eingerichtet ist und Mails empfängt, sonst die
+bisherige Adresse des Kunden), und danach keine Testanfrage mehr
+absenden.
 
 Ohne diese Variablen zeigt das Formular eine verständliche Fehlermeldung
 und verweist auf Telefon und WhatsApp. Es bricht also nichts.
@@ -280,8 +277,7 @@ einige Minuten.
 
 In `astro.config.mjs` die Konstante `SITE` auf die neue Domain setzen.
 Das aktualisiert Canonical-URL, Sitemap, Open-Graph-URLs und die
-Schema.org-Kennungen in einem Zug. Danach in `public/robots.txt` die
-Sitemap-Adresse anpassen.
+Schema.org-Kennungen, `robots.txt` und `llms.txt` in einem Zug.
 
 **Schritt 4, Doppelinhalte vermeiden:**
 
@@ -289,8 +285,8 @@ Umgebungsvariable `CANONICAL_HOST` auf `www.domain.de` setzen. Die
 Middleware in `functions/_middleware.js` leitet dann alle Aufrufe von
 `*.pages.dev` per 301 auf die Kundendomain um.
 
-**Schritt 5:** `MAIL_TO` auf `vato-bosna@web.de` umstellen, neu bauen und
-deployen.
+**Schritt 5:** `MAIL_TO` auf die Kundenadresse umstellen (siehe
+Abschnitt 3), neu bauen und deployen. Danach keine Testanfrage mehr.
 
 ---
 
@@ -315,8 +311,8 @@ Intervall fünf Minuten.
 
 **Google-Unternehmensprofil anlegen.** Bringt für einen lokalen
 Dienstleister mehr Anfragen als jede Optimierung an der Website selbst.
-Voraussetzung ist die Adresse aus Punkt 1.1. Name, Telefonnummer und
-Adresse müssen mit der Website zeichengenau übereinstimmen.
+Name, Telefonnummer und Adresse (Friedensstraße 1b, 85055 Ingolstadt)
+müssen mit der Website zeichengenau übereinstimmen.
 
 **Search Console verbinden** und `sitemap-index.xml` einreichen.
 
@@ -327,5 +323,4 @@ die Sammlung gestartet, lohnt sich eine Bewertungssektion auf der Seite.
 **Analytics:** derzeit bewusst nicht eingebaut, deshalb kein
 Cookie-Banner. Wer Zahlen braucht, nimmt Cloudflare Web Analytics: ohne
 Cookies, ohne Einwilligung, im Dashboard mit einem Klick aktivierbar.
-Dann in `src/components/LegalModals.astro` Abschnitt 5 der
-Datenschutzerklärung ergänzen.
+Dann in `src/pages/datenschutz.astro` Abschnitt 5 ergänzen.

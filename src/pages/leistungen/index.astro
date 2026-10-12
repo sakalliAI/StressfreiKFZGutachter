@@ -1,0 +1,104 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Icon from '../../components/Icon.astro';
+import { company, services } from '../../data/site';
+import { serviceImages } from '../../data/service-images';
+import { webPageSchema } from '../../lib/schema';
+
+const site = Astro.site ?? new URL('https://mk-stressfrei.sakalli.ai');
+const url = new URL('/leistungen/', site).href;
+const crumbs = [{ name: 'Leistungen', path: '/leistungen/' }];
+
+const title = 'Welches Gutachten brauche ich?';
+const description =
+  'Unfall, Kasko, kleiner Schaden, Wert, Streit oder Leasingrückgabe: welches Kfz-Gutachten in Ihrem Fall passt, wer es bezahlt und wie es abläuft.';
+
+const schema = [
+  webPageSchema({ url, name: title, description, origin: site.origin }),
+  {
+    '@type': 'ItemList',
+    '@id': `${url}#liste`,
+    itemListElement: services.map((service, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: service.title,
+      url: new URL(`/leistungen/${service.slug}/`, site).href,
+    })),
+  },
+];
+---
+
+<Layout
+  title={`Kfz-Gutachten: Leistungen im Überblick | ${company.shortName}`}
+  description={description}
+  breadcrumbs={crumbs}
+  schema={schema}
+  current="leistungen"
+>
+  <PageHeader
+    title={title}
+    lead="Das hängt davon ab, was passiert ist, nicht davon, wie es im Fachjargon heißt. Suchen Sie sich unten die Lage aus, die zu Ihnen passt. Und wenn nichts passt, schicken Sie mir einfach ein Foto."
+    breadcrumbs={crumbs}
+  />
+
+  <section class="bg-navy-900 py-14 md:py-20">
+    <div class="container-page">
+      <ol class="grid gap-4">
+        {
+          services.map((service, i) => {
+            const cover = serviceImages[service.id];
+            return (
+              <li>
+                <a
+                  href={`/leistungen/${service.slug}/`}
+                  class="group rounded-card bg-navy-850 hover:border-copper-500/45 grid grid-cols-[5.5rem_minmax(0,1fr)] items-center gap-4 overflow-hidden border border-white/8 p-3 transition-colors sm:grid-cols-[9rem_minmax(0,1fr)_auto] sm:gap-7 sm:p-5 md:grid-cols-[12rem_minmax(0,1fr)_auto]"
+                >
+                  {cover && (
+                    <Image
+                      src={cover}
+                      alt=""
+                      widths={[180, 320, 480]}
+                      sizes="(min-width: 768px) 12rem, (min-width: 640px) 9rem, 5.5rem"
+                      format="webp"
+                      quality={62}
+                      loading={i < 2 ? 'eager' : 'lazy'}
+                      class="aspect-square w-full rounded-lg object-cover sm:aspect-[4/3]"
+                    />
+                  )}
+                  <span>
+                    <span class="text-copper-400 block text-[0.85rem] font-semibold sm:text-[0.95rem]">
+                      {service.situation}
+                    </span>
+                    <span class="text-bone-50 font-display mt-1 block text-[1.12rem] font-bold sm:text-[1.35rem]">
+                      {service.title}
+                    </span>
+                    <span class="text-navy-300 mt-1.5 hidden text-[0.95rem] leading-relaxed sm:block">
+                      {service.claim}
+                    </span>
+                  </span>
+                  <span
+                    class="text-navy-300 group-hover:border-copper-500 group-hover:text-copper-400 hidden h-11 w-11 place-items-center rounded-full border border-white/15 transition-colors sm:grid"
+                    aria-hidden="true"
+                  >
+                    <Icon name="arrow-right" size={18} />
+                  </span>
+                </a>
+              </li>
+            );
+          })
+        }
+      </ol>
+
+      <p class="text-navy-300 mt-10 max-w-2xl text-[0.98rem] leading-relaxed">
+        Unsicher, wo Sie hingehören? Das geht den meisten so. Ein Foto per WhatsApp oder ein kurzer
+        Anruf reicht, und ich sage Ihnen, welches Gutachten in Ihrem Fall sinnvoll ist. Oder ob Sie
+        überhaupt eines brauchen.
+      </p>
+    </div>
+  </section>
+
+  <CtaBand />
+</Layout>

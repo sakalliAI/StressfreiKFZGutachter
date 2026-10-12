@@ -34,16 +34,16 @@ const cases = [
 ];
 ---
 
-<section id="kosten" class="section-pad bg-bone-50 text-navy-900">
+<section id="kosten" class="section-pad bg-bone-50 text-navy-900" aria-labelledby="kosten-title">
   <div class="container-page">
     <div
       class="grid gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center lg:gap-16"
     >
       <div>
         <SectionHead
-          eyebrow="Kosten"
+          id="kosten-title"
           title="Wer zahlt das Gutachten?"
-          lead="Die Frage, die fast jeder zuerst stellt. Hier die ehrliche Antwort für jede Konstellation."
+          lead="Kurz gesagt: Waren Sie nicht schuld, zahlt die Versicherung der Gegenseite. Für alle anderen Fälle steht die Antwort in der Tabelle."
           tone="light"
         />
 
@@ -69,8 +69,10 @@ const cases = [
       </div>
 
       <div data-reveal>
-        <!-- Auf schmalen Viewports Karten statt einer gequetschten
-             Tabelle, die sonst horizontal scrollen muesste. -->
+        {
+          /* Auf schmalen Viewports Karten statt einer gequetschten
+            Tabelle, die sonst horizontal scrollen muesste. */
+        }
         <div class="grid gap-3 sm:hidden">
           {
             cases.map((row) => (

@@ -10,13 +10,22 @@ const SITE = 'https://mk-stressfrei.sakalli.ai';
 export default defineConfig({
   site: SITE,
   output: 'static',
-  trailingSlash: 'ignore',
+  // Jede Seite hat genau eine Adresse, immer mit Schraegstrich am Ende.
+  // Ohne diese Festlegung waeren /leistungen/kasko und
+  // /leistungen/kasko/ zwei Adressen fuer denselben Inhalt.
+  trailingSlash: 'always',
   build: {
-    // Onepager: das gesamte CSS inline ausliefern spart einen
-    // render-blockierenden Request und drueckt den LCP.
+    // Das gesamte CSS inline ausliefern spart einen render-blockierenden
+    // Request und drueckt den LCP. Das Stylesheet ist klein genug, dass
+    // es sich auch bei mehreren Seiten lohnt; gemessen in docs/handover.md.
     inlineStylesheets: 'always',
   },
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      // Die 404-Seite gehoert nicht in die Sitemap.
+      filter: (page) => !page.includes('/404'),
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
     build: {

@@ -1,186 +1,92 @@
 ---
 import { Image } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
 import Icon from './Icon.astro';
 import SectionHead from './SectionHead.astro';
-import { services, company } from '../data/site';
+import { services } from '../data/site';
+import { serviceImages } from '../data/service-images';
 
-import imgHaftpflicht from '../assets/leistung-haftpflicht.jpeg';
-import imgKasko from '../assets/leistung-kasko.jpeg';
-import imgKurz from '../assets/leistung-kurzgutachten.jpeg';
-import imgWert from '../assets/leistung-wertgutachten.jpeg';
-import imgBeweis from '../assets/leistung-beweissicherung.jpeg';
-import imgLeasing from '../assets/leistung-leasing.jpeg';
-
-const covers: Record<string, ImageMetadata> = {
-  haftpflicht: imgHaftpflicht,
-  kasko: imgKasko,
-  kurzgutachten: imgKurz,
-  wertgutachten: imgWert,
-  beweissicherung: imgBeweis,
-  leasing: imgLeasing,
-};
+/**
+ * Leistungen auf der Startseite.
+ *
+ * Jede Karte fuehrt auf die eigene Seite der Leistung. Gross steht die
+ * Lage in den Worten des Kunden, der Fachbegriff klein darunter. Mobil
+ * eine kompakte Liste mit Vorschaubild statt Wischkarussell, so sieht
+ * man alle sechs auf einen Blick.
+ */
 ---
 
-<section id="leistungen" class="section-pad bg-navy-900">
+<section id="leistungen" class="section-pad bg-navy-900" aria-labelledby="leistungen-title">
   <div class="container-page">
     <div class="flex flex-wrap items-end justify-between gap-6">
       <SectionHead
-        eyebrow="Leistungen"
-        title="Wofür Sie mich beauftragen können"
-        lead="Sechs Bereiche, ein Ansprechpartner. Tippen Sie eine Karte an, dann sehen Sie die Details."
-        class="!max-w-xl"
+        id="leistungen-title"
+        title="Was ist bei Ihnen passiert?"
+        lead="Suchen Sie sich die Lage aus, die passt. Wie das Gutachten dazu heißt, steht klein darunter."
       />
-      <a href="#kontakt" class="btn btn-ghost hidden lg:inline-flex" data-reveal>
-        Fall schildern
+      <a href="/leistungen/" class="btn btn-ghost hidden lg:inline-flex" data-reveal>
+        Alle Leistungen
         <Icon name="arrow-right" size={17} />
       </a>
     </div>
 
-    <!--
-      Mobil ein horizontaler Snap-Slider statt sechs gestapelter
-      Vollbildkacheln, sonst scrollt man ewig an den Karten vorbei.
-      Ab sm wird daraus ein normales Grid.
-    -->
-    <ul
-      class="-mx-5 mt-12 flex snap-x snap-mandatory [scrollbar-width:none] gap-3 overflow-x-auto px-5 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3 [&::-webkit-scrollbar]:hidden"
-    >
+    <ul class="mt-10 grid gap-3 sm:mt-12 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
       {
         services.map((service, i) => {
-          const cover = covers[service.id];
+          const cover = serviceImages[service.id];
           return (
-            <li
-              class="w-[78vw] flex-none snap-start sm:w-auto"
-              data-reveal
-              style={`--reveal-delay:${(i % 3) * 80}ms`}
-            >
-              <button
-                type="button"
-                class="group rounded-card relative block h-56 w-full overflow-hidden text-left sm:h-64 lg:h-72"
-                data-service-open={service.id}
-                aria-haspopup="dialog"
+            <li data-reveal style={`--reveal-delay:${(i % 3) * 70}ms`}>
+              <a
+                href={`/leistungen/${service.slug}/`}
+                class="svc-card group rounded-card bg-navy-850 hover:border-copper-500/50 relative grid h-full grid-cols-[4.75rem_minmax(0,1fr)_auto] items-center gap-4 overflow-hidden border border-white/8 p-2.5 pr-4 transition-colors sm:block sm:p-0"
               >
                 {cover && (
-                  <Image
-                    src={cover}
-                    alt={service.alt}
-                    widths={[420, 640, 900]}
-                    sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 78vw"
-                    format="webp"
-                    quality={68}
-                    loading="lazy"
-                    decoding="async"
-                    class="absolute inset-0 h-full w-full object-cover saturate-[0.82] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
-                  />
+                  <span class="relative block overflow-hidden rounded-lg sm:rounded-none">
+                    <Image
+                      src={cover}
+                      alt={service.alt}
+                      widths={[160, 420, 640, 900]}
+                      sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 4.75rem"
+                      format="webp"
+                      quality={66}
+                      loading="lazy"
+                      decoding="async"
+                      class="aspect-square w-full object-cover saturate-[0.85] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04] sm:aspect-[16/10]"
+                    />
+                    <span
+                      class="absolute inset-0 hidden bg-[linear-gradient(to_top,var(--color-navy-850)_0%,transparent_55%)] sm:block"
+                      aria-hidden="true"
+                    />
+                  </span>
                 )}
 
-                <span
-                  class="absolute inset-0 bg-[linear-gradient(to_top,rgb(4_7_15/0.93)_4%,rgb(6_10_22/0.58)_42%,rgb(6_10_22/0.2)_100%)]"
-                  aria-hidden="true"
-                />
-
-                <span
-                  class="text-bone-50 group-hover:border-copper-400 group-hover:bg-copper-500 group-hover:text-navy-950 absolute top-3.5 right-3.5 grid h-9 w-9 place-items-center rounded-full border border-white/20 bg-black/35 backdrop-blur-sm transition-colors duration-220"
-                  aria-hidden="true"
-                >
-                  <Icon name="plus" size={17} />
-                </span>
-
-                {/* Feste Zeilenzahl fuer den Claim, damit die Titel
-                    aller Karten einer Reihe auf einer Linie sitzen. */}
-                <span class="absolute inset-x-0 bottom-0 block p-5">
-                  <span class="font-display text-bone-50 block text-lg font-bold">
-                    {service.title}
+                <span class="relative block sm:-mt-6 sm:px-6 sm:pb-6">
+                  <span class="font-display text-bone-50 block text-[1.02rem] leading-snug font-bold sm:text-[1.3rem]">
+                    {service.situation}
                   </span>
-                  <span class="text-bone-200/85 mt-1.5 line-clamp-2 block min-h-[2.6em] text-[0.85rem] leading-snug">
+                  <span class="text-copper-400 mt-1 flex items-center gap-2 text-[0.85rem] font-semibold sm:mt-3">
+                    {service.title}
+                    <Icon
+                      name="arrow-right"
+                      size={15}
+                      class="hidden transition-transform duration-300 group-hover:translate-x-1 sm:inline"
+                    />
+                  </span>
+                  <span class="text-navy-300 mt-2.5 hidden text-[0.92rem] leading-relaxed sm:block">
                     {service.claim}
                   </span>
                 </span>
 
-                <span class="sr-only">Details zu {service.title} öffnen</span>
-              </button>
+                <Icon name="arrow-right" size={17} class="text-navy-400 sm:hidden" />
+              </a>
             </li>
           );
         })
       }
     </ul>
 
-    <p class="text-navy-400 mt-6 text-center text-[0.85rem] sm:hidden">
-      Zum Blättern nach links wischen
+    <p class="text-navy-300 mt-8 max-w-2xl text-[0.95rem] leading-relaxed" data-reveal>
+      Nichts davon passt so richtig? Schicken Sie mir ein Foto per WhatsApp. Ich sage Ihnen, was
+      sinnvoll ist, auch wenn das heißt: Sie brauchen gar kein Gutachten.
     </p>
   </div>
 </section>
-
-<!-- Detail-Dialoge. Der Text steht real im HTML, damit Suchmaschinen
-     und Sprachmodelle ihn lesen koennen. -->
-{
-  services.map((service) => (
-    <dialog
-      id={`svc-${service.id}`}
-      class="rounded-card bg-navy-850 text-bone-100 m-auto w-[min(38rem,calc(100vw-1.5rem))] border border-white/10 p-0 backdrop:bg-black/70 backdrop:backdrop-blur-sm"
-      aria-labelledby={`svc-${service.id}-title`}
-    >
-      <div class="flex items-start justify-between gap-4 border-b border-white/8 p-5 sm:p-6">
-        <h3 id={`svc-${service.id}-title`} class="text-bone-50 text-xl font-bold">
-          {service.title}
-        </h3>
-        <button
-          type="button"
-          class="text-navy-300 hover:text-bone-50 grid h-10 w-10 flex-none place-items-center rounded-lg border border-white/12 transition-colors hover:bg-white/8"
-          data-dialog-close
-          aria-label="Schließen"
-        >
-          <Icon name="x" size={18} />
-        </button>
-      </div>
-
-      <div class="max-h-[60vh] overflow-y-auto p-5 sm:p-6">
-        <ul class="grid gap-3.5">
-          {service.detail.map((line) => (
-            <li class="text-navy-300 flex gap-3 text-[0.94rem] leading-relaxed">
-              <Icon name="check" size={17} class="text-copper-400 mt-1 flex-none" />
-              <span>{line}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div class="flex flex-col gap-2.5 border-t border-white/8 p-5 sm:flex-row sm:p-6">
-        <a
-          href={company.whatsapp}
-          target="_blank"
-          rel="noopener"
-          class="btn btn-wa flex-1"
-          data-track={`wa-svc-${service.id}`}
-        >
-          <Icon name="whatsapp" size={18} />
-          Dazu schreiben
-        </a>
-        <a
-          href={company.phoneHref}
-          class="btn btn-ghost flex-1"
-          data-track={`call-svc-${service.id}`}
-        >
-          <Icon name="phone" size={17} />
-          {company.phoneDisplay}
-        </a>
-      </div>
-    </dialog>
-  ))
-}
-
-<script>
-  /**
-   * Öffnet den passenden Leistungs-Dialog. Schließen, Backdrop-Klick
-   * und Scroll-Sperre erledigt der zentrale Dialog-Handler im Layout.
-   */
-  for (const trigger of document.querySelectorAll<HTMLElement>('[data-service-open]')) {
-    trigger.addEventListener('click', () => {
-      const dialog = document.getElementById(`svc-${trigger.dataset.serviceOpen}`);
-      if (dialog instanceof HTMLDialogElement) {
-        dialog.showModal();
-        document.documentElement.style.overflow = 'hidden';
-      }
-    });
-  }
-</script>
