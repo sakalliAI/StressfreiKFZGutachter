@@ -16,11 +16,11 @@ export const MAP_H = 470;
 /**
  * Maßstab: Meter je Bildpunkt der Ausgabe.
  *
- * Bindend ist die Nord-Süd-Achse: von Kösching bis Pfaffenhofen sind es
- * knapp 35 Kilometer, die mit Rand für die Beschriftung ins Bild
- * passen müssen. 90 ist der engste Wert, bei dem das aufgeht.
+ * Bindend ist die Nord-Süd-Achse: von Eichstätt bis Pfaffenhofen sind es
+ * gut 40 Kilometer, die mit Rand für die Beschriftung ins Bild passen
+ * müssen. 105 ist der engste Wert, bei dem das aufgeht.
  */
-export const M_PER_PX = 90;
+export const M_PER_PX = 105;
 
 /**
  * Zoomstufe der bezogenen Kacheln.
@@ -35,11 +35,12 @@ export const TILE_SIZE = 256;
 /**
  * Bildmitte.
  *
- * Nicht Ingolstadt, sondern die Mitte zwischen dem nördlichsten und dem
- * südlichsten Ort. Auf Ingolstadt zentriert bliebe oben viel leeres
- * Land stehen, während Pfaffenhofen unten aus dem Bild fiele.
+ * Nicht Ingolstadt, sondern die Mitte zwischen den aeussersten Orten:
+ * Eichstaett im Norden, Pfaffenhofen im Sueden, Eichstaett und Neuburg
+ * im Westen, Grossmehring im Osten. Auf Ingolstadt zentriert fielen
+ * Eichstaett oder Pfaffenhofen aus dem Bild.
  */
-export const CENTER = { lat: 48.686, lon: 11.425 };
+export const CENTER = { lat: 48.711, lon: 11.36 };
 
 /** Meter je Bildpunkt einer Kachel dieser Zoomstufe, auf Höhe der Mitte. */
 export function tileMetersPerPx(zoom = TILE_ZOOM) {

@@ -209,7 +209,7 @@ const scrim = Buffer.from(
      <text x="76" y="356" font-family="DejaVu Sans" font-size="54" font-weight="bold" fill="${BONE}">Unfall? Kein Stress.</text>
      <text x="76" y="428" font-family="DejaVu Sans" font-size="54" font-weight="bold" fill="${COPPER}">Den Rest mache ich.</text>
      <rect x="76" y="468" width="120" height="5" rx="2.5" fill="${COPPER}"/>
-     <text x="76" y="526" font-family="DejaVu Sans" font-size="25" fill="#b8c3dc">DESAG geprüfter Sachverständiger, Termin oft am selben Tag</text>
+     <text x="76" y="526" font-family="DejaVu Sans" font-size="25" fill="#b8c3dc">DESAG-geprüfter Sachverständiger, Termin oft am selben Tag</text>
    </svg>`,
 );
 

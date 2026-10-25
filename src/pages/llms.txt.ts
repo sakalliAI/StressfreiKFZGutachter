@@ -25,7 +25,7 @@ export const GET: APIRoute = async ({ site }) => {
     '',
     `> ${seo.description}`,
     '',
-    `Inhaber: ${company.owner}, DESAG geprüfter Kfz-Sachverständiger.`,
+    `Inhaber: ${company.owner}, DESAG-geprüfter Kfz-Sachverständiger.`,
     `Anschrift: ${company.street}, ${company.zip} ${company.city}.`,
     `Telefon und WhatsApp: ${company.phoneDisplay}. E-Mail: ${company.email}.`,
     `Erreichbarkeit: ${company.hours}`,

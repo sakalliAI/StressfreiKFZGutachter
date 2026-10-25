@@ -139,6 +139,13 @@ export const company = {
     },
     { slug: 'manching', name: 'Manching', fullName: 'Manching', lat: 48.71735, lon: 11.49397 },
     {
+      slug: 'eichstaett',
+      name: 'Eichstätt',
+      fullName: 'Eichstätt',
+      lat: 48.89345,
+      lon: 11.18348,
+    },
+    {
       slug: 'neuburg-an-der-donau',
       name: 'Neuburg a. d. Donau',
       fullName: 'Neuburg an der Donau',
@@ -399,7 +406,7 @@ export const upload = {
 export const seo = {
   title: 'KFZ Gutachter Ingolstadt nach Unfall | MK Stressfrei',
   description:
-    'Kfz-Gutachter in Ingolstadt: DESAG geprüft, unabhängig, Besichtigung vor Ort. Termin oft am selben Tag. Bei unverschuldetem Unfall zahlt die Gegenseite.',
+    'Kfz-Gutachter in Ingolstadt: DESAG-geprüft, unabhängig, Besichtigung vor Ort. Termin oft am selben Tag. Bei unverschuldetem Unfall zahlt die Gegenseite.',
   /* Liegt als `public/og.jpg` und damit direkt unter der Wurzel. Der
      fruehere Pfad `/img/og.jpg` existierte nicht: Cloudflare Pages
      lieferte dafuer die Startseite mit Status 200 aus, und jede

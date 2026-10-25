@@ -1,6 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import SectionHead from './SectionHead.astro';
-import { processSteps } from '../data/site';
+import { company, processSteps } from '../data/site';
+import photo from '../assets/begutachtung.jpeg';
 ---
 
 <section id="ablauf" class="bg-navy-850 relative" aria-labelledby="ablauf-title">
@@ -16,15 +18,37 @@ import { processSteps } from '../data/site';
   */
   }
   <div data-process-pin>
-    <div class="section-pad" data-process-sticky>
+    {
+      /* Eigene, etwas knappere Polsterung: der ganze Block samt Foto
+         muss beim Festhalten auch auf einem 720 px hohen Bildschirm
+         vollstaendig sichtbar bleiben. */
+    }
+    <div class="py-16 md:pt-10 md:pb-14" data-process-sticky>
       <div class="container-page">
-        <SectionHead
-          id="ablauf-title"
-          title="Von Ihrer Nachricht bis zum fertigen Gutachten"
-          lead="Meist liegen zwischen dem ersten Foto und dem Gutachten bei der Versicherung nur wenige Tage. So läuft es ab."
-        />
+        <div
+          class="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-center md:gap-12"
+        >
+          <SectionHead
+            id="ablauf-title"
+            title="Von Ihrer Nachricht bis zum fertigen Gutachten"
+            lead="Meist liegen zwischen dem ersten Foto und dem Gutachten bei der Versicherung nur wenige Tage. So läuft es ab."
+          />
+          <figure class="rounded-card overflow-hidden border border-white/10" data-reveal>
+            <Image
+              src={photo}
+              alt={`${company.owner} fotografiert den Unfallschaden an einem Fahrzeug, auf dem Rücken das Logo von MK Stressfrei`}
+              widths={[480, 720, 960, 1280]}
+              sizes="(min-width: 1280px) 600px, (min-width: 768px) 46vw, 100vw"
+              format="webp"
+              quality={70}
+              loading="lazy"
+              decoding="async"
+              class="aspect-[3/2] w-full object-cover md:aspect-[16/10] md:max-h-[min(22rem,30vh)] md:object-[50%_40%]"
+            />
+          </figure>
+        </div>
 
-        <div class="process mt-14 md:mt-20">
+        <div class="process mt-12 md:mt-14">
           {
             /* Fahrbahn von Punkt 1 bis Punkt 4, nur ab mittlerer Breite.
               Asphaltband mit Mittelstreifen, die gefahrene Strecke
@@ -219,9 +243,10 @@ import { processSteps } from '../data/site';
     color: var(--color-copper-300);
   }
 
+  /* Unter dem festen Header festhalten, nicht dahinter. */
   [data-process-pin].is-armed [data-process-sticky] {
     position: sticky;
-    top: 0;
+    top: var(--header-h);
   }
 </style>
 

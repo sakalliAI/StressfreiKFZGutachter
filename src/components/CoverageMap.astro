@@ -29,9 +29,11 @@ const home = toMap(company.coords.lat, company.coords.lon);
 
 const points = company.places.map((place) => {
   const p = toMap(place.lat, place.lon);
-  /* Beschriftung nach außen, weg von der Bildmitte. So laufen die
-     Namen nicht ineinander und nicht über den Rand. */
-  const right = p.x > MAP_W / 2;
+  /* Beschriftung nach außen, weg von Ingolstadt. So laufen die Namen
+     nicht ineinander und nicht über den Rand. Bezug ist Ingolstadt und
+     nicht die Bildmitte, weil die Karte für Eichstätt und Neuburg nach
+     Westen verschoben ist. */
+  const right = p.x > home.x;
   return {
     label: place.short ?? place.name,
     x: p.x,

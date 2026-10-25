@@ -43,18 +43,22 @@ const portrait = Object.values(portraits)[0]?.default ?? null;
 
         <div class="text-navy-300 mt-6 grid gap-4 text-[1rem] leading-relaxed" data-reveal>
           <p>
-            Ich bin {company.owner}, DESAG geprüfter Kfz-Sachverständiger{
-              company.city ? ` in ${company.city}` : ''
-            }. Ich arbeite allein, ohne Büro dazwischen. Wer hier anruft, hat mich am Apparat und
-            nicht die Zentrale.
+            {
+              `Ich bin ${company.owner}, DESAG-geprüfter Kfz-Sachverständiger in ${company.city}, Industriemeister Metall und bringe mehr als 25 Jahre Erfahrung in der Kfz-Branche mit.`
+            }
+          </p>
+          <p>
+            Ich arbeite allein, ohne Büro dazwischen. Wer hier anruft, hat mich am Apparat und nicht
+            die Zentrale.
           </p>
           <p>
             Ein Unfall ist Ärger genug. Dann kommen noch Fristen, Rückfragen der Versicherung und
-            Papiere, die kein Mensch versteht. Das nehme ich Ihnen ab. Daher der Name.
+            Papiere, die kein Mensch versteht. Das nehme ich Ihnen ab. Daher der Name: MK
+            Stressfrei.
           </p>
           <p class="border-copper-500 text-bone-100 border-l-2 pl-5">
-            Bezahlt werde ich für ein sauberes Gutachten, nicht für ein bestimmtes Ergebnis. Von
-            Werkstätten und Versicherungen nehme ich kein Geld an.
+            Bezahlt werde ich für ein sauberes und unabhängiges Gutachten, nicht für ein bestimmtes
+            Ergebnis. Von Werkstätten und Versicherungen nehme ich kein Geld an.
           </p>
         </div>
 
@@ -96,7 +100,7 @@ const portrait = Object.values(portraits)[0]?.default ?? null;
       <div class="flex flex-col gap-5 lg:order-first" data-reveal>
         {
           portrait ? (
-            <div class="rounded-card relative min-h-52 flex-1 overflow-hidden lg:min-h-40">
+            <div class="rounded-card relative aspect-[4/5] overflow-hidden sm:aspect-[4/3] lg:aspect-auto lg:min-h-80 lg:flex-1">
               <Image
                 src={portrait}
                 alt={`${company.owner}, Kfz-Sachverständiger`}
@@ -117,7 +121,7 @@ const portrait = Object.values(portraits)[0]?.default ?? null;
                   Ihr Ansprechpartner
                 </p>
                 <p class="font-display text-bone-50 mt-1 text-lg font-bold">{company.owner}</p>
-                <p class="text-navy-300 mt-0.5 text-[0.8rem]">DESAG geprüfter Sachverständiger</p>
+                <p class="text-navy-300 mt-0.5 text-[0.8rem]">DESAG-geprüfter Sachverständiger</p>
               </div>
             </div>
           ) : (
@@ -138,7 +142,7 @@ const portrait = Object.values(portraits)[0]?.default ?? null;
                 {company.owner}
               </p>
               <p class="text-navy-300 relative mt-1 text-[0.9rem]">
-                DESAG geprüfter Kfz-Sachverständiger
+                DESAG-geprüfter Kfz-Sachverständiger
               </p>
               <a
                 href={company.phoneHref}
