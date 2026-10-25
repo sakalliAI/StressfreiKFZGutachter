@@ -1,0 +1,39 @@
+---
+import desag from '../assets/desag-logo.svg';
+
+/**
+ * DESAG-Zeichen als Pruefsiegel.
+ *
+ * Offizielle Vektordatei von desag.de (Original in brand/). Das Logo ist
+ * fuer hellen Grund gestaltet, deshalb sitzt es auf einem eigenen
+ * hellen Schild. Die Nutzung hat der Kunde bestaetigt.
+ */
+interface Props {
+  /** Breite des Logos in rem. */
+  width?: number;
+  class?: string;
+}
+
+const { width = 8, class: className = '' } = Astro.props;
+---
+
+<a
+  href="https://www.desag.de/"
+  target="_blank"
+  rel="noopener"
+  class:list={[
+    'inline-block rounded-lg bg-white px-3 py-2.5 shadow-[0_8px_24px_-12px_rgb(0_0_0/0.7)] transition-transform hover:-translate-y-0.5',
+    className,
+  ]}
+  title="Deutsche Sachverständigen Gesellschaft"
+>
+  <img
+    src={desag.src}
+    alt="DESAG, Deutsche Sachverständigen Gesellschaft"
+    width={desag.width}
+    height={desag.height}
+    loading="lazy"
+    decoding="async"
+    style={`width:${width}rem;height:auto`}
+  />
+</a>

@@ -66,6 +66,10 @@ wäre: `owner` in `src/data/site.ts` ändern, die Seite zieht überall nach.
 
 ### 1.6 Weitere Qualifikationsnachweise
 
+Das offizielle DESAG-Zeichen (Vektordatei von desag.de, Original in
+`brand/desag-logo.svg`) steht als Prüfsiegel am Porträt und im Footer.
+Die Nutzung hat der Kunde bestätigt.
+
 Auf der Seite steht die **DESAG-Prüfung**, belegt durch die Visitenkarte
 (`brand/VK.png`). Sie erscheint im Hero, in der Vertrauensleiste und in
 der Sektion „Über mich".

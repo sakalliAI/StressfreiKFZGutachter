@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Icon from './Icon.astro';
 import CoverageMap from './CoverageMap.astro';
+import DesagSeal from './DesagSeal.astro';
 import { company, trustPoints } from '../data/site';
 import logo from '../assets/logo.webp';
 
@@ -112,6 +113,7 @@ const portrait = Object.values(portraits)[0]?.default ?? null;
                 decoding="async"
                 class="absolute inset-0 h-full w-full object-cover object-[50%_28%]"
               />
+              <DesagSeal width={6.5} class="absolute top-3 right-3 z-1 !px-2.5 !py-2" />
               <span
                 class="absolute inset-0 bg-[linear-gradient(to_top,rgb(4_7_15/0.9),rgb(6_10_22/0.15)_62%)]"
                 aria-hidden="true"

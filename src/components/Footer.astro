@@ -1,6 +1,7 @@
 ---
 import lockup from '../assets/logo-lockup.webp';
 import Icon from './Icon.astro';
+import DesagSeal from './DesagSeal.astro';
 import { company, services } from '../data/site';
 
 const year = new Date().getFullYear();
@@ -34,6 +35,10 @@ const link = 'text-navy-300 hover:text-copper-400 text-[0.88rem] transition-colo
           Unabhängige Kfz-Gutachten nach Unfall in {company.region}. Besichtigung vor Ort, Gutachten
           direkt an Versicherung und Anwalt.
         </p>
+        <p class="text-navy-400 mt-6 text-[0.72rem] font-semibold tracking-[0.16em] uppercase">
+          Geprüfter Sachverständiger
+        </p>
+        <DesagSeal width={8.5} class="mt-3" />
       </div>
 
       <nav aria-label="Leistungen">
