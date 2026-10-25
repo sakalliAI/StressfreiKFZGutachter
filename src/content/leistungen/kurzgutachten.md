@@ -2,11 +2,11 @@
 service: kurzgutachten
 title: Kurzgutachten für kleine Schäden
 seoTitle: Kurzgutachten bei Bagatellschaden | Kfz-Gutachter Ingolstadt
-description: Kleiner Schaden unter 750 Euro? Ein Kurzgutachten reicht oft. Vorsicht bei Stoßfängern mit Sensoren, die kosten schnell mehr als gedacht.
-lead: Unter rund 750 Euro Schadenhöhe erkennen Versicherungen oft kein volles Gutachten an, sondern nur einen Kostenvoranschlag oder ein Kurzgutachten. Bevor Sie sich festlegen, lohnt ein Blick von außen. Gerade an modernen Autos sieht ein Kratzer harmlos aus und kostet am Ende ein Vielfaches.
+description: Kleiner Schaden unter 1.000 Euro? Ein Kurzgutachten reicht oft. Vorsicht bei Stoßfängern mit Sensoren, die kosten schnell mehr als gedacht.
+lead: Bei kleineren Bagatellschäden reicht häufig ein Kostenvoranschlag oder Kurzgutachten aus. Ob ein vollständiges Schadengutachten erforderlich und erstattungsfähig ist, hängt vom Einzelfall ab. Das prüfe ich vorab mit Ihnen.
 facts:
   - label: Gedacht für
-    value: Schäden bis etwa 750 Euro
+    value: Schäden bis etwa 1.000 Euro
   - label: Inhalt
     value: Fotos, Schadenbeschreibung, Reparaturkalkulation
   - label: Ohne
@@ -16,7 +16,7 @@ facts:
 faqs:
   - q: Was ist der Unterschied zwischen Kurzgutachten und Kostenvoranschlag?
     a: Den Kostenvoranschlag schreibt die Werkstatt, die den Auftrag haben möchte. Das Kurzgutachten schreibe ich, unabhängig von der Werkstatt, mit Fotos und Beschreibung. Bei Rückfragen der Versicherung ist das die bessere Grundlage.
-  - q: Woher weiß ich, ob mein Schaden unter 750 Euro liegt?
+  - q: Woher weiß ich, ob mein Schaden unter 1.000 Euro liegt?
     a: Schicken Sie mir ein Foto per WhatsApp, möglichst gerade von vorn und eines schräg mit Licht von der Seite. Meist kann ich Ihnen dann schon sagen, in welche Richtung es geht.
   - q: Nur ein Kratzer an der Stoßstange. Lohnt sich das überhaupt?
     a: Kommt darauf an, was hinter der Stoßstange sitzt. Parksensoren, Radar für den Abstandstempomat oder Kameras müssen nach einem Anstoß oft geprüft oder neu eingestellt werden. Dann ist man schnell bei mehr als tausend Euro, obwohl außen kaum etwas zu sehen ist.
@@ -28,7 +28,7 @@ updated: 2026-10-12
 
 ## Wann ein Kurzgutachten reicht
 
-Nach der Rechtsprechung darf bei kleinen Schäden ein vollständiges Gutachten unverhältnismäßig sein. Die Grenze liegt bei rund 750 Euro. Darunter erstatten Versicherungen die Kosten für ein volles Gutachten häufig nicht, sondern nur die für einen Kostenvoranschlag oder ein Kurzgutachten.
+Bei kleinen Schäden kann ein vollständiges Gutachten unverhältnismäßig sein. Viele Versicherer ziehen die Grenze bei rund 1.000 Euro. Darunter erstatten Versicherungen die Kosten für ein volles Gutachten häufig nicht, sondern nur die für einen Kostenvoranschlag oder ein Kurzgutachten.
 
 Ein Kurzgutachten enthält Fotos, eine Beschreibung des Schadens und eine Kalkulation der Reparatur. Es verzichtet auf Teile, die bei kleinen Schäden selten eine Rolle spielen, etwa die Berechnung von Restwert oder Wiederbeschaffungswert.
 

@@ -10,7 +10,7 @@ facts:
   - label: Wer wählt den Gutachter
     value: Sie, nicht die Versicherung
   - label: Lohnt sich ab
-    value: rund 750 Euro Schaden
+    value: rund 1.000 Euro Schaden
   - label: Fertig
     value: meist 24 bis 48 Stunden nach dem Termin
 faqs:
@@ -30,7 +30,7 @@ updated: 2026-10-12
 
 ## Wer bezahlt das Gutachten?
 
-Bei einem Unfall, an dem Sie keine Schuld tragen, muss die Haftpflichtversicherung des Verursachers Ihren gesamten Schaden ersetzen. Dazu gehören nach § 249 BGB auch die Kosten für ein Sachverständigengutachten, soweit es zur Feststellung des Schadens erforderlich ist. Bei Schäden ab rund 750 Euro ist das nach der Rechtsprechung in der Regel der Fall.
+Bei einem Unfall, an dem Sie keine Schuld tragen, muss die Haftpflichtversicherung des Verursachers Ihren gesamten Schaden ersetzen. Dazu gehören nach § 249 BGB auch die Kosten für ein Sachverständigengutachten, soweit es zur Feststellung des Schadens erforderlich ist. Bei Schäden ab rund 1.000 Euro ist das in der Regel der Fall.
 
 Sie müssen dafür nicht in Vorleistung gehen. Üblich ist, dass Sie den Anspruch auf die Gutachterkosten an mich abtreten und ich direkt mit der Versicherung abrechne. Haben beide Seiten Schuld, wird nach der Haftungsquote geteilt. Das betrifft dann auch die Kosten für das Gutachten.
 

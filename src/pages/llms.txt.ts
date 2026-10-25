@@ -53,7 +53,7 @@ export const GET: APIRoute = async ({ site }) => {
     '## Wichtige Fakten',
     '',
     '- Bei einem unverschuldeten Unfall zahlt die Haftpflichtversicherung des Unfallgegners die erforderlichen Gutachterkosten (§ 249 BGB). Der Geschädigte wählt den Gutachter selbst.',
-    '- Ein vollständiges Gutachten lohnt sich in der Regel ab rund 750 Euro Schadenhöhe. Darunter genügt oft ein Kurzgutachten.',
+    '- Ein vollständiges Gutachten lohnt sich in der Regel ab rund 1.000 Euro Schadenhöhe. Darunter genügt oft ein Kurzgutachten.',
     '- Termin meist am selben oder am nächsten Werktag, Gutachten üblicherweise 24 bis 48 Stunden nach der Besichtigung.',
     '- Kein Gutachten nach § 23 StVZO (H-Kennzeichen), das stellen nur amtlich anerkannte Prüforganisationen aus.',
     '',

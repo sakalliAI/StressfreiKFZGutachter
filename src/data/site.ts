@@ -275,7 +275,8 @@ export const services: readonly Service[] = [
     slug: 'kurzgutachten',
     situation: 'Nur ein kleiner Schaden',
     title: 'Kurzgutachten',
-    claim: 'Unter rund 750 Euro reicht oft ein Kurzgutachten. Ich sage Ihnen vorher, ob das passt.',
+    claim:
+      'Bei kleineren Bagatellschäden reicht häufig ein Kostenvoranschlag oder Kurzgutachten aus. Ob ein vollständiges Schadengutachten erforderlich und erstattungsfähig ist, hängt vom Einzelfall ab. Das prüfe ich vorab mit Ihnen.',
     alt: 'Delle mit aufgerissenem Lack an einer Fahrzeugtür im Gegenlicht',
   },
   {
@@ -354,7 +355,7 @@ export const faqs: readonly Faq[] = [
   },
   {
     q: 'Ab welchem Schaden lohnt sich ein Gutachten?',
-    a: 'Als Faustregel gilt: ab etwa 750 Euro Schadenhöhe. Darunter erkennen Versicherungen häufig nur einen Kostenvoranschlag an. Ob Ihr Fall darüber liegt, sehe ich meist schon an einem guten Foto.',
+    a: 'Als Faustregel gilt: ab etwa 1.000 Euro Schadenhöhe. Darunter erkennen Versicherungen häufig nur einen Kostenvoranschlag an. Ob Ihr Fall darüber liegt, sehe ich meist schon an einem guten Foto.',
   },
   {
     q: 'Brauche ich zusätzlich einen Anwalt?',
