@@ -38,7 +38,7 @@ const OUT = 'src/assets/karte-einsatzgebiet.webp';
 
 /* Die Kachelnutzungsregeln von OpenStreetMap verlangen eine
    aussagekräftige Kennung. Anonyme Massenabrufe werden geblockt. */
-const UA = 'MK-Stressfrei-Website-Build/1.0 (+https://mk-stressfrei.sakalli.ai)';
+const UA = 'MK-Stressfrei-Website-Build/1.0 (+https://www.mk-stressfrei.de)';
 
 const scale = tileScale();
 /* Ausschnitt in Kachel-Bildpunkten, den wir am Ende auf MAP_W x MAP_H

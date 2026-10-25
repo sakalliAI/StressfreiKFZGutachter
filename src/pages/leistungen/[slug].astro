@@ -24,7 +24,7 @@ const { entry, service } = Astro.props;
 const { Content } = await render(entry);
 const data = entry.data;
 
-const site = Astro.site ?? new URL('https://mk-stressfrei.sakalli.ai');
+const site = Astro.site ?? new URL('https://www.mk-stressfrei.de');
 const url = new URL(`/leistungen/${service.slug}/`, site).href;
 
 const image = serviceImages[service.id];

@@ -4,7 +4,7 @@ Website für Mersum Kumalic, Kfz-Sachverständiger in Ingolstadt. Astro,
 gehostet auf Cloudflare Pages, Kontaktformular über Brevo. Startseite plus
 Seiten je Leistung und je Ort, Impressum und Datenschutz.
 
-Vorschau: https://mk-stressfrei.sakalli.ai
+Live: https://www.mk-stressfrei.de (die frühere Vorschau mk-stressfrei.sakalli.ai leitet per 301 dorthin)
 
 ## Schnellstart
 

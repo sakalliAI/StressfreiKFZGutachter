@@ -35,7 +35,7 @@ const {
   current,
 } = Astro.props;
 
-const site = Astro.site ?? new URL('https://mk-stressfrei.sakalli.ai');
+const site = Astro.site ?? new URL('https://www.mk-stressfrei.de');
 const canonical = new URL(Astro.url.pathname, site);
 const ogImage = new URL(seo.ogImage, site);
 const origin = site.origin;

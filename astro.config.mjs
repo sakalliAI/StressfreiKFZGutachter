@@ -3,9 +3,9 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-// Vorschau-Domain. Beim Go-Live auf die Kundendomain umstellen
-// (siehe docs/handover.md, Abschnitt "Domain wechseln").
-const SITE = 'https://mk-stressfrei.sakalli.ai';
+// Hauptdomain. Daraus entstehen Canonical, Sitemap, robots.txt,
+// llms.txt, Open-Graph- und Schema.org-Adressen.
+const SITE = 'https://www.mk-stressfrei.de';
 
 export default defineConfig({
   site: SITE,

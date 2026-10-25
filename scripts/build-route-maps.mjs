@@ -24,7 +24,7 @@ import { fitView, projector } from '../src/lib/projection.mjs';
 const ROUTES = 'src/data/routes.json';
 const CACHE = '.cache/tiles';
 const OUT_DIR = 'src/assets/orte';
-const UA = 'MK-Stressfrei-Website-Build/1.0 (+https://mk-stressfrei.sakalli.ai)';
+const UA = 'MK-Stressfrei-Website-Build/1.0 (+https://www.mk-stressfrei.de)';
 
 /* Etwas flacher als die Karte der Startseite: sie steht auf der Ortsseite
    in voller Breite und soll nicht den ganzen Bildschirm fuellen. */

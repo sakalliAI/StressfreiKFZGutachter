@@ -26,7 +26,7 @@ import { writeFile } from 'node:fs/promises';
 // beiden benoetigten Bloecke hier gezielt herausgelesen.
 import { readFile } from 'node:fs/promises';
 
-const UA = 'MK-Stressfrei-Website-Build/1.0 (+https://mk-stressfrei.sakalli.ai)';
+const UA = 'MK-Stressfrei-Website-Build/1.0 (+https://www.mk-stressfrei.de)';
 const OUT = 'src/data/routes.json';
 
 const source = await readFile('src/data/site.ts', 'utf8');

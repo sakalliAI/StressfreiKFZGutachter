@@ -47,7 +47,7 @@ const neighbours = company.places
   .sort((a, b) => dist(place, a) - dist(place, b))
   .slice(0, 2);
 
-const site = Astro.site ?? new URL('https://mk-stressfrei.sakalli.ai');
+const site = Astro.site ?? new URL('https://www.mk-stressfrei.de');
 const url = new URL(`/kfz-gutachter/${place.slug}/`, site).href;
 const crumbs = [
   { name: 'Einsatzgebiet', path: '/kfz-gutachter/' },

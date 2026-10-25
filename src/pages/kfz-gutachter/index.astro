@@ -19,7 +19,7 @@ const rows = company.places
   .filter((r): r is { place: (typeof company.places)[number]; route: RouteEntry } => !!r.route)
   .sort((a, b) => a.route.minutes - b.route.minutes);
 
-const site = Astro.site ?? new URL('https://mk-stressfrei.sakalli.ai');
+const site = Astro.site ?? new URL('https://www.mk-stressfrei.de');
 const url = new URL('/kfz-gutachter/', site).href;
 const crumbs = [{ name: 'Einsatzgebiet', path: '/kfz-gutachter/' }];
 const title = `Kfz-Gutachter in ${company.region}`;

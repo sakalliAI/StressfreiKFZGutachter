@@ -257,6 +257,12 @@ Die zurückgegebene ID in `wrangler.toml` als Binding eintragen und in
 
 ## 4. Go-Live auf die Kundendomain
 
+**Erledigt im Oktober 2026.** Live unter https://www.mk-stressfrei.de.
+CNAME `www` bei IONOS, Domain ohne www per IONOS-Weiterleitung (302) auf
+www, `SITE` umgestellt, `CANONICAL_HOST=www.mk-stressfrei.de`,
+`MAIL_TO=info@mk-stressfrei.de`. Ab hier keine Testanfragen mehr über
+das Formular. Die Schritte unten bleiben als Referenz stehen.
+
 Die Domain bleibt beim bisherigen Anbieter. **Keine Nameserver-Migration,
 MX-, SPF-, DKIM- und DMARC-Einträge nicht anfassen**, sonst steht das
 E-Mail-Postfach des Kunden still.

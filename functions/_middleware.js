@@ -1,22 +1,24 @@
 /**
- * Leitet Aufrufe der technischen *.pages.dev-Adresse auf die
- * eingerichtete Hauptdomain um, damit keine zweite indexierbare Kopie
- * der Seite entsteht.
+ * Leitet alle Zweitadressen der Seite per 301 auf die Hauptdomain um,
+ * damit keine zweite indexierbare Kopie entsteht: die Vorschau unter
+ * mk-stressfrei.sakalli.ai und die technische Adresse
+ * mk-stressfrei.pages.dev.
  *
- * Aktiv nur, wenn die Umgebungsvariable CANONICAL_HOST gesetzt ist:
+ * Aktiv nur, wenn die Umgebungsvariable CANONICAL_HOST gesetzt ist,
+ * etwa www.mk-stressfrei.de.
  *
- *   wrangler pages secret put CANONICAL_HOST      (oder als Plain-Env)
- *   Beispielwert: www.kundendomain.de
- *
- * Solange die Variable fehlt, passiert nichts. Damit bleibt die
- * Vorschau unter mk-stressfrei.pages.dev bis zum Go-Live erreichbar.
+ * Ausgenommen sind die Vorschauen einzelner Deployments
+ * (<hash>.mk-stressfrei.pages.dev). Die kennzeichnet Cloudflare selbst
+ * mit noindex, und sie bleiben so zum Pruefen vor dem Livegang nutzbar.
  */
+const PREVIEW = /^[a-z0-9-]+\.mk-stressfrei\.pages\.dev$/;
+
 export async function onRequest({ request, env, next }) {
   const host = env.CANONICAL_HOST;
 
-  if (host && request.method === 'GET') {
+  if (host && (request.method === 'GET' || request.method === 'HEAD')) {
     const url = new URL(request.url);
-    if (url.hostname.endsWith('.pages.dev') && url.hostname !== host) {
+    if (url.hostname !== host && !PREVIEW.test(url.hostname)) {
       url.hostname = host;
       url.protocol = 'https:';
       url.port = '';

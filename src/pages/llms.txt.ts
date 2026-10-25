@@ -16,7 +16,7 @@ import routes from '../data/routes.json';
 import { company, services, seo } from '../data/site';
 
 export const GET: APIRoute = async ({ site }) => {
-  const origin = (site ?? new URL('https://mk-stressfrei.sakalli.ai')).origin;
+  const origin = (site ?? new URL('https://www.mk-stressfrei.de')).origin;
   const leistungen = await getCollection('leistungen');
   const places = routes.places as Record<string, { km: number; minutes: number }>;
 
