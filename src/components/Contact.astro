@@ -313,8 +313,9 @@ const label = 'block text-[0.82rem] font-semibold text-navy-300';
             <p
               class="bg-copper-500/12 text-bone-100 rounded-lg px-4 py-3 text-[0.86rem] leading-relaxed"
             >
-              Für das Formular wird JavaScript benötigt. Rufen Sie einfach an unter
-              {company.phoneDisplay} oder schreiben Sie an {company.email}.
+              {
+                `Für das Formular wird JavaScript benötigt. Rufen Sie einfach an unter ${company.phoneDisplay} oder schreiben Sie an ${company.email}.`
+              }
             </p>
           </noscript>
         </form>
